@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="270,30" extention="Button">
+  <displayList>
+    <text id="n0_e1jj" name="title" xy="10,6" size="100,19" fontSize="12" color="#bdbdbd" align="center" autoSize="none" singleLine="true" text=""/>
+    <component id="n2_e1jj" name="btnPlay" src="au3n4b" fileName="Button/IconButton.xml" pkg="nk9ejx23" xy="131,4">
+      <Button icon="ui://2pshu6oig1zau6f"/>
+    </component>
+  </displayList>
+  <Button/>
+</component>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="286,746" restrictSize="286,0,0,0" overflow="scroll" scrollBarFlags="96" bgColorEnabled="true" bgColor="#383838">
+  <controller name="base" pages="0,,1," selected="0"/>
+  <controller name="controller" pages="0,,1," selected="0"/>
+  <controller name="transition" pages="0,,1," selected="0"/>
+  <displayList>
+    <graph id="n74_p0d9" name="n74" xy="0,0" size="286,746" type="rect" lineColor="#ff292828" fillColor="#00383838">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <component id="n78_e1jj" name="infoComp" src="r1st7iues" fileName="inspectors/InfoPropsPanel.xml" xy="8,10" group="n77_e1jj"/>
+    <component id="n75_e1jj" name="baseBar" src="itme7iudp" fileName="basic/TitleBar.xml" xy="0,36" size="286,25" group="n77_e1jj">
+      <relation target="" sidePair="width-width"/>
+      <Button title="基本" controller="base" page="1"/>
+    </component>
+    <component id="n76_e1jj" name="baseComp" src="au3n5" fileName="inspectors/BasicPropsPanel.xml" xy="8,61" group="n77_e1jj">
+      <gearDisplay controller="base" pages="0"/>
+    </component>
+    <component id="n79_e1jj" name="controllerBar" src="itme7iudp" fileName="basic/TitleBar.xml" xy="0,306" size="286,25" group="n77_e1jj">
+      <relation target="" sidePair="width-width"/>
+      <Button title="控制器" controller="controller" page="1"/>
+    </component>
+    <component id="n81_e1jj" name="controllerComp" src="e1jj1nry31y" fileName="inspectors/ComControllerPanel.xml" xy="8,331" group="n77_e1jj">
+      <gearDisplay controller="controller" pages="0"/>
+    </component>
+    <component id="n80_e1jj" name="transitionBar" src="itme7iudp" fileName="basic/TitleBar.xml" xy="0,363" size="286,25" group="n77_e1jj">
+      <relation target="" sidePair="width-width"/>
+      <Button title="动效" controller="transition" page="1"/>
+    </component>
+    <component id="n82_e1jj" name="transitionComp" src="e1jj1nry320" fileName="inspectors/ComTransitionPanel.xml" xy="8,388" group="n77_e1jj">
+      <gearDisplay controller="transition" pages="0"/>
+    </component>
+    <group id="n77_e1jj" name="group" xy="0,10" size="286,410" advanced="true" layout="vt" excludeInvisibles="true"/>
+  </displayList>
+</component>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="270,32" bgColorEnabled="true" bgColor="#383838">
+  <displayList>
+    <list id="n70_e1jj" name="list" xy="0,0" size="270,32" overflow="scroll" defaultItem="ui://2pshu6oie1jj1nry321"/>
+  </displayList>
+  <relation target="n70_e1jj" sidePair="height-height"/>
+</component>

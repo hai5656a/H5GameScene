@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1200,800" bgColorEnabled="true" bgColor="#383838">
+  <displayList>
+    <component id="n142_p0d9" name="webset" src="gcza1s" fileName="Input/TextInput.xml" pkg="nk9ejx23" xy="5,13" size="1078,30">
+      <relation target="" sidePair="width-width"/>
+      <Label titleFontSize="14"/>
+    </component>
+    <component id="n143_p0d9" name="btngo" src="xualm" fileName="Button/Button.xml" pkg="nk9ejx23" xy="1098,12" size="85,30">
+      <relation target="" sidePair="right-right"/>
+      <Button title="前往" titleFontSize="14"/>
+    </component>
+    <graph id="n115_r5uk" name="holder" xy="4,54" size="1192,724">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <component id="n139_mlmb" name="list" src="mlmb1nry31v" fileName="DisplayTreeView.xml" xy="4,55" size="283,725">
+      <relation target="" sidePair="height-height,left-left"/>
+    </component>
+    <component id="n140_mlmb" name="document" src="mlmb1nry31x" fileName="DocumentView.xml" xy="293,55" size="612,725">
+      <relation target="" sidePair="width-width,height-height"/>
+    </component>
+    <component id="n141_mlmb" name="insp" src="mtrqiudk" fileName="Editor/InspectorView.xml" xy="914,55" size="286,725">
+      <relation target="" sidePair="height-height,right-right"/>
+    </component>
+  </displayList>
+</component>

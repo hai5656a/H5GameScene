@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="270,26" bgColorEnabled="true" bgColor="#383838">
+  <displayList>
+    <graph id="n0_r1st" name="n0" xy="4,2" size="261,21" type="rect" lineColor="#00000000" fillColor="#00ffffff"/>
+    <component id="n1_r1st" name="title" src="okou7w" fileName="Button/LinkButton.xml" pkg="nk9ejx23" xy="32,3" size="20,18" tooltips="点击打印对象到控制台">
+      <Button title=" "/>
+    </component>
+    <loader id="n2_r1st" name="icon" xy="10,3" size="20,20" align="center" vAlign="middle" fill="scale" shrinkOnly="true"/>
+    <component id="n3_e1jj" name="btnRefresh" src="so5uixicsd" fileName="basic/RefreshButton.xml" xy="230,2" size="22,22" tooltips="刷新">
+      <Button icon="ui://2pshu6oiih9xiua2"/>
+    </component>
+  </displayList>
+</component>

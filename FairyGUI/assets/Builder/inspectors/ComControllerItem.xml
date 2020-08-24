@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="270,30" extention="Button">
+  <displayList>
+    <text id="n0_e1jj" name="title" xy="10,6" size="100,19" fontSize="12" color="#bdbdbd" align="center" autoSize="none" singleLine="true" text="分页控制"/>
+    <component id="n1_e1jj" name="pageController" src="gcza18" fileName="ComboBox/ComboBox.xml" pkg="nk9ejx23" xy="110,5" size="140,20">
+      <ComboBox visibleItemCount="10"/>
+    </component>
+  </displayList>
+  <Button/>
+</component>
