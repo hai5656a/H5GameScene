@@ -100,6 +100,13 @@ export default class  LayaManager implements IManager{
         }
            
     }
+    onPause(){
+        if( !this.game)
+         return;
+        if(this.game.timer.scale==0){
+            this.game.timer.scale = 1;
+        }else this.game.timer.scale = 0;
+    }
     checkVisible(gobj){
         return gobj.internalVisible2;
     }

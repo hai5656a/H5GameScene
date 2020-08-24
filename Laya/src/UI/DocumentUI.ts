@@ -30,6 +30,7 @@ export default class DocumentUI{
       this.view.m_orientation.on(fairygui.Events.STATE_CHANGED, this, this.resize);
       this.view.m_editType.on(fairygui.Events.STATE_CHANGED, this, this.changeType);
       this.view.m_btnfps.onClick(this,this.onFPS);
+      this.view.m_btnpause.onClick(this,this.onPause);
       Laya.stage.on(Laya.Event.RESIZE,this,this.resize);
     //   Laya.stage.on(Laya.Event.KEY_DOWN,this,this.keyDown);
     //   Laya.stage.on(Laya.Event.KEY_UP,this,this.keyUp);
@@ -103,6 +104,10 @@ export default class DocumentUI{
     onFPS(){
         if( Consts.manager)
            Consts.manager.onFPS();
+    }
+    onPause(){
+        if( Consts.manager)
+           Consts.manager.onPause();
     }
     changeType(){
         if(this.view.m_editType.selectedIndex==1){

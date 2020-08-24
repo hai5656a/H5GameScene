@@ -123,6 +123,17 @@ export default class  CCManager implements IManager{
          var show = !this.game.debug.isDisplayStats();
          this.game.debug.setDisplayStats(show);  
     }
+    onPause(){
+        if( !this.game)
+         return;
+         var shouldPause = !this.game.game.isPaused();
+            if (shouldPause) {
+                this.game.game.pause();
+            } 
+            else {
+                this.game.game.resume();
+            }
+    }
     checkVisible(gobj){
         return gobj._finalVisible;
     }

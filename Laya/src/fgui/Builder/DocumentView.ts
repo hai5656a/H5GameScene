@@ -13,6 +13,7 @@ export default class DocumentView extends fgui.GComponent {
 	public m_landscape:fgui.GButton;
 	public m_portrait:fgui.GButton;
 	public m_btnfps:fgui.GButton;
+	public m_btnpause:fgui.GButton;
 	public static URL:string = "ui://2pshu6oimlmb1nry31x";
 
 	public static createInstance():DocumentView {
@@ -31,5 +32,6 @@ export default class DocumentView extends fgui.GComponent {
 		this.m_landscape = <fgui.GButton>(this.getChildAt(8));
 		this.m_portrait = <fgui.GButton>(this.getChildAt(9));
 		this.m_btnfps = <fgui.GButton>(this.getChildAt(11));
+		this.m_btnpause = <fgui.GButton>(this.getChildAt(12));
 	}
 }

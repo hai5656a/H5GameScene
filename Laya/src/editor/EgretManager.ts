@@ -115,6 +115,16 @@ export default class  EgretManager implements IManager{
             }
         }
     }
+    
+    onPause(){
+        if( !this.game)
+         return;
+        if(this.game.ticker.isPaused){
+            this.game.ticker.resume();
+        }else {
+            this.game.ticker.pause()
+        };
+    }
     checkVisible(gobj){
         return gobj.internalVisible2;
     }

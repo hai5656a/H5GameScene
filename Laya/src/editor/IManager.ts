@@ -8,5 +8,6 @@ export interface IManager{
     addTouch();
     removeTouch();
     onFPS();
+    onPause();
     checkVisible(gobj);
 }
