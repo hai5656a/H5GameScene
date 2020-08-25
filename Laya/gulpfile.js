@@ -21,9 +21,11 @@ gulp.task("default", function () {
 		treeshake: false, //建议忽略
 		plugins: [
 			typescript({
+				tsconfig:workSpaceDir + "tsconfig.json",
 				check: true, //Set to false to avoid doing any diagnostic checks on the code
-				tsconfigOverride:{compilerOptions:{removeComments: true},compress:true},
-				include:"**/*.ts",
+				tsconfigOverride:{compilerOptions:{removeComments: true}},
+				include:/.*.ts/,
+				cacheRoot: `${workSpaceDir}.rpt2_cache`,
 			}),
 			glsl({
 				// By default, everything gets included
@@ -36,7 +38,7 @@ gulp.task("default", function () {
 				},
 				numWorkers:1,//Amount of workers to spawn. Defaults to the number of CPUs minus 1
 				sourcemap: false
-			})*/   
+			})*/        
 		]
 	}).then(bundle => {
 		return bundle.write({
@@ -45,22 +47,26 @@ gulp.task("default", function () {
 			name: 'laya',
 			sourcemap: true
 		});
-	});
+	}).catch(err=>{
+			console.log(err);
+		
+	})
 });
 
+gulp.task('compile', gulp.series('default'));
 
 
-gulp.task('android',function()
-{
-	var command1 =' layanative2refreshres -p android_studio --path ./release/StrayStarShip';
-	var child1 = child_process.exec(command1);
-})
+// gulp.task('android',function()
+// {
+// 	var command1 =' layanative2refreshres -p android_studio --path ./release/StrayStarShip';
+// 	var child1 = child_process.exec(command1);
+// })
 
-gulp.task('ios',function()
-{
-	var command1 ='layanative2 refreshres -p ios --path ./release/StrayStarShip';
-	var child1 = child_process.exec(command1);
-})
+// gulp.task('ios',function()
+// {
+// 	var command1 ='layanative2 refreshres -p ios --path ./release/StrayStarShip';
+// 	var child1 = child_process.exec(command1);
+// })
 
 // gulp.task('laya', function() {   
 //     gulp.src('./bin/libs/*.js')//找到项目下paths变量所定义的script文件  

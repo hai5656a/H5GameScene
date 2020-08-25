@@ -1,8 +1,8 @@
-import Consts from "./Consts";
-import EditorEvent from "./EditorEvent";
-import { IManager } from "./IManager";
+import Consts from "../Consts";
+import EditorEvent from "../EditorEvent";
+import { IEngineManager } from "./IEngineManager";
 
-export default class  EgretManager implements IManager{
+export default class  EgretManager implements IEngineManager{
     private static  i:EgretManager;
     static getInstance(){
         if(this.i==null){
@@ -11,15 +11,15 @@ export default class  EgretManager implements IManager{
         return this.i;
     }
     type:string="Egret";
-    game;
+    engine;
     start(game){
-        this.game = game;
+        this.engine = game;
     }
     end(){
         if(this.isShowfps)
           this.onFPS()
-        this.removeTouch();
-        this.game = null;
+        this.removeSelectModel();
+        this.engine = null;
         
     }
     rect:fgui.GGraph;
@@ -34,7 +34,7 @@ export default class  EgretManager implements IManager{
         line.touchable = false;  
         
     }
-    showRect(x,y,w,h){
+    showFGUIRect(x,y,w,h){
         if(!this.rect||this.rect.isDisposed){
             this.createRectGraph();
         }
@@ -49,14 +49,14 @@ export default class  EgretManager implements IManager{
                 Consts.GRoot.addChild(this.rect);
             }
     }
-    hideRect(){
+    hideFGUIRect(){
         if(this.rect)
           this.rect.visible = false;
     }
     touchHander
   
     player;
-    addTouch(){
+    addSelectModel(){
         var containerList =Consts.gameWindow.document.querySelectorAll(".egret-player");
         var length = containerList.length;
         if(length>0){
@@ -70,14 +70,14 @@ export default class  EgretManager implements IManager{
     }
     onMouseDown(event){
         var location = this.player.webTouchHandler.getLocation(event);
-        var target =  this.game.lifecycle.stage.$hitTest(location.x, location.y);
+        var target =  this.engine.lifecycle.stage.$hitTest(location.x, location.y);
         if(target){
             let comp = target["$owner"];
             EditorEvent.event(EditorEvent.Selection,comp);
             console.log(target);
         }
     }
-    removeTouch(){
+    removeSelectModel(){
         if(this.touchHander&&this.player){
             this.player.canvas.removeEventListener('mousedown',this.touchHander);
             this.player.webTouchHandler.touch.maxTouches = 1;
@@ -93,7 +93,7 @@ export default class  EgretManager implements IManager{
     }
     isShowfps
     onFPS(){
-        if( !this.game||!Consts.gameWindow)
+        if( !this.engine||!Consts.gameWindow)
         return;
         let panel =Consts.gameWindow.document.getElementById('egret-fps-panel');
         if(panel){
@@ -117,15 +117,15 @@ export default class  EgretManager implements IManager{
     }
     
     onPause(){
-        if( !this.game)
+        if( !this.engine)
          return;
-        if(this.game.ticker.isPaused){
-            this.game.ticker.resume();
+        if(this.engine.ticker.isPaused){
+            this.engine.ticker.resume();
         }else {
-            this.game.ticker.pause()
+            this.engine.ticker.pause()
         };
     }
-    checkVisible(gobj){
+    checkFGUIVisible(gobj){
         return gobj.internalVisible2;
     }
 }

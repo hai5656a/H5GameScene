@@ -1,9 +1,9 @@
 import DocumentView from "../fgui/Builder/DocumentView";
 import Consts from "../editor/Consts";
 import EditorEvent from "../editor/EditorEvent";
-import LayaManager from "../editor/LayaManager";
-import EgretManager from "../editor/EgretManager";
-import CCManager from "../editor/CCManager";
+import LayaManager from "../editor/engine/LayaManager";
+import EgretManager from "../editor/engine/EgretManager";
+import CCManager from "../editor/engine/CCManager";
 
 export default class DocumentUI{
     view:DocumentView;
@@ -55,8 +55,8 @@ export default class DocumentUI{
         EditorEvent.event(EditorEvent.ClickChanged);
     }
     onClickChange(){
-        if( Consts.manager)
-          Consts.manager.hideRect()
+        if( Consts.engineManager)
+          Consts.engineManager.hideFGUIRect()
     }
     resize(){
         let value =  this.view.m_device.value.split(":");
@@ -98,30 +98,30 @@ export default class DocumentUI{
         this.frame.height = h;
         localStorage.setItem("device",this.view.m_device.selectedIndex+"");
         localStorage.setItem("orientation",this.view.m_orientation.selectedIndex+"");
-        if( Consts.manager)
-          Consts.manager.hideRect()
+        if( Consts.engineManager)
+          Consts.engineManager.hideFGUIRect()
     }
     onFPS(){
-        if( Consts.manager)
-           Consts.manager.onFPS();
+        if( Consts.engineManager)
+           Consts.engineManager.onFPS();
     }
     onPause(){
-        if( Consts.manager)
-           Consts.manager.onPause();
+        if( Consts.engineManager)
+           Consts.engineManager.onPause();
     }
     changeType(){
         if(this.view.m_editType.selectedIndex==1){
             EditorEvent.event(EditorEvent.TreeChanged);
-            if( Consts.manager)
-               Consts.manager.addTouch();
+            if( Consts.engineManager)
+               Consts.engineManager.addSelectModel();
             // if(Consts.gameLaya){
             //     Consts.gameLaya.stage.on("mouseup",this,this.selectClick);
             // }else if(Consts.gameEgret){
             //     Consts.gameEgret.lifecycle.stage.addEventListener("touchBegin",this.selectClick,this);
             // }
         }else{
-            if( Consts.manager)
-                Consts.manager.removeTouch();
+            if( Consts.engineManager)
+                Consts.engineManager.removeSelectModel();
             // if(Consts.gameLaya){
             //     Consts.gameLaya.stage.off("mouseup",this,this.selectClick);
             // }else if(Consts.gameEgret){
@@ -144,9 +144,9 @@ export default class DocumentUI{
       
         Consts.gameFgui = null;
         Consts.GRoot = null;
-        if(Consts.manager){
-            Consts.manager.end();
-            Consts.manager = null;
+        if(Consts.engineManager){
+            Consts.engineManager.end();
+            Consts.engineManager = null;
         }
         this.view.m_editType.selectedIndex = 0;
         this.frame.src = url;
@@ -157,14 +157,14 @@ export default class DocumentUI{
         var gamefgui = win.fairygui?win.fairygui:win.fgui;
         Consts.gameWindow = win;
         if(win.Laya){
-            Consts.manager = LayaManager.getInstance();
-            Consts.manager.start(win.Laya);
+            Consts.engineManager = LayaManager.getInstance();
+            Consts.engineManager.start(win.Laya);
         }else if(win.egret){
-            Consts.manager = EgretManager.getInstance();
-            Consts.manager.start(win.egret);
+            Consts.engineManager = EgretManager.getInstance();
+            Consts.engineManager.start(win.egret);
         }else if(win.cc){
-            Consts.manager = CCManager.getInstance();
-            Consts.manager.start(win.cc);
+            Consts.engineManager = CCManager.getInstance();
+            Consts.engineManager.start(win.cc);
         }
         if(gamefgui){
             
@@ -199,7 +199,7 @@ export default class DocumentUI{
             let y =p.y;
             let width =pr.x-p.x;
             let height = pr.y-p.y;
-            Consts.manager.showRect(x,y,width,height);
+            Consts.engineManager.showFGUIRect(x,y,width,height);
             // this.line.setSize(width,height);
             // this.line.x = x;
             // this.line.y = y;
@@ -218,7 +218,7 @@ export default class DocumentUI{
         }else{
             // this.lineStyle.display = "none";
             // this.line.visible = false;
-            Consts.manager.hideRect();
+            Consts.engineManager.hideFGUIRect();
         }
     }
 }

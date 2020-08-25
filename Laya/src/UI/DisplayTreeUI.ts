@@ -65,7 +65,7 @@ export default class DisplayTreeUI{
 
         obj.text = cname;
         obj.icon = Consts.getFguiIcon(gobj);
-        obj.alpha = Consts.manager.checkVisible(gobj)?1:0.5;
+        obj.alpha = Consts.engineManager.checkFGUIVisible(gobj)?1:0.5;
     }
     onClickItem(item: fgui.GObject){
         this.selectItem = item;

@@ -1,11 +1,11 @@
 import FObjectType from "./FObjectType";
 import FPackageItemType from "./FPackageItemType";
-import { IManager } from "./IManager";
+import { IEngineManager } from "./engine/IEngineManager";
 
 export default class Consts{
     public static gameWindow:Window;
     public static gameFgui;
-    public static manager:IManager;
+    public static engineManager:IEngineManager;
     public static GRoot:fairygui.GRoot;
     public static  icons = {};
     public static EditorLineName = "$$EditorLine";

@@ -306,7 +306,7 @@
                 cname = gobj.name;
             obj.text = cname;
             obj.icon = Consts.getFguiIcon(gobj);
-            obj.alpha = Consts.manager.checkVisible(gobj) ? 1 : 0.5;
+            obj.alpha = Consts.engineManager.checkFGUIVisible(gobj) ? 1 : 0.5;
         }
         onClickItem(item) {
             this.selectItem = item;
@@ -346,13 +346,13 @@
             return this.i;
         }
         start(game) {
-            this.game = game;
+            this.engine = game;
         }
         end() {
             if (this.isShowfps)
                 this.onFPS();
-            this.removeTouch();
-            this.game = null;
+            this.removeSelectModel();
+            this.engine = null;
         }
         createRectGraph() {
             if (this.rect) {
@@ -365,7 +365,7 @@
             line.name = Consts.EditorLineName;
             line.touchable = false;
         }
-        showRect(x, y, w, h) {
+        showFGUIRect(x, y, w, h) {
             if (!this.rect || this.rect.isDisposed) {
                 this.createRectGraph();
             }
@@ -381,17 +381,17 @@
                 Consts.GRoot.addChild(this.rect);
             }
         }
-        hideRect() {
+        hideFGUIRect() {
             if (this.rect)
                 this.rect.visible = false;
         }
-        addTouch() {
-            this.game.MouseManager.enabled = false;
+        addSelectModel() {
+            this.engine.MouseManager.enabled = false;
             this.touchHander = this.onMouseDown.bind(this);
-            this.game.Render.canvas.addEventListener('mousedown', this.touchHander);
+            this.engine.Render.canvas.addEventListener('mousedown', this.touchHander);
         }
         onMouseDown(evt) {
-            let mouseManager = this.game.MouseManager.instance;
+            let mouseManager = this.engine.MouseManager.instance;
             mouseManager.initEvent(evt);
             mouseManager._checkAllBaseUI(mouseManager.mouseX, mouseManager.mouseY, () => {
                 if (mouseManager._target) {
@@ -400,11 +400,11 @@
                 }
             });
         }
-        removeTouch() {
-            if (this.game) {
-                this.game.MouseManager.enabled = true;
+        removeSelectModel() {
+            if (this.engine) {
+                this.engine.MouseManager.enabled = true;
                 if (this.touchHander) {
-                    this.game.Render.canvas.removeEventListener('mousedown', this.touchHander);
+                    this.engine.Render.canvas.removeEventListener('mousedown', this.touchHander);
                 }
             }
         }
@@ -414,18 +414,27 @@
             console.log(evt);
         }
         onFPS() {
-            if (!this.game)
+            if (!this.engine)
                 return;
             if (this.isShowfps) {
-                this.game.Stat.hide();
+                this.engine.Stat.hide();
                 this.isShowfps = false;
             }
             else {
                 this.isShowfps = true;
-                this.game.Stat.show();
+                this.engine.Stat.show();
             }
         }
-        checkVisible(gobj) {
+        onPause() {
+            if (!this.engine)
+                return;
+            if (this.engine.timer.scale == 0) {
+                this.engine.timer.scale = 1;
+            }
+            else
+                this.engine.timer.scale = 0;
+        }
+        checkFGUIVisible(gobj) {
             return gobj.internalVisible2;
         }
     }
@@ -441,13 +450,13 @@
             return this.i;
         }
         start(game) {
-            this.game = game;
+            this.engine = game;
         }
         end() {
             if (this.isShowfps)
                 this.onFPS();
-            this.removeTouch();
-            this.game = null;
+            this.removeSelectModel();
+            this.engine = null;
         }
         createRectGraph() {
             if (this.rect) {
@@ -459,7 +468,7 @@
             line.name = Consts.EditorLineName;
             line.touchable = false;
         }
-        showRect(x, y, w, h) {
+        showFGUIRect(x, y, w, h) {
             if (!this.rect || this.rect.isDisposed) {
                 this.createRectGraph();
             }
@@ -475,11 +484,11 @@
                 Consts.GRoot.addChild(this.rect);
             }
         }
-        hideRect() {
+        hideFGUIRect() {
             if (this.rect)
                 this.rect.visible = false;
         }
-        addTouch() {
+        addSelectModel() {
             var containerList = Consts.gameWindow.document.querySelectorAll(".egret-player");
             var length = containerList.length;
             if (length > 0) {
@@ -493,14 +502,14 @@
         }
         onMouseDown(event) {
             var location = this.player.webTouchHandler.getLocation(event);
-            var target = this.game.lifecycle.stage.$hitTest(location.x, location.y);
+            var target = this.engine.lifecycle.stage.$hitTest(location.x, location.y);
             if (target) {
                 let comp = target["$owner"];
                 EditorEvent.event(EditorEvent.Selection, comp);
                 console.log(target);
             }
         }
-        removeTouch() {
+        removeSelectModel() {
             if (this.touchHander && this.player) {
                 this.player.canvas.removeEventListener('mousedown', this.touchHander);
                 this.player.webTouchHandler.touch.maxTouches = 1;
@@ -513,7 +522,7 @@
             console.log(evt);
         }
         onFPS() {
-            if (!this.game || !Consts.gameWindow)
+            if (!this.engine || !Consts.gameWindow)
                 return;
             let panel = Consts.gameWindow.document.getElementById('egret-fps-panel');
             if (panel) {
@@ -537,7 +546,18 @@
                 }
             }
         }
-        checkVisible(gobj) {
+        onPause() {
+            if (!this.engine)
+                return;
+            if (this.engine.ticker.isPaused) {
+                this.engine.ticker.resume();
+            }
+            else {
+                this.engine.ticker.pause();
+            }
+            ;
+        }
+        checkFGUIVisible(gobj) {
             return gobj.internalVisible2;
         }
     }
@@ -553,11 +573,11 @@
             return this.i;
         }
         start(game) {
-            this.game = game;
+            this.engine = game;
         }
         end() {
-            this.removeTouch();
-            this.game = null;
+            this.removeSelectModel();
+            this.engine = null;
         }
         createRectGraph() {
             if (this.rect) {
@@ -566,9 +586,9 @@
             }
             let line = this.rect = new Consts.gameFgui.GGraph();
             let color = Consts.rectColorStr;
-            let c = new this.game.Color(0, 0, 0, 255);
+            let c = new this.engine.Color(0, 0, 0, 255);
             c.fromHEX(color);
-            let c2 = new this.game.Color(0, 0, 0, 255);
+            let c2 = new this.engine.Color(0, 0, 0, 255);
             c2.fromHEX(color);
             c2.setA(255 * Consts.rectFill);
             line.drawRect(Consts.rectLineSize, c, c2);
@@ -576,7 +596,7 @@
             line.name = Consts.EditorLineName;
             line.touchable = false;
         }
-        showRect(x, y, w, h) {
+        showFGUIRect(x, y, w, h) {
             if (!this.rect || !this.rect._node) {
                 this.createRectGraph();
             }
@@ -592,20 +612,20 @@
                 Consts.GRoot.addChild(this.rect);
             }
         }
-        hideRect() {
+        hideFGUIRect() {
             if (this.rect)
                 this.rect.visible = false;
         }
-        addTouch() {
+        addSelectModel() {
             this.touchHander = this.onMouseDown.bind(this);
-            this.game.game.canvas.addEventListener('mousedown', this.touchHander);
-            let evt = this.game.internal.eventManager;
+            this.engine.game.canvas.addEventListener('mousedown', this.touchHander);
+            let evt = this.engine.internal.eventManager;
             if (evt) {
                 evt._isEnabled = false;
             }
         }
         hitTestScene(pos) {
-            var node = this.game.director.getScene();
+            var node = this.engine.director.getScene();
             this.target = null;
             for (let i = 0; i < node.children.length; i++) {
                 this.hitTest(node.children[i], pos);
@@ -622,10 +642,10 @@
             }
         }
         onMouseDown(event) {
-            let selfPointer = this.game.internal.inputManager;
+            let selfPointer = this.engine.internal.inputManager;
             var canvasBoundingRect = selfPointer._canvasBoundingRect;
             var location = selfPointer.getPointByEvent(event, canvasBoundingRect);
-            var EventMouse = this.game.Event.EventMouse;
+            var EventMouse = this.engine.Event.EventMouse;
             var mouseEvent = selfPointer.getMouseEvent(location, canvasBoundingRect, EventMouse.DOWN);
             mouseEvent.setButton(event.button);
             var pos = mouseEvent.getLocation();
@@ -638,24 +658,35 @@
             event.stopPropagation();
             event.preventDefault();
         }
-        removeTouch() {
-            if (this.game) {
-                let evt = this.game.internal.eventManager;
+        removeSelectModel() {
+            if (this.engine) {
+                let evt = this.engine.internal.eventManager;
                 if (evt) {
                     evt._isEnabled = true;
                 }
                 if (this.touchHander) {
-                    this.game.game.canvas.removeEventListener('mousedown', this.touchHander);
+                    this.engine.game.canvas.removeEventListener('mousedown', this.touchHander);
                 }
             }
         }
         onFPS() {
-            if (!this.game)
+            if (!this.engine)
                 return;
-            var show = !this.game.debug.isDisplayStats();
-            this.game.debug.setDisplayStats(show);
+            var show = !this.engine.debug.isDisplayStats();
+            this.engine.debug.setDisplayStats(show);
         }
-        checkVisible(gobj) {
+        onPause() {
+            if (!this.engine)
+                return;
+            var shouldPause = !this.engine.game.isPaused();
+            if (shouldPause) {
+                this.engine.game.pause();
+            }
+            else {
+                this.engine.game.resume();
+            }
+        }
+        checkFGUIVisible(gobj) {
             return gobj._finalVisible;
         }
     }
@@ -679,6 +710,7 @@
             this.view.m_orientation.on(fairygui.Events.STATE_CHANGED, this, this.resize);
             this.view.m_editType.on(fairygui.Events.STATE_CHANGED, this, this.changeType);
             this.view.m_btnfps.onClick(this, this.onFPS);
+            this.view.m_btnpause.onClick(this, this.onPause);
             Laya.stage.on(Laya.Event.RESIZE, this, this.resize);
             this.resize();
             this.view.onClick(this, this.onClick);
@@ -700,8 +732,8 @@
             EditorEvent.event(EditorEvent.ClickChanged);
         }
         onClickChange() {
-            if (Consts.manager)
-                Consts.manager.hideRect();
+            if (Consts.engineManager)
+                Consts.engineManager.hideFGUIRect();
         }
         resize() {
             let value = this.view.m_device.value.split(":");
@@ -743,31 +775,35 @@
             this.frame.height = h;
             localStorage.setItem("device", this.view.m_device.selectedIndex + "");
             localStorage.setItem("orientation", this.view.m_orientation.selectedIndex + "");
-            if (Consts.manager)
-                Consts.manager.hideRect();
+            if (Consts.engineManager)
+                Consts.engineManager.hideFGUIRect();
         }
         onFPS() {
-            if (Consts.manager)
-                Consts.manager.onFPS();
+            if (Consts.engineManager)
+                Consts.engineManager.onFPS();
+        }
+        onPause() {
+            if (Consts.engineManager)
+                Consts.engineManager.onPause();
         }
         changeType() {
             if (this.view.m_editType.selectedIndex == 1) {
                 EditorEvent.event(EditorEvent.TreeChanged);
-                if (Consts.manager)
-                    Consts.manager.addTouch();
+                if (Consts.engineManager)
+                    Consts.engineManager.addSelectModel();
             }
             else {
-                if (Consts.manager)
-                    Consts.manager.removeTouch();
+                if (Consts.engineManager)
+                    Consts.engineManager.removeSelectModel();
             }
         }
         goweb(url) {
             Consts.gameWindow = null;
             Consts.gameFgui = null;
             Consts.GRoot = null;
-            if (Consts.manager) {
-                Consts.manager.end();
-                Consts.manager = null;
+            if (Consts.engineManager) {
+                Consts.engineManager.end();
+                Consts.engineManager = null;
             }
             this.view.m_editType.selectedIndex = 0;
             this.frame.src = url;
@@ -778,16 +814,16 @@
             var gamefgui = win.fairygui ? win.fairygui : win.fgui;
             Consts.gameWindow = win;
             if (win.Laya) {
-                Consts.manager = LayaManager.getInstance();
-                Consts.manager.start(win.Laya);
+                Consts.engineManager = LayaManager.getInstance();
+                Consts.engineManager.start(win.Laya);
             }
             else if (win.egret) {
-                Consts.manager = EgretManager.getInstance();
-                Consts.manager.start(win.egret);
+                Consts.engineManager = EgretManager.getInstance();
+                Consts.engineManager.start(win.egret);
             }
             else if (win.cc) {
-                Consts.manager = CCManager.getInstance();
-                Consts.manager.start(win.cc);
+                Consts.engineManager = CCManager.getInstance();
+                Consts.engineManager.start(win.cc);
             }
             if (gamefgui) {
                 Consts.gameFgui = gamefgui;
@@ -811,10 +847,10 @@
                 let y = p.y;
                 let width = pr.x - p.x;
                 let height = pr.y - p.y;
-                Consts.manager.showRect(x, y, width, height);
+                Consts.engineManager.showFGUIRect(x, y, width, height);
             }
             else {
-                Consts.manager.hideRect();
+                Consts.engineManager.hideFGUIRect();
             }
         }
     }
@@ -1121,6 +1157,7 @@
             this.m_landscape = (this.getChildAt(8));
             this.m_portrait = (this.getChildAt(9));
             this.m_btnfps = (this.getChildAt(11));
+            this.m_btnpause = (this.getChildAt(12));
         }
     }
     DocumentView.URL = "ui://2pshu6oimlmb1nry31x";

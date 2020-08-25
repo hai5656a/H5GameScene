@@ -1,8 +1,8 @@
-import Consts from "./Consts";
-import EditorEvent from "./EditorEvent";
-import { IManager } from "./IManager";
+import Consts from "../Consts";
+import EditorEvent from "../EditorEvent";
+import { IEngineManager } from "./IEngineManager";
 
-export default class  CCManager implements IManager{
+export default class  CCManager implements IEngineManager{
     private static  i:CCManager;
     static getInstance(){
         if(this.i==null){
@@ -11,13 +11,13 @@ export default class  CCManager implements IManager{
         return this.i;
     }
     type:string="Cocos Creator";
-    game;
+    engine;
     start(game){
-        this.game = game;
+        this.engine = game;
     }
     end(){
-        this.removeTouch();
-        this.game = null;
+        this.removeSelectModel();
+        this.engine = null;
     }
     rectNode
     rect;
@@ -28,9 +28,9 @@ export default class  CCManager implements IManager{
         }
         let line =this.rect= new Consts.gameFgui.GGraph();
         let color = Consts.rectColorStr;
-        let c =  new this.game.Color(0,0,0,255);
+        let c =  new this.engine.Color(0,0,0,255);
         c.fromHEX(color);
-        let c2 =  new this.game.Color(0,0,0,255);
+        let c2 =  new this.engine.Color(0,0,0,255);
         c2.fromHEX(color);
         c2.setA(255*Consts.rectFill)
         line.drawRect(Consts.rectLineSize, c,c2);
@@ -39,7 +39,7 @@ export default class  CCManager implements IManager{
         line.touchable = false;  
         
     }
-    showRect(x,y,w,h){
+    showFGUIRect(x,y,w,h){
         if(!this.rect||!this.rect._node){
             this.createRectGraph();
         }
@@ -54,22 +54,22 @@ export default class  CCManager implements IManager{
                 Consts.GRoot.addChild(this.rect);
             }
     }
-    hideRect(){
+    hideFGUIRect(){
         if(this.rect)
           this.rect.visible = false;
     }
     touchHander
-    addTouch(){
+    addSelectModel(){
       this.touchHander = this.onMouseDown.bind(this);
-      this.game.game.canvas.addEventListener('mousedown',this.touchHander);
-     let evt = this.game.internal.eventManager;
+      this.engine.game.canvas.addEventListener('mousedown',this.touchHander);
+     let evt = this.engine.internal.eventManager;
      if(evt){
         evt._isEnabled=false;
      }
     }
 
     hitTestScene(pos){
-        var node = this.game.director.getScene();
+        var node = this.engine.director.getScene();
         this.target = null;
         for(let i = 0;i<node.children.length;i++){
             this.hitTest(node.children[i],pos)
@@ -87,10 +87,10 @@ export default class  CCManager implements IManager{
         }
     }
     onMouseDown(event){
-       let selfPointer= this.game.internal.inputManager;
+       let selfPointer= this.engine.internal.inputManager;
        var canvasBoundingRect = selfPointer._canvasBoundingRect;
        var location = selfPointer.getPointByEvent(event, canvasBoundingRect);
-       var EventMouse = this.game.Event.EventMouse;
+       var EventMouse = this.engine.Event.EventMouse;
        var mouseEvent = selfPointer.getMouseEvent(location, canvasBoundingRect, EventMouse.DOWN);
        mouseEvent.setButton(event.button);
        var pos = mouseEvent.getLocation();
@@ -104,37 +104,37 @@ export default class  CCManager implements IManager{
        event.stopPropagation();
        event.preventDefault();
     }
-    removeTouch(){
-        if(this.game){
-            let evt = this.game.internal.eventManager;
+    removeSelectModel(){
+        if(this.engine){
+            let evt = this.engine.internal.eventManager;
             if(evt){
                evt._isEnabled=true;
             }
             if(this.touchHander){
-                this.game.game.canvas.removeEventListener('mousedown',this.touchHander);
+                this.engine.game.canvas.removeEventListener('mousedown',this.touchHander);
             }
         }
         
     }
     
     onFPS(){
-        if( !this.game)
+        if( !this.engine)
          return;
-         var show = !this.game.debug.isDisplayStats();
-         this.game.debug.setDisplayStats(show);  
+         var show = !this.engine.debug.isDisplayStats();
+         this.engine.debug.setDisplayStats(show);  
     }
     onPause(){
-        if( !this.game)
+        if( !this.engine)
          return;
-         var shouldPause = !this.game.game.isPaused();
+         var shouldPause = !this.engine.game.isPaused();
             if (shouldPause) {
-                this.game.game.pause();
+                this.engine.game.pause();
             } 
             else {
-                this.game.game.resume();
+                this.engine.game.resume();
             }
     }
-    checkVisible(gobj){
+    checkFGUIVisible(gobj){
         return gobj._finalVisible;
     }
 }

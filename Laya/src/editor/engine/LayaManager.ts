@@ -1,8 +1,8 @@
-import Consts from "./Consts";
-import EditorEvent from "./EditorEvent";
-import { IManager } from "./IManager";
+import Consts from "../Consts";
+import EditorEvent from "../EditorEvent";
+import { IEngineManager } from "./IEngineManager";
 
-export default class  LayaManager implements IManager{
+export default class  LayaManager implements IEngineManager{
     private static  i:LayaManager;
     static getInstance(){
         if(this.i==null){
@@ -11,15 +11,15 @@ export default class  LayaManager implements IManager{
         return this.i;
     }
     type:string="Laya";
-    game;
+    engine;
     start(game){
-        this.game = game;
+        this.engine = game;
     }
     end(){
         if(this.isShowfps)
           this.onFPS()
-        this.removeTouch();
-        this.game = null;
+        this.removeSelectModel();
+        this.engine = null;
     }
     rect:fgui.GGraph;
     createRectGraph(){
@@ -35,7 +35,7 @@ export default class  LayaManager implements IManager{
         line.touchable = false;  
         
     }
-    showRect(x,y,w,h){
+    showFGUIRect(x,y,w,h){
         if(!this.rect||this.rect.isDisposed){
             this.createRectGraph();
         }
@@ -50,18 +50,18 @@ export default class  LayaManager implements IManager{
                 Consts.GRoot.addChild(this.rect);
             }
     }
-    hideRect(){
+    hideFGUIRect(){
         if(this.rect)
           this.rect.visible = false;
     }
     touchHander
-    addTouch(){
-      this.game.MouseManager.enabled = false;
+    addSelectModel(){
+      this.engine.MouseManager.enabled = false;
       this.touchHander = this.onMouseDown.bind(this);
-      this.game.Render.canvas.addEventListener('mousedown',this.touchHander);
+      this.engine.Render.canvas.addEventListener('mousedown',this.touchHander);
     }
     onMouseDown(evt){
-        let mouseManager = this.game.MouseManager.instance
+        let mouseManager = this.engine.MouseManager.instance
         mouseManager.initEvent(evt);
         mouseManager._checkAllBaseUI(mouseManager.mouseX, mouseManager.mouseY, ()=>{
             if(mouseManager._target){
@@ -71,11 +71,11 @@ export default class  LayaManager implements IManager{
         })
        
     }
-    removeTouch(){
-        if(this.game){
-            this.game.MouseManager.enabled = true;
+    removeSelectModel(){
+        if(this.engine){
+            this.engine.MouseManager.enabled = true;
             if(this.touchHander){
-                this.game.Render.canvas.removeEventListener('mousedown',this.touchHander);
+                this.engine.Render.canvas.removeEventListener('mousedown',this.touchHander);
             }
         }
         
@@ -89,25 +89,25 @@ export default class  LayaManager implements IManager{
     }
     isShowfps
     onFPS(){
-        if( !this.game)
+        if( !this.engine)
          return;
         if(this.isShowfps){
-            this.game.Stat.hide()
+            this.engine.Stat.hide()
             this.isShowfps = false;
         }else{
             this.isShowfps = true;
-            this.game.Stat.show();
+            this.engine.Stat.show();
         }
            
     }
     onPause(){
-        if( !this.game)
+        if( !this.engine)
          return;
-        if(this.game.timer.scale==0){
-            this.game.timer.scale = 1;
-        }else this.game.timer.scale = 0;
+        if(this.engine.timer.scale==0){
+            this.engine.timer.scale = 1;
+        }else this.engine.timer.scale = 0;
     }
-    checkVisible(gobj){
+    checkFGUIVisible(gobj){
         return gobj.internalVisible2;
     }
    
