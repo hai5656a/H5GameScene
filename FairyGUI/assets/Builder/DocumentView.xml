@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="710,681" bgColorEnabled="true" bgColor="#383838">
-  <controller name="editType" pages="1,,0," selected="1"/>
+  <controller name="editType" pages="1,,0," selected="0"/>
   <controller name="orientation" pages="0,landscape,1,portriait" selected="0"/>
   <displayList>
     <graph id="n7" name="docBg" xy="5,57" size="700,620" type="rect" lineSize="0" lineColor="#fc292828" fillColor="#ff666666">
@@ -13,10 +13,10 @@
       <relation target="" sidePair="width-width"/>
     </graph>
     <component id="n57" name="hand" src="gj1q8v" fileName="Button/FlatIconButton_Radio.xml" pkg="nk9ejx23" xy="35,6" size="28,24" tooltips="游戏模式">
-      <Button icon="ui://2pshu6oiau3n1g" controller="editType" page="1"/>
+      <Button checked="true" icon="ui://2pshu6oiau3n1g" controller="editType" page="1"/>
     </component>
     <component id="n60" name="arrow" src="gj1q8v" fileName="Button/FlatIconButton_Radio.xml" pkg="nk9ejx23" xy="3,6" size="28,24" tooltips="鼠标右键选择模式(Ctrl快速切换) ">
-      <Button checked="true" icon="ui://2pshu6oiau3n1i" controller="editType" page="0"/>
+      <Button icon="ui://2pshu6oiau3n1i" controller="editType" page="0"/>
     </component>
     <image id="n58" name="n58" src="au3n39" fileName="HzSeperator.png" pkg="nk9ejx23" xy="69,7" size="1,22"/>
     <component id="n92_p0d9" name="device" src="gcza18" fileName="ComboBox/ComboBox.xml" pkg="nk9ejx23" xy="163,9" size="197,20">
@@ -38,6 +38,9 @@
     <image id="n96_e1jj" name="n96" src="au3n39" fileName="HzSeperator.png" pkg="nk9ejx23" xy="422,7" size="1,22"/>
     <component id="n97_e1jj" name="btnfps" src="xualm" fileName="Button/Button.xml" pkg="nk9ejx23" xy="434,5">
       <Button title="FPS" titleFontSize="14"/>
+    </component>
+    <component id="n98_jift" name="btnpause" src="xualm" fileName="Button/Button.xml" pkg="nk9ejx23" xy="531,5">
+      <Button title="Pause" titleFontSize="14"/>
     </component>
   </displayList>
 </component>
