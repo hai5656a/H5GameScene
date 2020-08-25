@@ -13,7 +13,7 @@ export default class InfoPropsUI{
     }
     public setData(item:fairygui.GObject){
         this.item = item;
-        this.view.m_icon.icon = Consts.getFguiIcon(item);
+        this.view.m_icon.icon = Consts.displayList.getDisPlayIcon(item);
         this.view.m_title.text = Consts.getClassName(item);
     }
     clickItem(){

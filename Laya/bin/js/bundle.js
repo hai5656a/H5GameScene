@@ -140,58 +140,6 @@
             Consts.icons[FObjectType.EXT_SCROLLBAR] = fgui.UIPackage.getItemURL("Builder", "icon_scrollbar");
             Consts.icons["GObject"] = fgui.UIPackage.getItemURL("Builder", "icon_misc");
         }
-        static getFguiIcon(obj) {
-            let gamefgui = Consts.gameFgui;
-            if (obj instanceof gamefgui.GMovieClip) {
-                return Consts.icons[FObjectType.MOVIECLIP];
-            }
-            if (obj instanceof gamefgui.GImage) {
-                return Consts.icons[FObjectType.IMAGE];
-            }
-            if (obj instanceof gamefgui.GComboBox) {
-                return Consts.icons[FObjectType.EXT_COMBOBOX];
-            }
-            if (obj instanceof gamefgui.GSlider) {
-                return Consts.icons[FObjectType.EXT_SLIDER];
-            }
-            if (obj instanceof gamefgui.GGroup) {
-                return Consts.icons[FObjectType.GROUP];
-            }
-            if (obj instanceof gamefgui.GGraph) {
-                return Consts.icons[FObjectType.GRAPH];
-            }
-            if (obj instanceof gamefgui.GTree) {
-                return Consts.icons[FObjectType.TREE];
-            }
-            if (obj instanceof gamefgui.GList) {
-                return Consts.icons[FObjectType.LIST];
-            }
-            if (obj instanceof gamefgui.GLoader) {
-                return Consts.icons[FObjectType.LOADER];
-            }
-            if (obj instanceof gamefgui.GTextInput) {
-                return Consts.icons[FObjectType.INPUTTEXT];
-            }
-            if (obj instanceof gamefgui.GRichTextField) {
-                return Consts.icons[FObjectType.RICHTEXT];
-            }
-            if (obj instanceof gamefgui.GTextField) {
-                return Consts.icons[FObjectType.TEXT];
-            }
-            if (obj instanceof gamefgui.GProgressBar) {
-                return Consts.icons[FObjectType.EXT_PROGRESS_BAR];
-            }
-            if (obj instanceof gamefgui.GLabel) {
-                return Consts.icons[FObjectType.EXT_LABEL];
-            }
-            if (obj instanceof gamefgui.GButton) {
-                return Consts.icons[FObjectType.EXT_BUTTON];
-            }
-            if (obj instanceof gamefgui.GComponent) {
-                return Consts.icons[FObjectType.COMPONENT];
-            }
-            return Consts.icons["GObject"];
-        }
         static getClassName(obj) {
             if (obj && obj.constructor && obj.constructor.toString()) {
                 if (obj.constructor.name) {
@@ -259,13 +207,13 @@
             EditorEvent.on(EditorEvent.TreeChanged, this, this.onRefresh);
         }
         initTree() {
-            this.root = Consts.GRoot;
-            if (!this.root)
+            let root = Consts.displayList.root;
+            if (!root)
                 return;
             this.isExpand = false;
             this.view.m_btnCollapseAll.tooltips = "全部展开";
             this.view.m_treeView.numItems = 0;
-            this.createGObject(this.root, this.view.m_treeView.rootNode);
+            Consts.displayList.refreshList(this.view.m_treeView.rootNode);
             this.selectItem = null;
             EditorEvent.event(EditorEvent.SelectionChanged, null);
         }
@@ -276,42 +224,16 @@
                 EditorEvent.event(EditorEvent.SelectionChanged, itemNode.data);
             }
         }
-        createGObject(item, parent) {
-            if (item.name == Consts.EditorLineName)
-                return;
-            let node = this.createNode(item);
-            parent.addChild(node);
-            if (item.asCom.numChildren > 0) {
-                this.createChildren(item.asCom._children, node);
-            }
-        }
-        createChildren(items, parent) {
-            for (var i = 0; i < items.length; i++) {
-                this.createGObject(items[i], parent);
-            }
-        }
-        createNode(item) {
-            let node = new fgui.GTreeNode(item.asCom.numChildren > 0);
-            node.data = item;
-            item[Consts.EditorNodeName] = node;
-            return node;
-        }
         renderTreeNode(node, obj) {
             let gobj = node.data;
-            let cname = Consts.getClassName(gobj);
-            if (cname) {
-                cname = gobj.name + "(" + cname + ")";
-            }
-            else
-                cname = gobj.name;
-            obj.text = cname;
-            obj.icon = Consts.getFguiIcon(gobj);
-            obj.alpha = Consts.engineManager.checkFGUIVisible(gobj) ? 1 : 0.5;
+            obj.text = Consts.displayList.getDisPlayName(gobj);
+            obj.icon = Consts.displayList.getDisPlayIcon(gobj);
+            obj.alpha = Consts.displayList.isVisable(gobj) ? 1 : 0.5;
         }
         onClickItem(item) {
             this.selectItem = item;
             if (item.treeNode && item.treeNode.data) {
-                if (item.treeNode.data != Consts.GRoot && !item.treeNode.data.parent) {
+                if (!Consts.displayList.isShow(item.treeNode.data)) {
                     alert("对象已不显示，请刷新列表");
                     return;
                 }
@@ -359,7 +281,7 @@
                 this.rect.removeFromParent();
                 this.rect.dispose();
             }
-            let line = this.rect = new Consts.gameFgui.GGraph();
+            let line = this.rect = new Consts.displayList.displayModule.GGraph();
             let color = Consts.rectColorStr;
             line.drawRect(Consts.rectLineSize, color, null);
             line.name = Consts.EditorLineName;
@@ -378,7 +300,7 @@
                 this.rect.parent.setChildIndex(this.rect, this.rect.parent.numChildren - 1);
             }
             else {
-                Consts.GRoot.addChild(this.rect);
+                Consts.displayList.root.addChild(this.rect);
             }
         }
         hideFGUIRect() {
@@ -407,11 +329,6 @@
                     this.engine.Render.canvas.removeEventListener('mousedown', this.touchHander);
                 }
             }
-        }
-        selectClick(evt) {
-            let comp = evt.target["$owner"];
-            EditorEvent.event(EditorEvent.Selection, comp);
-            console.log(evt);
         }
         onFPS() {
             if (!this.engine)
@@ -463,7 +380,7 @@
                 this.rect.removeFromParent();
                 this.rect.dispose();
             }
-            let line = this.rect = new Consts.gameFgui.GGraph();
+            let line = this.rect = new Consts.displayList.displayModule.GGraph();
             line.drawRect(Consts.rectLineSize, Consts.rectColor, 1, Consts.rectColor, Consts.rectFill);
             line.name = Consts.EditorLineName;
             line.touchable = false;
@@ -481,7 +398,7 @@
                 this.rect.parent.setChildIndex(this.rect, this.rect.parent.numChildren - 1);
             }
             else {
-                Consts.GRoot.addChild(this.rect);
+                Consts.displayList.root.addChild(this.rect);
             }
         }
         hideFGUIRect() {
@@ -515,11 +432,6 @@
                 this.player.webTouchHandler.touch.maxTouches = 1;
                 this.player = null;
             }
-        }
-        selectClick(evt) {
-            let comp = evt.target["$owner"];
-            EditorEvent.event(EditorEvent.Selection, comp);
-            console.log(evt);
         }
         onFPS() {
             if (!this.engine || !Consts.gameWindow)
@@ -584,7 +496,7 @@
                 this.rect.removeFromParent();
                 this.rect.dispose();
             }
-            let line = this.rect = new Consts.gameFgui.GGraph();
+            let line = this.rect = new Consts.displayList.displayModule.GGraph();
             let color = Consts.rectColorStr;
             let c = new this.engine.Color(0, 0, 0, 255);
             c.fromHEX(color);
@@ -609,7 +521,7 @@
                 this.rect.parent.setChildIndex(this.rect, this.rect.parent.numChildren - 1);
             }
             else {
-                Consts.GRoot.addChild(this.rect);
+                Consts.displayList.root.addChild(this.rect);
             }
         }
         hideFGUIRect() {
@@ -688,6 +600,117 @@
         }
         checkFGUIVisible(gobj) {
             return gobj._finalVisible;
+        }
+    }
+
+    class FGUIDisplayList {
+        static getInstance() {
+            if (this.i == null) {
+                this.i = new FGUIDisplayList();
+            }
+            return this.i;
+        }
+        start(root, m) {
+            this.root = root;
+            this.displayModule = m;
+        }
+        ;
+        end() {
+            this.root = null;
+            this.displayModule = null;
+        }
+        ;
+        refreshList(parent) {
+            if (this.root) {
+                this.createDisplay(this.root, parent);
+            }
+        }
+        createDisplay(item, parent) {
+            if (item.name == Consts.EditorLineName)
+                return;
+            let node = this.createNode(item);
+            parent.addChild(node);
+            if (item.asCom.numChildren > 0) {
+                this.createChildren(item.asCom._children, node);
+            }
+        }
+        createChildren(items, parent) {
+            for (var i = 0; i < items.length; i++) {
+                this.createDisplay(items[i], parent);
+            }
+        }
+        createNode(item) {
+            let node = new fgui.GTreeNode(item.asCom.numChildren > 0);
+            node.data = item;
+            item[Consts.EditorNodeName] = node;
+            return node;
+        }
+        isShow(obj) {
+            return obj == this.root || obj.parent;
+        }
+        isVisable(obj) {
+            return Consts.engineManager.checkFGUIVisible(obj);
+        }
+        getDisPlayName(gobj) {
+            let cname = Consts.getClassName(gobj);
+            if (cname) {
+                cname = gobj.name + "(" + cname + ")";
+            }
+            else
+                cname = gobj.name;
+            return cname;
+        }
+        getDisPlayIcon(obj) {
+            let gamefgui = this.displayModule;
+            if (obj instanceof gamefgui.GMovieClip) {
+                return Consts.icons[FObjectType.MOVIECLIP];
+            }
+            if (obj instanceof gamefgui.GImage) {
+                return Consts.icons[FObjectType.IMAGE];
+            }
+            if (obj instanceof gamefgui.GComboBox) {
+                return Consts.icons[FObjectType.EXT_COMBOBOX];
+            }
+            if (obj instanceof gamefgui.GSlider) {
+                return Consts.icons[FObjectType.EXT_SLIDER];
+            }
+            if (obj instanceof gamefgui.GGroup) {
+                return Consts.icons[FObjectType.GROUP];
+            }
+            if (obj instanceof gamefgui.GGraph) {
+                return Consts.icons[FObjectType.GRAPH];
+            }
+            if (obj instanceof gamefgui.GTree) {
+                return Consts.icons[FObjectType.TREE];
+            }
+            if (obj instanceof gamefgui.GList) {
+                return Consts.icons[FObjectType.LIST];
+            }
+            if (obj instanceof gamefgui.GLoader) {
+                return Consts.icons[FObjectType.LOADER];
+            }
+            if (obj instanceof gamefgui.GTextInput) {
+                return Consts.icons[FObjectType.INPUTTEXT];
+            }
+            if (obj instanceof gamefgui.GRichTextField) {
+                return Consts.icons[FObjectType.RICHTEXT];
+            }
+            if (obj instanceof gamefgui.GTextField) {
+                return Consts.icons[FObjectType.TEXT];
+            }
+            if (obj instanceof gamefgui.GProgressBar) {
+                return Consts.icons[FObjectType.EXT_PROGRESS_BAR];
+            }
+            if (obj instanceof gamefgui.GLabel) {
+                return Consts.icons[FObjectType.EXT_LABEL];
+            }
+            if (obj instanceof gamefgui.GButton) {
+                return Consts.icons[FObjectType.EXT_BUTTON];
+            }
+            if (obj instanceof gamefgui.GComponent) {
+                return Consts.icons[FObjectType.COMPONENT];
+            }
+            return Consts.icons["GObject"];
         }
     }
 
@@ -799,8 +822,10 @@
         }
         goweb(url) {
             Consts.gameWindow = null;
-            Consts.gameFgui = null;
-            Consts.GRoot = null;
+            if (Consts.displayList) {
+                Consts.displayList.end();
+                Consts.displayList = null;
+            }
             if (Consts.engineManager) {
                 Consts.engineManager.end();
                 Consts.engineManager = null;
@@ -826,10 +851,10 @@
                 Consts.engineManager.start(win.cc);
             }
             if (gamefgui) {
-                Consts.gameFgui = gamefgui;
-                Consts.GRoot = gamefgui.GRoot._inst;
-                if (!Consts.GRoot)
+                if (!gamefgui.GRoot._inst)
                     return;
+                Consts.displayList = FGUIDisplayList.getInstance();
+                Consts.displayList.start(gamefgui.GRoot._inst, gamefgui);
                 Laya.timer.clear(this, this.frameLoad);
                 EditorEvent.event(EditorEvent.TreeChanged);
                 this.frame.contentWindow.document.onkeydown = this.keyDown.bind(this);
@@ -892,7 +917,7 @@
         }
         setData(item) {
             this.item = item;
-            this.view.m_icon.icon = Consts.getFguiIcon(item);
+            this.view.m_icon.icon = Consts.displayList.getDisPlayIcon(item);
             this.view.m_title.text = Consts.getClassName(item);
         }
         clickItem() {

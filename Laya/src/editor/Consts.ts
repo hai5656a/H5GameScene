@@ -1,12 +1,14 @@
 import FObjectType from "./FObjectType";
 import FPackageItemType from "./FPackageItemType";
 import { IEngineManager } from "./engine/IEngineManager";
+import { IDisplayList } from "./display/IDisplayList";
 
 export default class Consts{
     public static gameWindow:Window;
-    public static gameFgui;
+    
+    // public static GRoot:fairygui.GRoot;
     public static engineManager:IEngineManager;
-    public static GRoot:fairygui.GRoot;
+    public static displayList:IDisplayList;
     public static  icons = {};
     public static EditorLineName = "$$EditorLine";
     public static EditorNodeName = "$$Node";
@@ -45,60 +47,7 @@ export default class Consts{
         Consts.icons[FObjectType.EXT_SCROLLBAR] = fgui.UIPackage.getItemURL("Builder", "icon_scrollbar");
         Consts.icons["GObject"] = fgui.UIPackage.getItemURL("Builder", "icon_misc");
     }
-    public static getFguiIcon(obj:fgui.GObject){
-        let gamefgui = Consts.gameFgui; 
-        if(obj instanceof gamefgui.GMovieClip){
-            return Consts.icons[FObjectType.MOVIECLIP];
-        }
-        if(obj instanceof gamefgui.GImage){
-            return Consts.icons[FObjectType.IMAGE];
-        }
-        if(obj instanceof gamefgui.GComboBox){
-            return Consts.icons[FObjectType.EXT_COMBOBOX];
-        }
-        if(obj instanceof gamefgui.GSlider){
-            return Consts.icons[FObjectType.EXT_SLIDER];
-        }
-        if(obj instanceof gamefgui.GGroup){
-            return Consts.icons[FObjectType.GROUP];
-        }
-        if(obj instanceof gamefgui.GGraph){
-            return Consts.icons[FObjectType.GRAPH];
-        }
-        if(obj instanceof gamefgui.GTree){
-            return Consts.icons[FObjectType.TREE];
-        }
-        if(obj instanceof gamefgui.GList){
-            return Consts.icons[FObjectType.LIST];
-        }
-        if(obj instanceof gamefgui.GLoader){
-            return Consts.icons[FObjectType.LOADER];
-        }
-        if(obj instanceof gamefgui.GTextInput){
-            return Consts.icons[FObjectType.INPUTTEXT];
-        }
-        if(obj instanceof gamefgui.GRichTextField){
-            return Consts.icons[FObjectType.RICHTEXT];
-        }
-        if(obj instanceof gamefgui.GTextField){
-            return Consts.icons[FObjectType.TEXT];
-        }
-        if(obj instanceof gamefgui.GProgressBar){
-            return Consts.icons[FObjectType.EXT_PROGRESS_BAR];
-        }
-        if(obj instanceof gamefgui.GLabel){
-            return Consts.icons[FObjectType.EXT_LABEL];
-        }
-        if(obj instanceof gamefgui.GButton){
-            return Consts.icons[FObjectType.EXT_BUTTON];
-        }
-        if(obj instanceof gamefgui.GComponent){
-            return Consts.icons[FObjectType.COMPONENT];
-        }
-       
-        return  Consts.icons["GObject"];
-        
-    }
+    
     public static getClassName(obj) {
         if (obj && obj.constructor && obj.constructor.toString()) {
             if(obj.constructor.name) {

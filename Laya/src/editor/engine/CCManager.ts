@@ -26,7 +26,7 @@ export default class  CCManager implements IEngineManager{
             this.rect.removeFromParent();
             this.rect.dispose();
         }
-        let line =this.rect= new Consts.gameFgui.GGraph();
+        let line =this.rect= new Consts.displayList.displayModule.GGraph();
         let color = Consts.rectColorStr;
         let c =  new this.engine.Color(0,0,0,255);
         c.fromHEX(color);
@@ -51,7 +51,7 @@ export default class  CCManager implements IEngineManager{
             if(this.rect.parent){
                 this.rect.parent.setChildIndex(this.rect,this.rect.parent.numChildren-1);
             }else{
-                Consts.GRoot.addChild(this.rect);
+                Consts.displayList.root.addChild(this.rect);
             }
     }
     hideFGUIRect(){

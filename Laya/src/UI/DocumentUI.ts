@@ -4,6 +4,7 @@ import EditorEvent from "../editor/EditorEvent";
 import LayaManager from "../editor/engine/LayaManager";
 import EgretManager from "../editor/engine/EgretManager";
 import CCManager from "../editor/engine/CCManager";
+import FGUIDisplayList from "../editor/display/FGUIDisplayList";
 
 export default class DocumentUI{
     view:DocumentView;
@@ -141,9 +142,10 @@ export default class DocumentUI{
     // }
     goweb(url){
         Consts.gameWindow = null;
-      
-        Consts.gameFgui = null;
-        Consts.GRoot = null;
+        if(Consts.displayList){
+            Consts.displayList.end();
+            Consts.displayList = null;
+        }
         if(Consts.engineManager){
             Consts.engineManager.end();
             Consts.engineManager = null;
@@ -167,12 +169,12 @@ export default class DocumentUI{
             Consts.engineManager.start(win.cc);
         }
         if(gamefgui){
-            
-            Consts.gameFgui =gamefgui;
-            Consts.GRoot = gamefgui.GRoot._inst;
-            if(!Consts.GRoot)
+           
+            if(!gamefgui.GRoot._inst)
               return;
-            Laya.timer.clear(this,this.frameLoad);
+              Consts.displayList = FGUIDisplayList.getInstance(); 
+              Consts.displayList.start(gamefgui.GRoot._inst,gamefgui);   
+             Laya.timer.clear(this,this.frameLoad);
             // this.line = Consts.manager.createLineGraph();
            
             // // this.line.setSize (100,100);

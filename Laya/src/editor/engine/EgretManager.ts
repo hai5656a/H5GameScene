@@ -28,7 +28,7 @@ export default class  EgretManager implements IEngineManager{
             this.rect.removeFromParent();
             this.rect.dispose();
         }
-        let line =this.rect= new Consts.gameFgui.GGraph();
+        let line = this.rect = new Consts.displayList.displayModule.GGraph();
         line.drawRect(Consts.rectLineSize,Consts.rectColor,1,Consts.rectColor,Consts.rectFill);
         line.name = Consts.EditorLineName;
         line.touchable = false;  
@@ -46,7 +46,7 @@ export default class  EgretManager implements IEngineManager{
             if(this.rect.parent){
                 this.rect.parent.setChildIndex(this.rect,this.rect.parent.numChildren-1);
             }else{
-                Consts.GRoot.addChild(this.rect);
+                Consts.displayList.root.addChild(this.rect);
             }
     }
     hideFGUIRect(){
@@ -84,13 +84,13 @@ export default class  EgretManager implements IEngineManager{
             this.player = null;
         }
     }
-     selectClick(evt){
-        // evt.stopPropagation();
-       let comp = evt.target["$owner"];
-       EditorEvent.event(EditorEvent.Selection,comp);
+    //  selectClick(evt){
+    //     // evt.stopPropagation();
+    //    let comp = evt.target["$owner"];
+    //    EditorEvent.event(EditorEvent.Selection,comp);
       
-        console.log(evt);
-    }
+    //     console.log(evt);
+    // }
     isShowfps
     onFPS(){
         if( !this.engine||!Consts.gameWindow)
