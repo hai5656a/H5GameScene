@@ -9,7 +9,7 @@ window.screenOrientation = "sensor_landscape";
 
 //-----libs-begin-----
 loadLib("libs/laya.core.js")
-//-----libs-end-------
-loadLib("libs/fairygui/rawinflate.min.js");// 如果勾选了不压缩，这个库不需要
+loadLib("libs/fairygui/rawinflate.js");// 如果勾选了不压缩，这个库不需要
 loadLib("libs/fairygui/fairygui.js");// 只依赖laya.core,laya.html两个模块
+//-----libs-end-------
 loadLib("js/bundle.js");

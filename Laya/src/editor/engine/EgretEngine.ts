@@ -126,6 +126,6 @@ export default class  EgretEngine implements IEngine{
         };
     }
     checkFGUIVisible(gobj){
-        return gobj.internalVisible2;
+        return  gobj.internalVisible&& gobj.internalVisible2;
     }
 }

@@ -108,7 +108,7 @@ export default class  LayaEngine implements IEngine{
         }else this.engine.timer.scale = 0;
     }
     checkFGUIVisible(gobj){
-        return gobj.internalVisible2;
+        return gobj.internalVisible&& gobj.internalVisible2;
     }
    
 }

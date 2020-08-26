@@ -358,7 +358,7 @@
                 this.engine.timer.scale = 0;
         }
         checkFGUIVisible(gobj) {
-            return gobj.internalVisible2;
+            return gobj.internalVisible && gobj.internalVisible2;
         }
     }
 
@@ -476,7 +476,7 @@
             ;
         }
         checkFGUIVisible(gobj) {
-            return gobj.internalVisible2;
+            return gobj.internalVisible && gobj.internalVisible2;
         }
     }
 
@@ -1040,7 +1040,7 @@
             this.insp = new InspectorUI(this.view.m_insp);
             let str = Consts.GetQueryString("url");
             if (str) {
-                this.view.m_webset.text = decodeURI(str);
+                this.view.m_webset.text = decodeURIComponent(str);
                 this.goweb();
             }
             else {
@@ -1356,4 +1356,3 @@
     new Main();
 
 }());
-//# sourceMappingURL=bundle.js.map

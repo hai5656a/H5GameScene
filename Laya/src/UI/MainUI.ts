@@ -25,7 +25,7 @@ export default class MainUI{
         this.insp = new InspectorUI(this.view.m_insp);
         let str = Consts.GetQueryString("url");
         if(str){
-            this.view.m_webset.text = decodeURI(str);
+            this.view.m_webset.text = decodeURIComponent(str);
             this.goweb();
         }else{
             str =  Laya.LocalStorage.getItem("webURL");
