@@ -1,12 +1,12 @@
 import Consts from "../Consts";
 import EditorEvent from "../EditorEvent";
-import { IEngineManager } from "./IEngineManager";
+import { IEngine } from "./IEngine";
 
-export default class  EgretManager implements IEngineManager{
-    private static  i:EgretManager;
+export default class  EgretEngine implements IEngine{
+    private static  i:EgretEngine;
     static getInstance(){
         if(this.i==null){
-            this.i = new EgretManager();
+            this.i = new EgretEngine();
         }
         return this.i;
     }

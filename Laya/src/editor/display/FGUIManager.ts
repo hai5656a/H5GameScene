@@ -1,13 +1,13 @@
-import { IDisplayList } from "./IDisplayList";
+import { IDisplayManager } from "./IDisplayManager";
 import Consts from "../Consts";
 import FObjectType from "../FObjectType";
 
-export default class  FGUIDisplayList implements IDisplayList{
+export default class  FGUIManager implements IDisplayManager{
    
-    private static  i:FGUIDisplayList;
+    private static  i:FGUIManager;
     static getInstance(){
         if(this.i==null){
-            this.i = new FGUIDisplayList();
+            this.i = new FGUIManager();
         }
         return this.i;
     }

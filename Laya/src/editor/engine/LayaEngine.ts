@@ -1,12 +1,12 @@
 import Consts from "../Consts";
 import EditorEvent from "../EditorEvent";
-import { IEngineManager } from "./IEngineManager";
+import { IEngine } from "./IEngine";
 
-export default class  LayaManager implements IEngineManager{
-    private static  i:LayaManager;
+export default class  LayaEngine implements IEngine{
+    private static  i:LayaEngine;
     static getInstance(){
         if(this.i==null){
-            this.i = new LayaManager();
+            this.i = new LayaEngine();
         }
         return this.i;
     }

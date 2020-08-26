@@ -1,4 +1,4 @@
-export interface IEngineManager{
+export interface IEngine{
     /**引擎类型 */
     type:string;
     /**引擎module cc Laya egret */

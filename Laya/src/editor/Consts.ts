@@ -1,14 +1,14 @@
 import FObjectType from "./FObjectType";
 import FPackageItemType from "./FPackageItemType";
-import { IEngineManager } from "./engine/IEngineManager";
-import { IDisplayList } from "./display/IDisplayList";
+import { IEngine } from "./engine/IEngine";
+import { IDisplayManager } from "./display/IDisplayManager";
 
 export default class Consts{
     public static gameWindow:Window;
     
     // public static GRoot:fairygui.GRoot;
-    public static engineManager:IEngineManager;
-    public static displayList:IDisplayList;
+    public static engineManager:IEngine;
+    public static displayList:IDisplayManager;
     public static  icons = {};
     public static EditorLineName = "$$EditorLine";
     public static EditorNodeName = "$$Node";
@@ -66,5 +66,11 @@ export default class Consts{
             }
         }
         return ""; 
+    }
+    static GetQueryString(name)
+    {
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if(r!=null)return  unescape(r[2]); return null;
     }
 }

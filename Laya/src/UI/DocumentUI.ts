@@ -1,10 +1,10 @@
 import DocumentView from "../fgui/Builder/DocumentView";
 import Consts from "../editor/Consts";
 import EditorEvent from "../editor/EditorEvent";
-import LayaManager from "../editor/engine/LayaManager";
-import EgretManager from "../editor/engine/EgretManager";
-import CCManager from "../editor/engine/CCManager";
-import FGUIDisplayList from "../editor/display/FGUIDisplayList";
+import LayaEngine from "../editor/engine/LayaEngine";
+import EgretEngine from "../editor/engine/EgretEngine";
+import CCEngine from "../editor/engine/CCEngine";
+import FGUIManager from "../editor/display/FGUIManager";
 
 export default class DocumentUI{
     view:DocumentView;
@@ -159,20 +159,20 @@ export default class DocumentUI{
         var gamefgui = win.fairygui?win.fairygui:win.fgui;
         Consts.gameWindow = win;
         if(win.Laya){
-            Consts.engineManager = LayaManager.getInstance();
+            Consts.engineManager = LayaEngine.getInstance();
             Consts.engineManager.start(win.Laya);
         }else if(win.egret){
-            Consts.engineManager = EgretManager.getInstance();
+            Consts.engineManager = EgretEngine.getInstance();
             Consts.engineManager.start(win.egret);
         }else if(win.cc){
-            Consts.engineManager = CCManager.getInstance();
+            Consts.engineManager = CCEngine.getInstance();
             Consts.engineManager.start(win.cc);
         }
         if(gamefgui){
            
             if(!gamefgui.GRoot._inst)
               return;
-              Consts.displayList = FGUIDisplayList.getInstance(); 
+              Consts.displayList = FGUIManager.getInstance(); 
               Consts.displayList.start(gamefgui.GRoot._inst,gamefgui);   
              Laya.timer.clear(this,this.frameLoad);
             // this.line = Consts.manager.createLineGraph();
@@ -183,6 +183,7 @@ export default class DocumentUI{
 
             this.frame.contentWindow.document.onkeydown=this.keyDown.bind(this);
             this.frame.contentWindow.document.onkeyup = this.keyUp.bind(this);
+           
         }
         // else {
         //     win.loadCallBack = this.loadCallBack.bind(this);
@@ -194,7 +195,6 @@ export default class DocumentUI{
     }
     selectItem(item:fgui.GObject){
         if(item){
-            
             let p = item.localToGlobal(0,0);
             let pr = item.localToGlobal(item.width,item.height);
             let x = p.x;

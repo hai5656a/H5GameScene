@@ -1,12 +1,12 @@
 import Consts from "../Consts";
 import EditorEvent from "../EditorEvent";
-import { IEngineManager } from "./IEngineManager";
+import { IEngine } from "./IEngine";
 
-export default class  CCManager implements IEngineManager{
-    private static  i:CCManager;
+export default class  CCEngine implements IEngine{
+    private static  i:CCEngine;
     static getInstance(){
         if(this.i==null){
-            this.i = new CCManager();
+            this.i = new CCEngine();
         }
         return this.i;
     }

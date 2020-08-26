@@ -159,6 +159,13 @@
             }
             return "";
         }
+        static GetQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null)
+                return unescape(r[2]);
+            return null;
+        }
     }
     Consts.icons = {};
     Consts.EditorLineName = "$$EditorLine";
@@ -207,8 +214,7 @@
             EditorEvent.on(EditorEvent.TreeChanged, this, this.onRefresh);
         }
         initTree() {
-            let root = Consts.displayList.root;
-            if (!root)
+            if (!Consts.displayList || !Consts.displayList.root)
                 return;
             this.isExpand = false;
             this.view.m_btnCollapseAll.tooltips = "全部展开";
@@ -257,13 +263,13 @@
         }
     }
 
-    class LayaManager {
+    class LayaEngine {
         constructor() {
             this.type = "Laya";
         }
         static getInstance() {
             if (this.i == null) {
-                this.i = new LayaManager();
+                this.i = new LayaEngine();
             }
             return this.i;
         }
@@ -356,13 +362,13 @@
         }
     }
 
-    class EgretManager {
+    class EgretEngine {
         constructor() {
             this.type = "Egret";
         }
         static getInstance() {
             if (this.i == null) {
-                this.i = new EgretManager();
+                this.i = new EgretEngine();
             }
             return this.i;
         }
@@ -474,13 +480,13 @@
         }
     }
 
-    class CCManager {
+    class CCEngine {
         constructor() {
             this.type = "Cocos Creator";
         }
         static getInstance() {
             if (this.i == null) {
-                this.i = new CCManager();
+                this.i = new CCEngine();
             }
             return this.i;
         }
@@ -603,10 +609,10 @@
         }
     }
 
-    class FGUIDisplayList {
+    class FGUIManager {
         static getInstance() {
             if (this.i == null) {
-                this.i = new FGUIDisplayList();
+                this.i = new FGUIManager();
             }
             return this.i;
         }
@@ -839,21 +845,21 @@
             var gamefgui = win.fairygui ? win.fairygui : win.fgui;
             Consts.gameWindow = win;
             if (win.Laya) {
-                Consts.engineManager = LayaManager.getInstance();
+                Consts.engineManager = LayaEngine.getInstance();
                 Consts.engineManager.start(win.Laya);
             }
             else if (win.egret) {
-                Consts.engineManager = EgretManager.getInstance();
+                Consts.engineManager = EgretEngine.getInstance();
                 Consts.engineManager.start(win.egret);
             }
             else if (win.cc) {
-                Consts.engineManager = CCManager.getInstance();
+                Consts.engineManager = CCEngine.getInstance();
                 Consts.engineManager.start(win.cc);
             }
             if (gamefgui) {
                 if (!gamefgui.GRoot._inst)
                     return;
-                Consts.displayList = FGUIDisplayList.getInstance();
+                Consts.displayList = FGUIManager.getInstance();
                 Consts.displayList.start(gamefgui.GRoot._inst, gamefgui);
                 Laya.timer.clear(this, this.frameLoad);
                 EditorEvent.event(EditorEvent.TreeChanged);
@@ -1032,9 +1038,16 @@
             this.list = new DisplayTreeUI(this.view.m_list);
             this.document = new DocumentUI(this.view.m_document);
             this.insp = new InspectorUI(this.view.m_insp);
-            let str = Laya.LocalStorage.getItem("webURL");
+            let str = Consts.GetQueryString("url");
             if (str) {
-                this.view.m_webset.text = str;
+                this.view.m_webset.text = decodeURI(str);
+                this.goweb();
+            }
+            else {
+                str = Laya.LocalStorage.getItem("webURL");
+                if (str) {
+                    this.view.m_webset.text = str;
+                }
             }
         }
         onChanged(e) {

@@ -1,4 +1,4 @@
-export interface IDisplayList{
+export interface IDisplayManager{
     displayModule;
     root;
     /**初始化 */

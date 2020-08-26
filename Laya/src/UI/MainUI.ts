@@ -23,10 +23,17 @@ export default class MainUI{
         this.list = new DisplayTreeUI(this.view.m_list);
         this.document = new DocumentUI(this.view.m_document);
         this.insp = new InspectorUI(this.view.m_insp);
-        let str =  Laya.LocalStorage.getItem("webURL");
+        let str = Consts.GetQueryString("url");
         if(str){
-            this.view.m_webset.text = str;
+            this.view.m_webset.text = decodeURI(str);
+            this.goweb();
+        }else{
+            str =  Laya.LocalStorage.getItem("webURL");
+            if(str){
+                this.view.m_webset.text = str;
+            }
         }
+         
     }
    
     onChanged(e:Laya.Event){

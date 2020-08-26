@@ -17,8 +17,8 @@ export default class DisplayTreeUI{
         EditorEvent.on(EditorEvent.TreeChanged,this,this.onRefresh) ;
     }
     initTree(){
-        let root = Consts.displayList.root;
-        if(!root)
+        // let root = Consts.displayList.root;
+        if(!Consts.displayList||!Consts.displayList.root)
           return;
         this.isExpand = false; 
         this.view.m_btnCollapseAll.tooltips = "全部展开";
