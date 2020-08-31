@@ -1,4 +1,4 @@
-# GameScene
+# H5GameScene
 
 #### 介绍
 fgui场景查看
@@ -12,8 +12,11 @@ fgui场景查看
  
 #### 使用说明
 
-将项目发布目录放到和要查看的项目同个域下， 地址栏输入要查看的网址
-显示列表暂时不支持实时刷新，需要查看的时候手动刷新
+将项目发布目录release/H5GameScene放到和要查看的项目同个域下，
+Laya项目放在和工程bin同级目录，原访问地址bin/index.html改为H5GameScene/index.html?url=..%2Fbin%2Findex.html
+Egret项目放在和工程bin-debug同级目录，原访问地址index.html改为H5GameScene/index.html?url=..%2Findex.html
+CoCosCreator项目放在IDE安装目录resources\static目录内，原访问地址http://localhost:7456/ 改为 http://localhost:7457/app/editor/static/H5GameScene/index.html?url=..%2F..%2F..%2F..%2F
+显示列表暂时不支持实时刷新，需要查看的时候手动点击左上角刷新按钮
 
 
 
