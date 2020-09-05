@@ -32,16 +32,24 @@
     
 </head>
 
-<body>
+<body >
     <script type="text/javascript">
+        basePath = "http://download.zgsjl8.com/sw/minigame/lpy/H5GameScene/web/";
         function loadLib(url) {
             var script = document.createElement("script");
             script.async = false;
-            script.src = url;
+            script.src =basePath+ url;
             document.body.appendChild(script);
         }
+        function checkComp(){
+            if(window.Laya){
+                Laya.URL.basePath = basePath;
+                clearInterval(tid);
+            }
+        }
+        tid = setInterval(checkComp,1);
     </script>
-    <script type="text/javascript" src="index.js"></script>
+    <script type="text/javascript" src="http://download.zgsjl8.com/sw/minigame/lpy/H5GameScene/web/index.js"></script>
     <iframe id="gameFrame" style=" position: absolute; z-index: 999; "  frameborder="0" scrolling="no" ></iframe> 
     <!-- <div id="line"  style=" position: absolute; z-index: 9999; border-style: solid; border-color: #00ffff; pointer-events: none; display: none; " ></div> -->
 </body>
