@@ -8,7 +8,7 @@ H5场景查看
 目前支持基于FairyGui的Laya、Egret、Cocos Creator 项目
 后续支持原生UI框架以及原生3D对象
 #### 安装教程
-release/H5GameScene.html放到和要查看的项目同个域下
+Laya/release/H5GameScene.html放到和要查看的项目同个域下
  
 #### 使用说明
 
