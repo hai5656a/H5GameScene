@@ -13,8 +13,10 @@ export default class DisplayTreeUI{
         this.view.m_treeView.on(fairygui.Events.CLICK_ITEM, this, this.onClickItem);
         this.view.m_btnRefresh.onClick(this,this.onRefresh);
         this.view.m_btnCollapseAll.onClick(this,this.onCollapseAll);
+        this.view.m_group.on(fairygui.Events.STATE_CHANGED, this, this.changeType);
         EditorEvent.on(EditorEvent.Selection,this,this.selectTree) ;
         EditorEvent.on(EditorEvent.TreeChanged,this,this.onRefresh) ;
+        EditorEvent.on(EditorEvent.TreeTypeDataChanged,this,this.onTreeType);
     }
     initTree(){
         // let root = Consts.displayList.root;
@@ -31,14 +33,13 @@ export default class DisplayTreeUI{
         if(item&&item[Consts.EditorNodeName]){
             let itemNode = item[Consts.EditorNodeName]
             this.view.m_treeView.selectNode(itemNode,true);
-           
             EditorEvent.event(EditorEvent.SelectionChanged,itemNode.data);
         }
     }
    
     private renderTreeNode(node: fgui.GTreeNode, obj: fgui.GComponent) {
   
-        let gobj =<fgui.GObject> node.data;
+        let gobj =  node.data;
         // let cname = Consts.getClassName(gobj);
         // if(cname){
         //     cname = gobj.name+"("+cname+")"
@@ -73,5 +74,13 @@ export default class DisplayTreeUI{
             this.view.m_treeView.collapseAll();
         }
        
+    }
+    onTreeType(selectedIndex){
+        this.view.m_group.visible = true;
+        this.view.m_group.items = Consts.treeTypeList;
+        this.view.m_group.selectedIndex = selectedIndex;
+    }
+    changeType(){
+        EditorEvent.event(EditorEvent.TreeTypeChanged,Consts.treeTypeList[this.view.m_group.selectedIndex] );
     }
 }

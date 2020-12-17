@@ -19,9 +19,9 @@ export default class ComControllerUI{
          item.m_pageController.on(fairygui.Events.STATE_CHANGED, this, this.onChanged,[item])
      }
    
-     setData(item:fgui.GObject){
+     setData(item){
          if(item){
-             this.allController = item.asCom._controllers;
+             this.allController = item._controllers;
              if(this.allController&&this.allController.length>0){
                  this.allControllerNames = [];
                  for(var i = 0;i<this.allController.length;i++){

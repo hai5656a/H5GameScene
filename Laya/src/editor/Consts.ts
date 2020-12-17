@@ -2,8 +2,14 @@ import FObjectType from "./FObjectType";
 import FPackageItemType from "./FPackageItemType";
 import { IEngine } from "./engine/IEngine";
 import { IDisplayManager } from "./display/IDisplayManager";
-
+export enum TreeType{
+    Laya="Laya",
+    Egret = "Egret",
+    CC ="Cocos Creator",
+    FGUI="FariyGui"
+}
 export default class Consts{
+    
     public static gameWindow:Window;
     
     // public static GRoot:fairygui.GRoot;
@@ -14,6 +20,8 @@ export default class Consts{
     public static EditorNodeName = "$$Node";
     public static rectLineSize=4;
     public static rectColor =0x1F66D1;
+    public static treeTypeList:TreeType[];
+    public static nowTreeType:TreeType;
     public static get rectColorStr():string{
         return "#"+Consts.rectColor.toString(16);
     }
@@ -45,6 +53,8 @@ export default class Consts{
         Consts.icons[FObjectType.EXT_SLIDER] = fgui.UIPackage.getItemURL("Builder", "icon_slider");
         Consts.icons[FObjectType.EXT_PROGRESS_BAR] = fgui.UIPackage.getItemURL("Builder", "icon_progressbar");
         Consts.icons[FObjectType.EXT_SCROLLBAR] = fgui.UIPackage.getItemURL("Builder", "icon_scrollbar");
+        Consts.icons[FObjectType.SPRITE] = fgui.UIPackage.getItemURL("Builder", "icon_Sprite");
+        Consts.icons[FObjectType.SPRITE3D] = fgui.UIPackage.getItemURL("Builder", "icon_loader3D");
         Consts.icons["GObject"] = fgui.UIPackage.getItemURL("Builder", "icon_misc");
     }
     

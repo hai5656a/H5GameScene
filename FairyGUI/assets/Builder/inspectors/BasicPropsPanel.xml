@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="270,245" bgColorEnabled="true" bgColor="#383838">
   <controller name="showRestrictSize" pages="0,,1," selected="0"/>
+  <controller name="type" exported="true" pages="0,Fgui,1,Laya,2,Laya3D,8,Creator,9,Egret" selected="0"/>
   <displayList>
     <text id="n17" name="n17" xy="4,6" size="80,19" fontSize="12" color="#bdbdbd" align="center" autoSize="none" text="名称"/>
     <text id="n13" name="n13" xy="4,32" size="80,19" fontSize="12" color="#bdbdbd" align="center" autoSize="none" text="位置"/>
@@ -12,6 +13,7 @@
     <component id="n27" name="height" src="wqe79a" fileName="Input/XYInput.xml" pkg="nk9ejx23" xy="166,57" size="72,20" controller="xy,3"/>
     <component id="n53" name="n53" src="ehmsu7z" fileName="basic/InfoButton.xml" xy="247,7" visible="false" tooltips="当选定多个对象时，使用#可以自动添加数字序列。例如：&#xA;a#&#xA;则选定的元件的名称依次修改为a0,a1,a2.."/>
     <component id="n81_ruil" name="showRestrictSize" src="gj1q8u" fileName="Button/ToggleIconButton.xml" pkg="nk9ejx23" xy="244,57">
+      <gearDisplay controller="type" pages="0"/>
       <Button icon="ui://2pshu6oipi83u6x" selectedIcon="ui://2pshu6oiruiliual" controller="showRestrictSize" page="1"/>
     </component>
     <text id="n96_wqe7" name="n96" xy="4,105" size="80,19" group="n72_ruil" fontSize="12" color="#bdbdbd" align="center" autoSize="none" text="最大尺寸"/>
@@ -44,6 +46,7 @@
       <Button icon="ui://2pshu6oipi83u6x"/>
     </component>
     <component id="n61" name="anchor" src="dp4f7u" fileName="Button/EmCheckbox_as.xml" pkg="nk9ejx23" xy="94,162" size="95,19" group="n82_ruil" touchable="false" grayed="true" tooltips="勾选后，轴心位置将作为元件的原点">
+      <gearDisplay controller="type" pages="0"/>
       <Button title="同时作为锚点"/>
     </component>
     <component id="n37" name="alpha" src="au3n69" fileName="Input/NumericInput.xml" pkg="nk9ejx23" xy="88,187" size="48,20" group="n82_ruil"/>
@@ -52,6 +55,7 @@
       <Button title="不可见"/>
     </component>
     <component id="n36" name="grayed" src="dp4f7u" fileName="Button/EmCheckbox_as.xml" pkg="nk9ejx23" xy="77,215" size="47,19" group="n82_ruil">
+      <gearDisplay controller="type" pages="0"/>
       <relation target="n32" sidePair="left-right"/>
       <Button title="变灰"/>
     </component>

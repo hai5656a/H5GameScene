@@ -1,6 +1,8 @@
+import { TreeType } from "../Consts";
+
 export interface IEngine{
     /**引擎类型 */
-    type:string;
+    type:TreeType;
     /**引擎module cc Laya egret */
     engine;
     /**引擎初始化 */
@@ -8,7 +10,7 @@ export interface IEngine{
     /**引擎结束 */
     end();
     /**显示FGUI选中方块 */
-    showFGUIRect(x,y,w,h);
+    showRect(x,y,w,h);
     /**隐藏FGUI选中方块 */
     hideFGUIRect();
     /**设置选择模式 */

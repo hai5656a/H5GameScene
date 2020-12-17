@@ -17,7 +17,7 @@ Laya项目放在和工程bin同级目录，原访问地址bin/index.html改为H5
 
 Egret项目放在和工程bin-debug同级目录，原访问地址index.html改为H5GameScene.html?url=index.html
 
-CoCosCreator项目放在IDE安装目录resources\static目录内，原访问地址http://localhost:7456/ 改为 http://localhost:7457/app/editor/static/H5GameScene.html?url=..%2F..%2F..%2F
+CoCosCreator项目放在IDE安装目录resources\static目录内，原访问地址http://localhost:7456/ 改为 http://localhost:7456/app/editor/static/H5GameScene.html?url=..%2F..%2F..%2F
 
 显示列表暂时不支持实时刷新，需要查看的时候手动点击左上角刷新按钮
 

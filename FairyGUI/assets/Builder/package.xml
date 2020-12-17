@@ -232,7 +232,7 @@
     <component id="nbr4iudh" name="TransitionInput.xml" path="/basic/"/>
     <component id="nbr4iudi" name="FontSizeInput.xml" path="/basic/"/>
     <component id="nbr4iudj" name="FontInput.xml" path="/basic/"/>
-    <component id="mtrqiudk" name="InspectorView.xml" path="/Editor/"/>
+    <component id="mtrqiudk" name="InspectorView.xml" path="/"/>
     <component id="7fi9iudl" name="ViewGrid.xml" path="/basic/"/>
     <image id="owzdiudm" name="highlight_border.png" path="/images/" scale="9grid" scale9grid="4,4,7,7" gridTile="15"/>
     <component id="jluviudn" name="ViewGrid_content.xml" path="/basic/"/>
@@ -573,6 +573,10 @@
     <component id="e1jj1nry31z" name="ComControllerItem.xml" path="/inspectors/"/>
     <component id="e1jj1nry320" name="ComTransitionPanel.xml" path="/inspectors/"/>
     <component id="e1jj1nry321" name="ComTransitionItem.xml" path="/inspectors/"/>
+    <image id="6who1nry322" name="icon_Sprite.png" path="/icons_obj/" exported="true"/>
+    <component id="6who1nry324" name="Basic3DPropsPanel.xml" path="/inspectors/" exported="true"/>
+    <component id="ixw71nry325" name="CreatorPropsPanel.xml" path="/inspectors/" exported="true"/>
+    <component id="ixw71nry326" name="CreatorWidgetPanel.xml" path="/inspectors/" exported="true"/>
   </resources>
   <publish name="Builder" genCode="true"/>
 </packageDescription>

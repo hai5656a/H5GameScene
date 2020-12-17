@@ -59,6 +59,8 @@
     FObjectType.EXT_PROGRESS_BAR = "ProgressBar";
     FObjectType.EXT_SLIDER = "Slider";
     FObjectType.EXT_SCROLLBAR = "ScrollBar";
+    FObjectType.SPRITE = "sprite";
+    FObjectType.SPRITE3D = "sprite3D";
     FObjectType.NAME_PREFIX = {
         image: "img",
         graph: "graph",
@@ -108,6 +110,13 @@
         xml: FPackageItemType.COMPONENT
     };
 
+    var TreeType;
+    (function (TreeType) {
+        TreeType["Laya"] = "Laya";
+        TreeType["Egret"] = "Egret";
+        TreeType["CC"] = "Cocos Creator";
+        TreeType["FGUI"] = "FariyGui";
+    })(TreeType || (TreeType = {}));
     class Consts {
         static get rectColorStr() {
             return "#" + Consts.rectColor.toString(16);
@@ -138,6 +147,8 @@
             Consts.icons[FObjectType.EXT_SLIDER] = fgui.UIPackage.getItemURL("Builder", "icon_slider");
             Consts.icons[FObjectType.EXT_PROGRESS_BAR] = fgui.UIPackage.getItemURL("Builder", "icon_progressbar");
             Consts.icons[FObjectType.EXT_SCROLLBAR] = fgui.UIPackage.getItemURL("Builder", "icon_scrollbar");
+            Consts.icons[FObjectType.SPRITE] = fgui.UIPackage.getItemURL("Builder", "icon_Sprite");
+            Consts.icons[FObjectType.SPRITE3D] = fgui.UIPackage.getItemURL("Builder", "icon_loader3D");
             Consts.icons["GObject"] = fgui.UIPackage.getItemURL("Builder", "icon_misc");
         }
         static getClassName(obj) {
@@ -200,6 +211,8 @@
     EditorEvent.SelectionChanged = "SelectionChanged";
     EditorEvent.Selection = "Selection";
     EditorEvent.TreeChanged = "TreeChanged";
+    EditorEvent.TreeTypeDataChanged = "TreeTypeDataChanged";
+    EditorEvent.TreeTypeChanged = "TreeTypeChanged";
     EditorEvent.ClickChanged = "ClickChanged";
     EditorEvent.EventDispatcher = new Laya.EventDispatcher();
 
@@ -210,8 +223,10 @@
             this.view.m_treeView.on(fairygui.Events.CLICK_ITEM, this, this.onClickItem);
             this.view.m_btnRefresh.onClick(this, this.onRefresh);
             this.view.m_btnCollapseAll.onClick(this, this.onCollapseAll);
+            this.view.m_group.on(fairygui.Events.STATE_CHANGED, this, this.changeType);
             EditorEvent.on(EditorEvent.Selection, this, this.selectTree);
             EditorEvent.on(EditorEvent.TreeChanged, this, this.onRefresh);
+            EditorEvent.on(EditorEvent.TreeTypeDataChanged, this, this.onTreeType);
         }
         initTree() {
             if (!Consts.displayList || !Consts.displayList.root)
@@ -261,11 +276,19 @@
                 this.view.m_treeView.collapseAll();
             }
         }
+        onTreeType(selectedIndex) {
+            this.view.m_group.visible = true;
+            this.view.m_group.items = Consts.treeTypeList;
+            this.view.m_group.selectedIndex = selectedIndex;
+        }
+        changeType() {
+            EditorEvent.event(EditorEvent.TreeTypeChanged, Consts.treeTypeList[this.view.m_group.selectedIndex]);
+        }
     }
 
     class LayaEngine {
         constructor() {
-            this.type = "Laya";
+            this.type = TreeType.Laya;
         }
         static getInstance() {
             if (this.i == null) {
@@ -281,24 +304,30 @@
                 this.onFPS();
             this.removeSelectModel();
             this.engine = null;
+            this.removeRect();
         }
         createRectGraph() {
             if (this.rect) {
-                this.rect.removeFromParent();
-                this.rect.dispose();
+                this.rect.destroy(true);
             }
-            let line = this.rect = new Consts.displayList.displayModule.GGraph();
-            let color = Consts.rectColorStr;
-            line.drawRect(Consts.rectLineSize, color, null);
+            let line = this.rect = new this.engine.Sprite();
             line.name = Consts.EditorLineName;
-            line.touchable = false;
+            line.mouseEnabled = false;
         }
-        showFGUIRect(x, y, w, h) {
-            if (!this.rect || this.rect.isDisposed) {
+        showRect(x, y, w, h) {
+            if (!this.rect || this.rect.destroyed) {
                 this.createRectGraph();
             }
             this.rect.visible = true;
-            this.rect.setSize(w, h);
+            let color = Consts.rectColorStr;
+            this.rect.graphics.clear();
+            if (w >= 0 && h >= 0) {
+                this.rect.graphics.drawRect(0, 0, w, h, null, color, Consts.rectLineSize);
+            }
+            else {
+                this.rect.graphics.drawLine(-20, 0, 20, 0, color, Consts.rectLineSize);
+                this.rect.graphics.drawLine(0, -20, 0, 20, color, Consts.rectLineSize);
+            }
             this.rect.x = x;
             this.rect.y = y;
             this.rect.visible = true;
@@ -306,12 +335,17 @@
                 this.rect.parent.setChildIndex(this.rect, this.rect.parent.numChildren - 1);
             }
             else {
-                Consts.displayList.root.addChild(this.rect);
+                this.engine.stage.addChild(this.rect);
             }
         }
         hideFGUIRect() {
             if (this.rect)
                 this.rect.visible = false;
+        }
+        removeRect() {
+            if (this.rect)
+                this.rect.destroy(true);
+            this.rect = null;
         }
         addSelectModel() {
             this.engine.MouseManager.enabled = false;
@@ -321,12 +355,22 @@
         onMouseDown(evt) {
             let mouseManager = this.engine.MouseManager.instance;
             mouseManager.initEvent(evt);
-            mouseManager._checkAllBaseUI(mouseManager.mouseX, mouseManager.mouseY, () => {
-                if (mouseManager._target) {
-                    let comp = mouseManager._target["$owner"];
-                    EditorEvent.event(EditorEvent.Selection, comp);
-                }
-            });
+            if (mouseManager.check) {
+                mouseManager.check(mouseManager._stage, mouseManager.mouseX, mouseManager.mouseY, () => {
+                    if (mouseManager._target) {
+                        let comp = mouseManager._target;
+                        EditorEvent.event(EditorEvent.Selection, comp);
+                    }
+                });
+            }
+            else if (mouseManager._checkAllBaseUI) {
+                mouseManager._checkAllBaseUI(mouseManager.mouseX, mouseManager.mouseY, () => {
+                    if (mouseManager._target) {
+                        let comp = mouseManager._target;
+                        EditorEvent.event(EditorEvent.Selection, comp);
+                    }
+                });
+            }
         }
         removeSelectModel() {
             if (this.engine) {
@@ -358,13 +402,13 @@
                 this.engine.timer.scale = 0;
         }
         checkFGUIVisible(gobj) {
-            return gobj.internalVisible && gobj.internalVisible2;
+            return gobj._displayObject && gobj.internalVisible && gobj.internalVisible2;
         }
     }
 
     class EgretEngine {
         constructor() {
-            this.type = "Egret";
+            this.type = TreeType.Egret;
         }
         static getInstance() {
             if (this.i == null) {
@@ -380,26 +424,29 @@
                 this.onFPS();
             this.removeSelectModel();
             this.engine = null;
+            this.removeRect();
         }
         createRectGraph() {
-            if (this.rect) {
-                this.rect.removeFromParent();
-                this.rect.dispose();
+            if (this.rect && this.rect.parent) {
+                this.rect.parent.removeChild(this.rect);
             }
-            let line = this.rect = new Consts.displayList.displayModule.GGraph();
-            line.drawRect(Consts.rectLineSize, Consts.rectColor, 1, Consts.rectColor, Consts.rectFill);
+            let line = this.rect = new Consts.displayList.displayModule.Sprite();
             line.name = Consts.EditorLineName;
-            line.touchable = false;
+            line.touchEnabled = false;
         }
-        showFGUIRect(x, y, w, h) {
-            if (!this.rect || this.rect.isDisposed) {
+        showRect(x, y, w, h) {
+            if (!this.rect) {
                 this.createRectGraph();
             }
             this.rect.visible = true;
-            this.rect.setSize(w, h);
+            let ctx = this.rect.graphics;
+            ctx.clear();
+            ctx.lineStyle(Consts.rectLineSize, Consts.rectColor, 1);
+            ctx.beginFill(Consts.rectColor, Consts.rectFill);
+            ctx.drawRect(0, 0, w, h);
+            ctx.endFill();
             this.rect.x = x;
             this.rect.y = y;
-            this.rect.visible = true;
             if (this.rect.parent) {
                 this.rect.parent.setChildIndex(this.rect, this.rect.parent.numChildren - 1);
             }
@@ -410,6 +457,11 @@
         hideFGUIRect() {
             if (this.rect)
                 this.rect.visible = false;
+        }
+        removeRect() {
+            if (this.rect && this.rect.parent)
+                this.rect.parent.removeChild(this.rect);
+            this.rect = null;
         }
         addSelectModel() {
             var containerList = Consts.gameWindow.document.querySelectorAll(".egret-player");
@@ -427,9 +479,8 @@
             var location = this.player.webTouchHandler.getLocation(event);
             var target = this.engine.lifecycle.stage.$hitTest(location.x, location.y);
             if (target) {
-                let comp = target["$owner"];
+                let comp = target;
                 EditorEvent.event(EditorEvent.Selection, comp);
-                console.log(target);
             }
         }
         removeSelectModel() {
@@ -482,7 +533,7 @@
 
     class CCEngine {
         constructor() {
-            this.type = "Cocos Creator";
+            this.type = TreeType.CC;
         }
         static getInstance() {
             if (this.i == null) {
@@ -496,13 +547,35 @@
         end() {
             this.removeSelectModel();
             this.engine = null;
+            this.removeRect();
         }
         createRectGraph() {
             if (this.rect) {
                 this.rect.removeFromParent();
-                this.rect.dispose();
+                this.rect.destroy();
             }
-            let line = this.rect = new Consts.displayList.displayModule.GGraph();
+            this.rect = new this.engine.Node();
+            this.rect.name = "Graphics";
+            let line = this._content = this.rect.addComponent(this.engine.Graphics);
+            let color = Consts.rectColorStr;
+            let c = new this.engine.Color(0, 0, 0, 255);
+            c.fromHEX(color);
+            let c2 = new this.engine.Color(0, 0, 0, 255);
+            c2.fromHEX(color);
+            c2.setA(255 * Consts.rectFill);
+            line.clear();
+            line.lineWidth = Consts.rectLineSize;
+            line.strokeColor = c;
+            line.fillColor = c2;
+            this.fillColor = c2;
+            line.name = Consts.EditorLineName;
+        }
+        createfguiRectGraph() {
+            if (this.fguirect) {
+                this.fguirect.removeFromParent();
+                this.fguirect.dispose();
+            }
+            let line = this.fguirect = new Consts.displayList.displayModule.GGraph();
             let color = Consts.rectColorStr;
             let c = new this.engine.Color(0, 0, 0, 255);
             c.fromHEX(color);
@@ -510,34 +583,77 @@
             c2.fromHEX(color);
             c2.setA(255 * Consts.rectFill);
             line.drawRect(Consts.rectLineSize, c, c2);
+            this.fillColor = c2;
             this.rectNode = line.node;
             line.name = Consts.EditorLineName;
             line.touchable = false;
         }
-        showFGUIRect(x, y, w, h) {
-            if (!this.rect || !this.rect._node) {
-                this.createRectGraph();
+        showRect(x, y, w, h) {
+            if (Consts.nowTreeType == TreeType.CC) {
+                if (!this.rect) {
+                    this.createRectGraph();
+                }
+                this.rect.active = true;
+                var ls = Consts.rectLineSize / 2;
+                this._content.clear();
+                this._content.rect(ls, ls, w - Consts.rectLineSize, h - Consts.rectLineSize);
+                var node = this.engine.director.getScene();
+                var local = node.convertToNodeSpace(new Consts.displayList.displayModule.Vec2(x, y));
+                this.rect.x = local.x;
+                this.rect.y = local.y;
+                this.rect.active = true;
+                if (ls != 0)
+                    this._content.stroke();
+                if (this.fillColor.a != 0)
+                    this._content.fill();
+                if (this.rect.parent) {
+                    this.rect.setSiblingIndex(this.rect.parent.childrenCount - 1);
+                }
+                else {
+                    var node = this.engine.director.getScene();
+                    node.addChild(this.rect);
+                }
             }
-            this.rect.visible = true;
-            this.rect.setSize(w, h);
-            this.rect.x = x;
-            this.rect.y = y;
-            this.rect.visible = true;
-            if (this.rect.parent) {
-                this.rect.parent.setChildIndex(this.rect, this.rect.parent.numChildren - 1);
-            }
-            else {
-                Consts.displayList.root.addChild(this.rect);
+            else if (Consts.nowTreeType == TreeType.FGUI) {
+                if (!this.fguirect) {
+                    this.createfguiRectGraph();
+                }
+                this.fguirect.visible = true;
+                this.fguirect.setSize(w, h);
+                this.fguirect.x = x;
+                this.fguirect.y = y;
+                if (this.fguirect.parent) {
+                    this.fguirect.parent.setChildIndex(this.fguirect, this.fguirect.parent.numChildren - 1);
+                }
+                else {
+                    Consts.displayList.root.addChild(this.fguirect);
+                }
             }
         }
         hideFGUIRect() {
             if (this.rect)
-                this.rect.visible = false;
+                this.rect.active = false;
+            if (this.fguirect && this.fguirect["_node"])
+                this.fguirect.visible = false;
+        }
+        removeRect() {
+            if (this.rect)
+                this.rect.destroy();
+            this.rect = null;
+            if (this.fguirect)
+                this.fguirect.dispose();
+            this.fguirect = null;
         }
         addSelectModel() {
             this.touchHander = this.onMouseDown.bind(this);
             this.engine.game.canvas.addEventListener('mousedown', this.touchHander);
-            let evt = this.engine.internal.eventManager;
+            let evt;
+            if (this.engine.internal) {
+                evt = this.engine.internal.eventManager;
+            }
+            else if (this.engine.eventManager) {
+                evt = this.engine.eventManager;
+            }
             if (evt) {
                 evt._isEnabled = false;
             }
@@ -550,7 +666,7 @@
             }
         }
         hitTest(node, pos) {
-            if (node.active && node != this.rectNode) {
+            if (node.active && node != this.rectNode && node != this.rect) {
                 if (node._hitTest(pos)) {
                     this.target = node;
                 }
@@ -560,7 +676,15 @@
             }
         }
         onMouseDown(event) {
-            let selfPointer = this.engine.internal.inputManager;
+            let selfPointer;
+            if (this.engine.internal)
+                selfPointer = this.engine.internal.inputManager;
+            else if (this.engine.inputManager)
+                selfPointer = this.engine.inputManager;
+            else if (Consts.gameWindow["_cc"])
+                selfPointer = Consts.gameWindow["_cc"].inputManager;
+            if (!selfPointer)
+                return;
             var canvasBoundingRect = selfPointer._canvasBoundingRect;
             var location = selfPointer.getPointByEvent(event, canvasBoundingRect);
             var EventMouse = this.engine.Event.EventMouse;
@@ -569,16 +693,21 @@
             var pos = mouseEvent.getLocation();
             this.hitTestScene(pos);
             if (this.target) {
-                let comp = this.target["$gobj"];
+                let comp = this.target;
                 EditorEvent.event(EditorEvent.Selection, comp);
-                console.log(this.target);
             }
             event.stopPropagation();
             event.preventDefault();
         }
         removeSelectModel() {
             if (this.engine) {
-                let evt = this.engine.internal.eventManager;
+                let evt;
+                if (this.engine.internal) {
+                    evt = this.engine.internal.eventManager;
+                }
+                else if (this.engine.eventManager) {
+                    evt = this.engine.eventManager;
+                }
                 if (evt) {
                     evt._isEnabled = true;
                 }
@@ -619,6 +748,7 @@
         start(root, m) {
             this.root = root;
             this.displayModule = m;
+            Consts.nowTreeType = TreeType.FGUI;
         }
         ;
         end() {
@@ -635,7 +765,8 @@
             if (item.name == Consts.EditorLineName)
                 return;
             let node = this.createNode(item);
-            parent.addChild(node);
+            if (node)
+                parent.addChild(node);
             if (item.asCom.numChildren > 0) {
                 this.createChildren(item.asCom._children, node);
             }
@@ -646,10 +777,13 @@
             }
         }
         createNode(item) {
-            let node = new fgui.GTreeNode(item.asCom.numChildren > 0);
+            let node = new fgui.GTreeNode(item.numChildren > 0);
             node.data = item;
-            item[Consts.EditorNodeName] = node;
-            return node;
+            let target = item._node ? item._node : item._displayObject;
+            if (target) {
+                target[Consts.EditorNodeName] = node;
+                return node;
+            }
         }
         isShow(obj) {
             return obj == this.root || obj.parent;
@@ -665,6 +799,15 @@
             else
                 cname = gobj.name;
             return cname;
+        }
+        getDisPlayRect(item) {
+            let p = item.localToGlobal(0, 0);
+            let pr = item.localToGlobal(item.width, item.height);
+            let x = p.x;
+            let y = p.y;
+            let width = pr.x - p.x;
+            let height = pr.y - p.y;
+            return [x, y, width, height];
         }
         getDisPlayIcon(obj) {
             let gamefgui = this.displayModule;
@@ -686,7 +829,7 @@
             if (obj instanceof gamefgui.GGraph) {
                 return Consts.icons[FObjectType.GRAPH];
             }
-            if (obj instanceof gamefgui.GTree) {
+            if (gamefgui.GTree && obj instanceof gamefgui.GTree) {
                 return Consts.icons[FObjectType.TREE];
             }
             if (obj instanceof gamefgui.GList) {
@@ -720,6 +863,325 @@
         }
     }
 
+    class LayaManager {
+        static getInstance() {
+            if (this.i == null) {
+                this.i = new LayaManager();
+            }
+            return this.i;
+        }
+        start(root, m) {
+            this.root = root;
+            this.displayModule = m;
+            Consts.nowTreeType = TreeType.Laya;
+        }
+        ;
+        end() {
+            this.root = null;
+            this.displayModule = null;
+        }
+        ;
+        refreshList(parent) {
+            if (this.root) {
+                this.createDisplay(this.root, parent);
+            }
+        }
+        createDisplay(item, parent) {
+            if (item.name == Consts.EditorLineName)
+                return;
+            let node = this.createNode(item);
+            parent.addChild(node);
+            if (item.active && this.displayModule.Camera && item instanceof this.displayModule.Camera) {
+                this.camera = item;
+            }
+            let children = item._childs ? item._childs : item._children;
+            if (children && children.length > 0) {
+                this.createChildren(children, node);
+            }
+        }
+        createChildren(items, parent) {
+            for (var i = 0; i < items.length; i++) {
+                this.createDisplay(items[i], parent);
+            }
+        }
+        createNode(item) {
+            let node = new fgui.GTreeNode(item.numChildren > 0);
+            node.data = item;
+            item[Consts.EditorNodeName] = node;
+            return node;
+        }
+        isShow(obj) {
+            return obj == this.root || obj.parent;
+        }
+        isVisable(item) {
+            let gameModule = this.displayModule;
+            if (gameModule.Sprite && item instanceof gameModule.Sprite) {
+                return item.visible;
+            }
+            else {
+                return item.active;
+            }
+        }
+        getDisPlayName(gobj) {
+            let cname = Consts.getClassName(gobj);
+            if (cname) {
+                cname = gobj.name + "(" + cname + ")";
+            }
+            else
+                cname = gobj.name;
+            return cname;
+        }
+        getDisPlayRect(item) {
+            let gameLaya = this.displayModule;
+            if (gameLaya.Sprite && item instanceof gameLaya.Sprite) {
+                let p = item.localToGlobal(new gameLaya.Point(0, 0));
+                let pr = item.localToGlobal(new gameLaya.Point(item.width, item.height));
+                let x = p.x;
+                let y = p.y;
+                let width = pr.x - p.x;
+                let height = pr.y - p.y;
+                return [x, y, width, height];
+            }
+            else if (gameLaya.Sprite3D && item instanceof gameLaya.Sprite3D) {
+                let t = item.transform;
+                let camera = this.camera;
+                if (camera) {
+                    let outPos = new gameLaya.Vector4();
+                    camera.viewport.project(t.position, camera.projectionViewMatrix, outPos);
+                    return [outPos.x / gameLaya.stage.clientScaleX, outPos.y / gameLaya.stage.clientScaleY, -1, -1];
+                }
+                else {
+                    return [0, 0, 0, 0];
+                }
+            }
+        }
+        getDisPlayIcon(obj) {
+            let gameLaya = this.displayModule;
+            if (gameLaya.Clip && obj instanceof gameLaya.Clip) {
+                return Consts.icons[FObjectType.MOVIECLIP];
+            }
+            if (gameLaya.Image && obj instanceof gameLaya.Image) {
+                return Consts.icons[FObjectType.IMAGE];
+            }
+            if (gameLaya.ComboBox && obj instanceof gameLaya.ComboBox) {
+                return Consts.icons[FObjectType.EXT_COMBOBOX];
+            }
+            if (gameLaya.Slider && obj instanceof gameLaya.Slider) {
+                return Consts.icons[FObjectType.EXT_SLIDER];
+            }
+            if (gameLaya.Tree && obj instanceof gameLaya.Tree) {
+                return Consts.icons[FObjectType.TREE];
+            }
+            if (gameLaya.List && obj instanceof gameLaya.List) {
+                return Consts.icons[FObjectType.LIST];
+            }
+            if (gameLaya.TextInput && obj instanceof gameLaya.TextInput) {
+                return Consts.icons[FObjectType.INPUTTEXT];
+            }
+            if (gameLaya.ProgressBar && obj instanceof gameLaya.ProgressBar) {
+                return Consts.icons[FObjectType.EXT_PROGRESS_BAR];
+            }
+            if (gameLaya.Label && obj instanceof gameLaya.Label) {
+                return Consts.icons[FObjectType.EXT_LABEL];
+            }
+            if (gameLaya.Button && obj instanceof gameLaya.Button) {
+                return Consts.icons[FObjectType.EXT_BUTTON];
+            }
+            if (gameLaya.Panel && obj instanceof gameLaya.Panel) {
+                return Consts.icons[FObjectType.COMPONENT];
+            }
+            if (obj instanceof gameLaya.Sprite) {
+                return Consts.icons[FObjectType.SPRITE];
+            }
+            if (gameLaya.Sprite3D && obj instanceof gameLaya.Sprite3D) {
+                return Consts.icons[FObjectType.SPRITE3D];
+            }
+            return Consts.icons["GObject"];
+        }
+    }
+
+    class CCManager {
+        static getInstance() {
+            if (this.i == null) {
+                this.i = new CCManager();
+            }
+            return this.i;
+        }
+        start(root, m) {
+            this.root = root;
+            this.displayModule = m;
+            Consts.nowTreeType = TreeType.CC;
+        }
+        ;
+        end() {
+            this.root = null;
+            this.displayModule = null;
+        }
+        ;
+        refreshList(parent) {
+            if (this.root) {
+                this.createDisplay(this.root, parent);
+            }
+        }
+        createDisplay(item, parent) {
+            if (item.name == Consts.EditorLineName)
+                return;
+            let node = this.createNode(item);
+            if (node)
+                parent.addChild(node);
+            if (item.childrenCount > 0) {
+                this.createChildren(item.children, node);
+            }
+        }
+        createChildren(items, parent) {
+            for (var i = 0; i < items.length; i++) {
+                this.createDisplay(items[i], parent);
+            }
+        }
+        createNode(item) {
+            let node = new fgui.GTreeNode(item.childrenCount > 0);
+            node.data = item;
+            item[Consts.EditorNodeName] = node;
+            return node;
+        }
+        isShow(obj) {
+            return obj == this.root || obj.parent;
+        }
+        isVisable(item) {
+            return item == this.root || item.active;
+        }
+        getDisPlayName(gobj) {
+            let cname = Consts.getClassName(gobj);
+            if (cname) {
+                cname = gobj.name + "(" + cname + ")";
+            }
+            else
+                cname = gobj.name;
+            return cname;
+        }
+        getDisPlayRect(item) {
+            let p = item.convertToWorldSpace(new this.displayModule.Vec2(0, 0));
+            let pr = item.convertToWorldSpace(new this.displayModule.Vec2(item.width, item.height));
+            let x = p.x;
+            let y = p.y;
+            let width = pr.x - p.x;
+            let height = pr.y - p.y;
+            return [x, y, width, height];
+        }
+        getDisPlayIcon(obj) {
+            let gamecc = this.displayModule;
+            return Consts.icons["GObject"];
+        }
+    }
+
+    class EgretManager {
+        static getInstance() {
+            if (this.i == null) {
+                this.i = new EgretManager();
+            }
+            return this.i;
+        }
+        start(root, m) {
+            this.root = root;
+            this.displayModule = m;
+            Consts.nowTreeType = TreeType.Egret;
+        }
+        ;
+        end() {
+            this.root = null;
+            this.displayModule = null;
+        }
+        ;
+        refreshList(parent) {
+            if (this.root) {
+                this.createDisplay(this.root, parent);
+            }
+        }
+        createDisplay(item, parent) {
+            if (item.name == Consts.EditorLineName)
+                return;
+            let node = this.createNode(item);
+            parent.addChild(node);
+            let children = item.$children;
+            if (children && children.length > 0) {
+                this.createChildren(children, node);
+            }
+        }
+        createChildren(items, parent) {
+            for (var i = 0; i < items.length; i++) {
+                this.createDisplay(items[i], parent);
+            }
+        }
+        createNode(item) {
+            let node = new fgui.GTreeNode(item.numChildren > 0);
+            node.data = item;
+            item[Consts.EditorNodeName] = node;
+            return node;
+        }
+        isShow(obj) {
+            return obj == this.root || obj.parent;
+        }
+        isVisable(item) {
+            return item.visible;
+        }
+        getDisPlayName(gobj) {
+            let cname = Consts.getClassName(gobj);
+            if (cname) {
+                cname = gobj.name + "(" + cname + ")";
+            }
+            else
+                cname = gobj.name;
+            return cname;
+        }
+        getDisPlayRect(item) {
+            let gameEgret = this.displayModule;
+            let p = item.localToGlobal(0, 0);
+            let pr = item.localToGlobal(item.width, item.height);
+            let x = p.x;
+            let y = p.y;
+            let width = pr.x - p.x;
+            let height = pr.y - p.y;
+            return [x, y, width, height];
+        }
+        getDisPlayIcon(obj) {
+            let gameEgret = this.displayModule;
+            if (gameEgret.MovieClip && obj instanceof gameEgret.MovieClip) {
+                return Consts.icons[FObjectType.MOVIECLIP];
+            }
+            if (gameEgret.Bitmap && obj instanceof gameEgret.Bitmap) {
+                return Consts.icons[FObjectType.IMAGE];
+            }
+            if (obj instanceof gameEgret.Sprite) {
+                return Consts.icons[FObjectType.SPRITE];
+            }
+            let eui = Consts.gameWindow["eui"];
+            if (eui) {
+                if (eui.SliderBase && obj instanceof eui.SliderBase) {
+                    return Consts.icons[FObjectType.EXT_SLIDER];
+                }
+                if (eui.List && obj instanceof eui.List) {
+                    return Consts.icons[FObjectType.LIST];
+                }
+                if (eui.TextInput && obj instanceof eui.TextInput) {
+                    return Consts.icons[FObjectType.INPUTTEXT];
+                }
+                if (eui.ProgressBar && obj instanceof eui.ProgressBar) {
+                    return Consts.icons[FObjectType.EXT_PROGRESS_BAR];
+                }
+                if (eui.Label && obj instanceof eui.Label) {
+                    return Consts.icons[FObjectType.EXT_LABEL];
+                }
+                if (eui.Button && obj instanceof eui.Button) {
+                    return Consts.icons[FObjectType.EXT_BUTTON];
+                }
+                if (eui.Panel && obj instanceof eui.Panel) {
+                    return Consts.icons[FObjectType.COMPONENT];
+                }
+            }
+            return Consts.icons["GObject"];
+        }
+    }
+
     class DocumentUI {
         constructor(view) {
             this.frame = document.getElementById('gameFrame');
@@ -744,6 +1206,7 @@
             this.resize();
             this.view.onClick(this, this.onClick);
             EditorEvent.on(EditorEvent.ClickChanged, this, this.onClickChange);
+            EditorEvent.on(EditorEvent.TreeTypeChanged, this, this.onListChange);
             document.onkeydown = this.keyDown.bind(this);
             document.onkeyup = this.keyUp.bind(this);
         }
@@ -836,13 +1299,14 @@
                 Consts.engineManager.end();
                 Consts.engineManager = null;
             }
+            Consts.treeTypeList = [];
             this.view.m_editType.selectedIndex = 0;
             this.frame.src = url;
+            this.loadTimes = 0;
             Laya.timer.loop(100, this, this.frameLoad);
         }
         frameLoad() {
             var win = this.frame.contentWindow;
-            var gamefgui = win.fairygui ? win.fairygui : win.fgui;
             Consts.gameWindow = win;
             if (win.Laya) {
                 Consts.engineManager = LayaEngine.getInstance();
@@ -855,16 +1319,82 @@
             else if (win.cc) {
                 Consts.engineManager = CCEngine.getInstance();
                 Consts.engineManager.start(win.cc);
+                var toolbar = win.document.getElementsByClassName('toolbar')[0];
+                if (toolbar)
+                    toolbar.style.display = 'none';
             }
+            if (Consts.engineManager) {
+                this.loadTimes++;
+                if (Consts.treeTypeList.indexOf(Consts.engineManager.type) == -1) {
+                    Consts.treeTypeList.push(Consts.engineManager.type);
+                }
+            }
+            var gamefgui = win.fairygui ? win.fairygui : win.fgui;
             if (gamefgui) {
                 if (!gamefgui.GRoot._inst)
                     return;
-                Consts.displayList = FGUIManager.getInstance();
-                Consts.displayList.start(gamefgui.GRoot._inst, gamefgui);
                 Laya.timer.clear(this, this.frameLoad);
-                EditorEvent.event(EditorEvent.TreeChanged);
+                this.initFgui();
+                if (Consts.treeTypeList.indexOf(TreeType.FGUI) == -1)
+                    Consts.treeTypeList.push(TreeType.FGUI);
+                EditorEvent.event(EditorEvent.TreeTypeDataChanged, Consts.treeTypeList.indexOf(TreeType.FGUI));
+            }
+            else {
+                if (this.loadTimes > 50) {
+                    Laya.timer.clear(this, this.frameLoad);
+                    this.initManager();
+                    EditorEvent.event(EditorEvent.TreeTypeDataChanged, Consts.treeTypeList.indexOf(Consts.engineManager.type));
+                }
+            }
+            if (Consts.displayList) {
                 this.frame.contentWindow.document.onkeydown = this.keyDown.bind(this);
                 this.frame.contentWindow.document.onkeyup = this.keyUp.bind(this);
+            }
+        }
+        initFgui() {
+            if (Consts.displayList) {
+                Consts.displayList.end();
+                Consts.displayList = null;
+            }
+            var win = this.frame.contentWindow;
+            var gamefgui = win.fairygui ? win.fairygui : win.fgui;
+            if (gamefgui) {
+                Consts.displayList = FGUIManager.getInstance();
+                Consts.displayList.start(gamefgui.GRoot._inst, gamefgui);
+                EditorEvent.event(EditorEvent.TreeChanged);
+                return true;
+            }
+        }
+        initManager() {
+            if (Consts.displayList) {
+                Consts.displayList.end();
+                Consts.displayList = null;
+            }
+            var win = this.frame.contentWindow;
+            if (win.Laya) {
+                Consts.displayList = LayaManager.getInstance();
+                Consts.displayList.start(win.Laya.stage, win.Laya);
+                EditorEvent.event(EditorEvent.TreeChanged);
+                return true;
+            }
+            else if (win.cc) {
+                Consts.displayList = CCManager.getInstance();
+                Consts.displayList.start(win.cc.director.getScene(), win.cc);
+                EditorEvent.event(EditorEvent.TreeChanged);
+                return true;
+            }
+            else if (win.egret) {
+                Consts.displayList = EgretManager.getInstance();
+                Consts.displayList.start(win.egret.lifecycle.stage, win.egret);
+                EditorEvent.event(EditorEvent.TreeChanged);
+            }
+        }
+        onListChange(type) {
+            if (type == TreeType.FGUI) {
+                this.initFgui();
+            }
+            else {
+                this.initManager();
             }
         }
         loadCallBack() {
@@ -872,13 +1402,11 @@
         }
         selectItem(item) {
             if (item) {
-                let p = item.localToGlobal(0, 0);
-                let pr = item.localToGlobal(item.width, item.height);
-                let x = p.x;
-                let y = p.y;
-                let width = pr.x - p.x;
-                let height = pr.y - p.y;
-                Consts.engineManager.showFGUIRect(x, y, width, height);
+                let rect = Consts.displayList.getDisPlayRect(item);
+                if (rect)
+                    Consts.engineManager.showRect(rect[0], rect[1], rect[2], rect[3]);
+                else
+                    Consts.engineManager.hideFGUIRect();
             }
             else {
                 Consts.engineManager.hideFGUIRect();
@@ -889,10 +1417,22 @@
     class BasicPropsUI {
         constructor(view) {
             this.view = view;
+            this.view.m_name.editable = false;
         }
         setData(item) {
+            let gameModule = Consts.displayList.displayModule;
+            if (gameModule.GObject && item instanceof gameModule.GObject) {
+                this.setFGUIData(item);
+            }
+            else if (gameModule.DisplayObject && item instanceof gameModule.DisplayObject) {
+                this.setEgretData(item);
+            }
+            else if (gameModule.Sprite && item instanceof gameModule.Sprite) {
+                this.setLaya2DData(item);
+            }
+        }
+        setFGUIData(item) {
             this.view.m_name.text = item.name;
-            this.view.m_name.editable = false;
             this.view.m_x.setObj(item, "x");
             this.view.m_y.setObj(item, "y");
             this.view.m_width.setObj(item, "width");
@@ -912,6 +1452,38 @@
             this.view.m_visible.setObj(item, "visible", true);
             this.view.m_grayed.setObj(item, "grayed", false);
             this.view.m_touchable.setObj(item, "touchable", true);
+        }
+        setLaya2DData(item) {
+            this.view.m_name.text = item.name;
+            this.view.m_x.setObj(item, "x");
+            this.view.m_y.setObj(item, "y");
+            this.view.m_width.setObj(item, "width");
+            this.view.m_height.setObj(item, "height");
+            this.view.m_scaleX.setObj(item, "scaleX");
+            this.view.m_scaleY.setObj(item, "scaleY");
+            this.view.m_skewX.setObj(item, "skewY");
+            this.view.m_pivotX.setObj(item, "pivotX");
+            this.view.m_pivotY.setObj(item, "pivotY");
+            this.view.m_alpha.setObj(item, "alpha");
+            this.view.m_rotation.setObj(item, "rotation");
+            this.view.m_visible.setObj(item, "visible", true);
+            this.view.m_touchable.setObj(item, "mouseThrough", false);
+        }
+        setEgretData(item) {
+            this.view.m_name.text = item.name;
+            this.view.m_x.setObj(item, "x");
+            this.view.m_y.setObj(item, "y");
+            this.view.m_width.setObj(item, "width");
+            this.view.m_height.setObj(item, "height");
+            this.view.m_scaleX.setObj(item, "scaleX");
+            this.view.m_scaleY.setObj(item, "scaleY");
+            this.view.m_skewX.setObj(item, "skewY");
+            this.view.m_pivotX.setObj(item, "anchorOffsetX");
+            this.view.m_pivotY.setObj(item, "anchorOffsetY");
+            this.view.m_alpha.setObj(item, "alpha");
+            this.view.m_rotation.setObj(item, "rotation");
+            this.view.m_visible.setObj(item, "visible", true);
+            this.view.m_touchable.setObj(item, "touchEnabled", true);
         }
     }
 
@@ -951,7 +1523,7 @@
         }
         setData(item) {
             if (item) {
-                this.allController = item.asCom._controllers;
+                this.allController = item._controllers;
                 if (this.allController && this.allController.length > 0) {
                     this.allControllerNames = [];
                     for (var i = 0; i < this.allController.length; i++) {
@@ -993,7 +1565,7 @@
         }
         setData(item) {
             if (item) {
-                this.allTransition = item.asCom._transitions;
+                this.allTransition = item._transitions;
                 if (this.allTransition && this.allTransition.length > 0) {
                     this.view.m_list.numItems = this.allTransition.length;
                 }
@@ -1005,21 +1577,168 @@
         }
     }
 
+    class Basic3DPropsUI {
+        constructor(view) {
+            this.view = view;
+            this.view.m_name.editable = false;
+        }
+        setData(item) {
+            let gameModule = Consts.displayList.displayModule;
+            if (gameModule && gameModule.Sprite3D && item instanceof gameModule.Sprite3D) {
+                this.setLaya3DData(item);
+            }
+        }
+        setLaya3DData(item) {
+            this.view.m_name.text = item.name;
+            let transform = item.transform;
+            this.view.m_x.setObj(transform, "x", "position");
+            this.view.m_y.setObj(transform, "y", "position");
+            this.view.m_z.setObj(transform, "z", "position");
+            this.view.m_scaleX.setObj(transform, "x", "scale");
+            this.view.m_scaleY.setObj(transform, "y", "scale");
+            this.view.m_scaleZ.setObj(transform, "z", "scale");
+            this.view.m_rotationX.setObj(transform, "x", "rotationEuler");
+            this.view.m_rotationY.setObj(transform, "y", "rotationEuler");
+            this.view.m_rotationZ.setObj(transform, "z", "rotationEuler");
+            this.view.m_localx.setObj(transform, "x", "localPosition");
+            this.view.m_localy.setObj(transform, "y", "localPosition");
+            this.view.m_localz.setObj(transform, "z", "localPosition");
+            this.view.m_localscaleX.setObj(transform, "x", "localRotationEuler");
+            this.view.m_localscaleY.setObj(transform, "y", "localRotationEuler");
+            this.view.m_localscaleZ.setObj(transform, "z", "localRotationEuler");
+            this.view.m_localrotationX.setObj(transform, "x", "localScale");
+            this.view.m_localrotationY.setObj(transform, "y", "localScale");
+            this.view.m_localrotationZ.setObj(transform, "z", "localScale");
+            this.view.m_visible.setObj(item, "active", true);
+            this.view.m_static.setObj(item, "isStatic", false);
+        }
+    }
+
+    class CreatorPropsUI {
+        constructor(view) {
+            this.view = view;
+            this.view.m_name.editable = false;
+            let text = this.view.m_color.getTextField();
+            text.displayObject.on(Laya.Event.BLUR, this, this.changeValue);
+        }
+        setData(item) {
+            this.setCCData(item);
+        }
+        setCCData(item) {
+            this.item = item;
+            this.view.m_name.text = item.name;
+            this.view.m_x.setObj(item, "x");
+            this.view.m_y.setObj(item, "y");
+            this.view.m_width.setObj(item, "width");
+            this.view.m_height.setObj(item, "height");
+            this.view.m_scaleX.setObj(item, "scaleX");
+            this.view.m_scaleY.setObj(item, "scaleY");
+            this.view.m_skewX.setObj(item, "skewX");
+            this.view.m_skewY.setObj(item, "skewY");
+            this.view.m_pivotX.setObj(item, "anchorX");
+            this.view.m_pivotY.setObj(item, "anchorY");
+            this.view.m_alpha.setObj(item, "opacity");
+            this.view.m_rotation.setObj(item, "rotation");
+            this.view.m_visible.setObj(item, "active", false);
+            this.view.m_color.text = item.color.toCSS("#rrggbb");
+        }
+        changeValue() {
+            this.item.color.fromHEX(this.view.m_color.text);
+        }
+    }
+
+    class CreatorWidgetUI {
+        constructor(view) {
+            this.view = view;
+            this.view.m_TargetValue.editable = false;
+            this.view.m_AlignMode.on(fairygui.Events.STATE_CHANGED, this, this.onChanged);
+        }
+        setData(item) {
+            this.setCCData(item);
+        }
+        setCCData(item) {
+            let gameModule = Consts.displayList.displayModule;
+            var widget = item.getComponent(gameModule.Widget);
+            this.widget = widget;
+            if (widget) {
+                this.view.visible = true;
+                this.view.m_Top.setObj(widget, "isAlignTop", false);
+                this.view.m_TopValue.setObj(widget, "top");
+                this.view.m_Left.setObj(widget, "isAlignLeft", false);
+                this.view.m_LeftValue.setObj(widget, "left");
+                this.view.m_Right.setObj(widget, "isAlignRight", false);
+                this.view.m_RightValue.setObj(widget, "right");
+                this.view.m_Bottom.setObj(widget, "isAlignBottom", false);
+                this.view.m_BottomValue.setObj(widget, "bottom");
+                this.view.m_HorizontalCenter.setObj(widget, "isAlignHorizontalCenter", false);
+                this.view.m_HorizontalCenterValue.setObj(widget, "horizontalCenter");
+                this.view.m_VerticlCenter.setObj(widget, "isAlignVerticalCenter", false);
+                this.view.m_VerticlCenterValue.setObj(widget, "verticalCenter");
+                this.view.m_TargetValue.setObj(widget, "isAlignXX", false);
+                this.view.m_AlignMode.selectedIndex = this.widget.alignMode;
+                if (widget.target) {
+                    this.view.m_TargetValue.text = widget.target.name;
+                }
+                else if (item.parent) {
+                    this.view.m_TargetValue.text = item.parent.name;
+                }
+                else
+                    this.view.m_TargetValue.text = "";
+            }
+            else {
+                this.view.visible = false;
+            }
+        }
+        onChanged() {
+            this.widget.alignMode = this.view.m_AlignMode.selectedIndex;
+        }
+    }
+
     class InspectorUI {
         constructor(view) {
             EditorEvent.on(EditorEvent.SelectionChanged, this, this.selectItem);
             this.view = view;
             this.baseProps = new BasicPropsUI(this.view.m_baseComp);
+            this.base3DProps = new Basic3DPropsUI(this.view.m_base3DComp);
             this.infoComp = new InfoPropsUI(this.view.m_infoComp);
             this.controllerComp = new ComControllerUI(this.view.m_controllerComp);
             this.transitionComp = new ComTransitionUI(this.view.m_transitionComp);
+            this.ccInfoComp = new CreatorPropsUI(this.view.m_nodeComp);
+            this.ccWidget = new CreatorWidgetUI(this.view.m_widgetComp);
         }
         selectItem(item) {
             if (item) {
+                let gameModule = Consts.displayList.displayModule;
                 this.infoComp.setData(item);
-                this.baseProps.setData(item);
-                this.controllerComp.setData(item);
-                this.transitionComp.setData(item);
+                if (Consts.nowTreeType == TreeType.FGUI) {
+                    this.view.m_type.selectedIndex = 0;
+                    this.baseProps.setData(item);
+                    this.controllerComp.setData(item);
+                    this.transitionComp.setData(item);
+                }
+                else if (Consts.nowTreeType == TreeType.Laya) {
+                    if (gameModule.Sprite && item instanceof gameModule.Sprite) {
+                        this.view.m_type.selectedIndex = 1;
+                        this.baseProps.setData(item);
+                    }
+                    else if (gameModule.Sprite3D && item instanceof gameModule.Sprite3D) {
+                        this.view.m_type.selectedIndex = 2;
+                        this.base3DProps.setData(item);
+                    }
+                    else if (gameModule.Node && item instanceof gameModule.Node) {
+                        this.view.m_type.selectedIndex = 2;
+                        this.base3DProps.setData(item);
+                    }
+                }
+                else if (Consts.nowTreeType == TreeType.CC) {
+                    this.view.m_type.selectedIndex = 3;
+                    this.ccInfoComp.setData(item);
+                    this.ccWidget.setData(item);
+                }
+                else if (Consts.nowTreeType == TreeType.Egret) {
+                    this.view.m_type.selectedIndex = 4;
+                    this.baseProps.setData(item);
+                }
             }
         }
         onClick() {
@@ -1064,12 +1783,45 @@
         }
     }
 
+    class Basic3DPropsPanel extends fgui.GComponent {
+        static createInstance() {
+            return (fgui.UIPackage.createObject("Builder", "Basic3DPropsPanel"));
+        }
+        onConstruct() {
+            this.m_showRestrictSize = this.getControllerAt(0);
+            this.m_type = this.getControllerAt(1);
+            this.m_name = (this.getChildAt(1));
+            this.m_x = (this.getChildAt(4));
+            this.m_y = (this.getChildAt(5));
+            this.m_z = (this.getChildAt(6));
+            this.m_rotationX = (this.getChildAt(8));
+            this.m_rotationY = (this.getChildAt(9));
+            this.m_rotationZ = (this.getChildAt(10));
+            this.m_scaleX = (this.getChildAt(12));
+            this.m_scaleY = (this.getChildAt(13));
+            this.m_scaleZ = (this.getChildAt(14));
+            this.m_visible = (this.getChildAt(15));
+            this.m_static = (this.getChildAt(16));
+            this.m_localx = (this.getChildAt(18));
+            this.m_localy = (this.getChildAt(19));
+            this.m_localz = (this.getChildAt(20));
+            this.m_localrotationX = (this.getChildAt(22));
+            this.m_localrotationY = (this.getChildAt(23));
+            this.m_localrotationZ = (this.getChildAt(24));
+            this.m_localscaleX = (this.getChildAt(26));
+            this.m_localscaleY = (this.getChildAt(27));
+            this.m_localscaleZ = (this.getChildAt(28));
+        }
+    }
+    Basic3DPropsPanel.URL = "ui://2pshu6oi6who1nry324";
+
     class BasicPropsPanel extends fgui.GComponent {
         static createInstance() {
             return (fgui.UIPackage.createObject("Builder", "BasicPropsPanel"));
         }
         onConstruct() {
             this.m_showRestrictSize = this.getControllerAt(0);
+            this.m_type = this.getControllerAt(1);
             this.m_name = (this.getChildAt(3));
             this.m_x = (this.getChildAt(4));
             this.m_y = (this.getChildAt(5));
@@ -1159,6 +1911,59 @@
     }
     TitleBar.URL = "ui://2pshu6oiitme7iudp";
 
+    class CreatorPropsPanel extends fgui.GComponent {
+        static createInstance() {
+            return (fgui.UIPackage.createObject("Builder", "CreatorPropsPanel"));
+        }
+        onConstruct() {
+            this.m_name = (this.getChildAt(8));
+            this.m_x = (this.getChildAt(9));
+            this.m_y = (this.getChildAt(10));
+            this.m_width = (this.getChildAt(11));
+            this.m_height = (this.getChildAt(12));
+            this.m_scaleX = (this.getChildAt(14));
+            this.m_scaleY = (this.getChildAt(15));
+            this.m_skewX = (this.getChildAt(16));
+            this.m_skewY = (this.getChildAt(17));
+            this.m_pivotX = (this.getChildAt(18));
+            this.m_pivotY = (this.getChildAt(19));
+            this.m_alpha = (this.getChildAt(20));
+            this.m_rotation = (this.getChildAt(21));
+            this.m_visible = (this.getChildAt(22));
+            this.m_color = (this.getChildAt(23));
+        }
+    }
+    CreatorPropsPanel.URL = "ui://2pshu6oiixw71nry325";
+
+    class CreatorWidgetPanel extends fgui.GComponent {
+        static createInstance() {
+            return (fgui.UIPackage.createObject("Builder", "CreatorWidgetPanel"));
+        }
+        onConstruct() {
+            this.m_top = this.getControllerAt(0);
+            this.m_left = this.getControllerAt(1);
+            this.m_right = this.getControllerAt(2);
+            this.m_bottom = this.getControllerAt(3);
+            this.m_horizontal = this.getControllerAt(4);
+            this.m_verticl = this.getControllerAt(5);
+            this.m_TopValue = (this.getChildAt(2));
+            this.m_TargetValue = (this.getChildAt(3));
+            this.m_Top = (this.getChildAt(4));
+            this.m_AlignMode = (this.getChildAt(5));
+            this.m_LeftValue = (this.getChildAt(6));
+            this.m_Left = (this.getChildAt(7));
+            this.m_RightValue = (this.getChildAt(8));
+            this.m_Right = (this.getChildAt(9));
+            this.m_BottomValue = (this.getChildAt(10));
+            this.m_Bottom = (this.getChildAt(11));
+            this.m_HorizontalCenterValue = (this.getChildAt(12));
+            this.m_HorizontalCenter = (this.getChildAt(13));
+            this.m_VerticlCenterValue = (this.getChildAt(14));
+            this.m_VerticlCenter = (this.getChildAt(15));
+        }
+    }
+    CreatorWidgetPanel.URL = "ui://2pshu6oiixw71nry326";
+
     class DisplayTreeView extends fgui.GComponent {
         static createInstance() {
             return (fgui.UIPackage.createObject("Builder", "DisplayTreeView"));
@@ -1189,13 +1994,12 @@
             this.m_docBg = (this.getChildAt(0));
             this.m_border = (this.getChildAt(1));
             this.m_tabBar = (this.getChildAt(2));
-            this.m_hand = (this.getChildAt(3));
-            this.m_arrow = (this.getChildAt(4));
-            this.m_device = (this.getChildAt(6));
-            this.m_landscape = (this.getChildAt(8));
-            this.m_portrait = (this.getChildAt(9));
-            this.m_btnfps = (this.getChildAt(11));
-            this.m_btnpause = (this.getChildAt(12));
+            this.m_arrow = (this.getChildAt(3));
+            this.m_device = (this.getChildAt(5));
+            this.m_landscape = (this.getChildAt(7));
+            this.m_portrait = (this.getChildAt(8));
+            this.m_btnfps = (this.getChildAt(10));
+            this.m_btnpause = (this.getChildAt(11));
         }
     }
     DocumentView.URL = "ui://2pshu6oimlmb1nry31x";
@@ -1208,14 +2012,22 @@
             this.m_base = this.getControllerAt(0);
             this.m_controller = this.getControllerAt(1);
             this.m_transition = this.getControllerAt(2);
+            this.m_type = this.getControllerAt(3);
+            this.m_node = this.getControllerAt(4);
+            this.m_widget = this.getControllerAt(5);
             this.m_infoComp = (this.getChildAt(1));
             this.m_baseBar = (this.getChildAt(2));
             this.m_baseComp = (this.getChildAt(3));
-            this.m_controllerBar = (this.getChildAt(4));
-            this.m_controllerComp = (this.getChildAt(5));
-            this.m_transitionBar = (this.getChildAt(6));
-            this.m_transitionComp = (this.getChildAt(7));
-            this.m_group = (this.getChildAt(8));
+            this.m_base3DComp = (this.getChildAt(4));
+            this.m_controllerBar = (this.getChildAt(5));
+            this.m_controllerComp = (this.getChildAt(6));
+            this.m_transitionBar = (this.getChildAt(7));
+            this.m_transitionComp = (this.getChildAt(8));
+            this.m_NodeBar = (this.getChildAt(9));
+            this.m_nodeComp = (this.getChildAt(10));
+            this.m_WidgetBar = (this.getChildAt(11));
+            this.m_widgetComp = (this.getChildAt(12));
+            this.m_group = (this.getChildAt(13));
         }
     }
     InspectorView.URL = "ui://2pshu6oimtrqiudk";
@@ -1255,6 +2067,7 @@
 
     class BuilderBinder {
         static bindAll() {
+            fgui.UIObjectFactory.setExtension(Basic3DPropsPanel.URL, Basic3DPropsPanel);
             fgui.UIObjectFactory.setExtension(BasicPropsPanel.URL, BasicPropsPanel);
             fgui.UIObjectFactory.setExtension(ComControllerPanel.URL, ComControllerPanel);
             fgui.UIObjectFactory.setExtension(ComControllerItem.URL, ComControllerItem);
@@ -1262,6 +2075,8 @@
             fgui.UIObjectFactory.setExtension(ComTransitionItem.URL, ComTransitionItem);
             fgui.UIObjectFactory.setExtension(LibView_sep.URL, LibView_sep);
             fgui.UIObjectFactory.setExtension(TitleBar.URL, TitleBar);
+            fgui.UIObjectFactory.setExtension(CreatorPropsPanel.URL, CreatorPropsPanel);
+            fgui.UIObjectFactory.setExtension(CreatorWidgetPanel.URL, CreatorWidgetPanel);
             fgui.UIObjectFactory.setExtension(DisplayTreeView.URL, DisplayTreeView);
             fgui.UIObjectFactory.setExtension(MainView.URL, MainView);
             fgui.UIObjectFactory.setExtension(DocumentView.URL, DocumentView);
@@ -1297,14 +2112,25 @@
             text.restrict = "0-9.";
         }
         changeValue() {
-            if (this.targetObj && this.targetKey) {
+            if (this.targetObj && this.targetKey && this.tKey) {
+                let obj = this.targetObj[this.tKey];
+                obj[this.targetKey] = Number(this.text);
+                this.targetObj[this.tKey] = obj;
+            }
+            else if (this.targetObj && this.targetKey) {
                 this.targetObj[this.targetKey] = Number(this.text);
             }
         }
-        setObj(target, key) {
+        setObj(target, key, tKey) {
             this.targetObj = target;
             this.targetKey = key;
-            this.text = this.targetObj[this.targetKey] + "";
+            this.tKey = tKey;
+            if (tKey) {
+                this.text = target[tKey][key] + "";
+            }
+            else {
+                this.text = target[key] + "";
+            }
         }
     }
     XYInput.URL = "ui://nk9ejx23wqe79a";

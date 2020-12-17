@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="270,245" bgColorEnabled="true" bgColor="#383838">
+  <controller name="showRestrictSize" pages="0,,1," selected="0"/>
+  <controller name="type" exported="true" pages="1,Laya" selected="0"/>
+  <displayList>
+    <text id="n17" name="n17" xy="4,6" size="80,19" fontSize="12" color="#bdbdbd" align="center" autoSize="none" text="名称"/>
+    <component id="n9" name="name" src="gcza1s" fileName="Input/TextInput.xml" pkg="nk9ejx23" xy="87,5" size="152,20" controller="noBorder,0,showClear,0"/>
+    <component id="n53" name="n53" src="ehmsu7z" fileName="basic/InfoButton.xml" xy="247,7" visible="false" tooltips="当选定多个对象时，使用#可以自动添加数字序列。例如：&#xA;a#&#xA;则选定的元件的名称依次修改为a0,a1,a2.."/>
+    <text id="n13" name="n13" xy="4,32" size="40,19" fontSize="12" color="#bdbdbd" align="center" autoSize="none" text="位置"/>
+    <component id="n21" name="x" src="wqe79a" fileName="Input/XYInput.xml" pkg="nk9ejx23" xy="46,32" size="72,20" controller="xy,0"/>
+    <component id="n23" name="y" src="wqe79a" fileName="Input/XYInput.xml" pkg="nk9ejx23" xy="121,32" size="73,20" controller="xy,1"/>
+    <component id="n97_6who" name="z" src="wqe79a" fileName="Input/XYInput.xml" pkg="nk9ejx23" xy="196,32" size="72,20" controller="xy,4"/>
+    <text id="n24" name="n24" xy="4,58" size="40,19" fontSize="12" color="#bdbdbd" align="center" autoSize="none" text="旋转"/>
+    <component id="n25" name="rotationX" src="wqe79a" fileName="Input/XYInput.xml" pkg="nk9ejx23" xy="46,57" size="72,20" controller="xy,0"/>
+    <component id="n27" name="rotationY" src="wqe79a" fileName="Input/XYInput.xml" pkg="nk9ejx23" xy="121,57" size="72,20" controller="xy,1"/>
+    <component id="n98_6who" name="rotationZ" src="wqe79a" fileName="Input/XYInput.xml" pkg="nk9ejx23" xy="196,57" size="72,20" controller="xy,4"/>
+    <text id="n48" name="n48" xy="4,85" size="40,19" fontSize="12" color="#bdbdbd" align="center" autoSize="none" text="缩放"/>
+    <component id="n51" name="scaleX" src="wqe79a" fileName="Input/XYInput.xml" pkg="nk9ejx23" xy="46,85" size="73,20" controller="xy,0"/>
+    <component id="n50" name="scaleY" src="wqe79a" fileName="Input/XYInput.xml" pkg="nk9ejx23" xy="121,85" size="73,20" controller="xy,1"/>
+    <component id="n99_6who" name="scaleZ" src="wqe79a" fileName="Input/XYInput.xml" pkg="nk9ejx23" xy="196,85" size="73,20" controller="xy,1"/>
+    <component id="n32" name="visible" src="dp4f7u" fileName="Button/EmCheckbox_as.xml" pkg="nk9ejx23" xy="16,215" size="59,19" tooltips="仅在测试和运行期可以看到效果，&#xA;设计界面中将始终保持可见">
+      <Button title="不可见"/>
+    </component>
+    <component id="n113_6who" name="static" src="dp4f7u" fileName="Button/EmCheckbox_as.xml" pkg="nk9ejx23" xy="87,215" size="47,19" grayed="true" tooltips="仅在测试和运行期可以看到效果，&#xA;设计界面中将始终保持可见">
+      <Button title="静态"/>
+    </component>
+    <text id="n100_6who" name="n100" xy="4,135" size="40,19" fontSize="12" color="#bdbdbd" align="center" autoSize="none" text="位置"/>
+    <component id="n101_6who" name="localx" src="wqe79a" fileName="Input/XYInput.xml" pkg="nk9ejx23" xy="46,135" size="72,20" controller="xy,0"/>
+    <component id="n102_6who" name="localy" src="wqe79a" fileName="Input/XYInput.xml" pkg="nk9ejx23" xy="121,135" size="73,20" controller="xy,1"/>
+    <component id="n103_6who" name="localz" src="wqe79a" fileName="Input/XYInput.xml" pkg="nk9ejx23" xy="196,135" size="72,20" controller="xy,4"/>
+    <text id="n104_6who" name="n104" xy="4,161" size="40,19" fontSize="12" color="#bdbdbd" align="center" autoSize="none" text="旋转"/>
+    <component id="n105_6who" name="localrotationX" src="wqe79a" fileName="Input/XYInput.xml" pkg="nk9ejx23" xy="46,160" size="72,20" controller="xy,0"/>
+    <component id="n106_6who" name="localrotationY" src="wqe79a" fileName="Input/XYInput.xml" pkg="nk9ejx23" xy="121,160" size="72,20" controller="xy,1"/>
+    <component id="n107_6who" name="localrotationZ" src="wqe79a" fileName="Input/XYInput.xml" pkg="nk9ejx23" xy="196,160" size="72,20" controller="xy,4"/>
+    <text id="n108_6who" name="n108" xy="4,188" size="40,19" fontSize="12" color="#bdbdbd" align="center" autoSize="none" text="缩放"/>
+    <component id="n109_6who" name="localscaleX" src="wqe79a" fileName="Input/XYInput.xml" pkg="nk9ejx23" xy="46,188" size="73,20" controller="xy,0"/>
+    <component id="n110_6who" name="localscaleY" src="wqe79a" fileName="Input/XYInput.xml" pkg="nk9ejx23" xy="121,188" size="73,20" controller="xy,1"/>
+    <component id="n111_6who" name="localscaleZ" src="wqe79a" fileName="Input/XYInput.xml" pkg="nk9ejx23" xy="196,188" size="73,20" controller="xy,1"/>
+    <text id="n112_6who" name="n112" xy="4,113" size="80,19" fontSize="12" color="#bdbdbd" align="center" autoSize="none" text="局部"/>
+  </displayList>
+</component>

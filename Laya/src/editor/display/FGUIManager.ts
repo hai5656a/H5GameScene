@@ -1,5 +1,5 @@
 import { IDisplayManager } from "./IDisplayManager";
-import Consts from "../Consts";
+import Consts, { TreeType } from "../Consts";
 import FObjectType from "../FObjectType";
 
 export default class  FGUIManager implements IDisplayManager{
@@ -17,6 +17,7 @@ export default class  FGUIManager implements IDisplayManager{
     start(root,m){
         this.root = root;
         this.displayModule = m;
+        Consts.nowTreeType = TreeType.FGUI;
     };
     /**引擎结束 */
     end(){
@@ -34,7 +35,8 @@ export default class  FGUIManager implements IDisplayManager{
         if(item.name==Consts.EditorLineName)
           return;
         let node : fgui.GTreeNode= this.createNode(item);
-        parent.addChild(node);
+        if(node)
+          parent.addChild(node);
         if(item.asCom.numChildren>0){
             this.createChildren(item.asCom._children,node);
         }
@@ -44,11 +46,14 @@ export default class  FGUIManager implements IDisplayManager{
             this.createDisplay(items[i],parent);
         }
     }
-    private createNode(item:fgui.GObject):fgui.GTreeNode{
-        let node : fgui.GTreeNode = new  fgui.GTreeNode(item.asCom.numChildren>0)
+    private createNode(item):fgui.GTreeNode{
+        let node : fgui.GTreeNode = new  fgui.GTreeNode(item.numChildren>0)
         node.data = item;
-        item[Consts.EditorNodeName] = node;
-        return node;
+        let target = item._node?item._node:item._displayObject;
+        if(target){
+            target[Consts.EditorNodeName] = node;
+            return node;
+        }
     }
     isShow(obj:fgui.GObject){
         
@@ -64,6 +69,15 @@ export default class  FGUIManager implements IDisplayManager{
             cname = gobj.name+"("+cname+")"
         }else cname = gobj.name;
         return cname;
+    }
+    getDisPlayRect(item:fgui.GObject){
+        let p = item.localToGlobal(0,0);
+            let pr = item.localToGlobal(item.width,item.height);
+            let x = p.x;
+            let y =p.y;
+            let width =pr.x-p.x;
+            let height = pr.y-p.y;
+        return [x,y,width,height];    
     }
     public getDisPlayIcon(obj:fgui.GObject){
         let gamefgui = this.displayModule; 
@@ -85,7 +99,7 @@ export default class  FGUIManager implements IDisplayManager{
         if(obj instanceof gamefgui.GGraph){
             return Consts.icons[FObjectType.GRAPH];
         }
-        if(obj instanceof gamefgui.GTree){
+        if(gamefgui.GTree && obj instanceof gamefgui.GTree){
             return Consts.icons[FObjectType.TREE];
         }
         if(obj instanceof gamefgui.GList){

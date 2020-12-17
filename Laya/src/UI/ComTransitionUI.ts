@@ -18,9 +18,9 @@ export default class ComTransitionUI{
     clickItem(t:fairygui.Transition){
         t.play();
     }
-    setData(item:fgui.GObject){
+    setData(item){
         if(item){
-            this.allTransition = item.asCom._transitions;
+            this.allTransition = item._transitions;
             if(this.allTransition&&this.allTransition.length>0){
                 this.view.m_list.numItems = this.allTransition.length;
             }else this.view.m_list.numItems = 0;

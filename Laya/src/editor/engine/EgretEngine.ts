@@ -1,4 +1,4 @@
-import Consts from "../Consts";
+import Consts, { TreeType } from "../Consts";
 import EditorEvent from "../EditorEvent";
 import { IEngine } from "./IEngine";
 
@@ -10,7 +10,7 @@ export default class  EgretEngine implements IEngine{
         }
         return this.i;
     }
-    type:string="Egret";
+    type=TreeType.Egret;
     engine;
     start(game){
         this.engine = game;
@@ -20,29 +20,36 @@ export default class  EgretEngine implements IEngine{
           this.onFPS()
         this.removeSelectModel();
         this.engine = null;
-        
+        this.removeRect();
     }
-    rect:fgui.GGraph;
+    rect:egret.Sprite;
     createRectGraph(){
-        if(this.rect){
-            this.rect.removeFromParent();
-            this.rect.dispose();
+        if(this.rect&&this.rect.parent){
+            this.rect.parent.removeChild(this.rect);
+            // this.rect.d();
         }
-        let line = this.rect = new Consts.displayList.displayModule.GGraph();
-        line.drawRect(Consts.rectLineSize,Consts.rectColor,1,Consts.rectColor,Consts.rectFill);
+        let line:egret.Sprite = this.rect = new Consts.displayList.displayModule.Sprite();
+       
+        // this.rect.graphics.drawRect(Consts.rectLineSize,Consts.rectColor,1,Consts.rectColor,Consts.rectFill);
         line.name = Consts.EditorLineName;
-        line.touchable = false;  
+        line.touchEnabled = false;  
         
     }
-    showFGUIRect(x,y,w,h){
-        if(!this.rect||this.rect.isDisposed){
+    showRect(x,y,w,h){
+        if(!this.rect){
             this.createRectGraph();
         }
         this.rect.visible =  true;
-        this.rect.setSize(w,h);
+        // this.rect.setSize(w,h);
+        let ctx = this.rect.graphics;
+        ctx.clear();
+        ctx.lineStyle(Consts.rectLineSize, Consts.rectColor, 1);
+        ctx.beginFill(Consts.rectColor, Consts.rectFill);
+        ctx.drawRect(0,0,w,h);
+        ctx.endFill();
             this.rect.x = x;
             this.rect.y = y;
-            this.rect.visible = true;
+         
             if(this.rect.parent){
                 this.rect.parent.setChildIndex(this.rect,this.rect.parent.numChildren-1);
             }else{
@@ -52,6 +59,11 @@ export default class  EgretEngine implements IEngine{
     hideFGUIRect(){
         if(this.rect)
           this.rect.visible = false;
+    }
+    removeRect(){
+        if (this.rect&&this.rect.parent)
+          this.rect.parent.removeChild(this.rect);
+        this.rect = null;
     }
     touchHander
   
@@ -72,9 +84,9 @@ export default class  EgretEngine implements IEngine{
         var location = this.player.webTouchHandler.getLocation(event);
         var target =  this.engine.lifecycle.stage.$hitTest(location.x, location.y);
         if(target){
-            let comp = target["$owner"];
+            let comp = target//["$owner"];
             EditorEvent.event(EditorEvent.Selection,comp);
-            console.log(target);
+            //console.log(target);
         }
     }
     removeSelectModel(){

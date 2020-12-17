@@ -3,6 +3,8 @@ export default class EditorEvent {
     public static readonly SelectionChanged: string = "SelectionChanged";
     public static readonly Selection: string = "Selection";
     public static readonly TreeChanged: string = "TreeChanged";
+    public static readonly TreeTypeDataChanged: string = "TreeTypeDataChanged";
+    public static readonly TreeTypeChanged: string = "TreeTypeChanged";
     public static readonly ClickChanged: string = "ClickChanged";
     public static readonly EventDispatcher: Laya.EventDispatcher = new Laya.EventDispatcher();
 

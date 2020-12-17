@@ -19,6 +19,8 @@ export default class FObjectType{
     public static readonly EXT_PROGRESS_BAR:string = "ProgressBar";
     public static readonly EXT_SLIDER:string = "Slider";
     public static readonly EXT_SCROLLBAR:string = "ScrollBar";
+    public static readonly SPRITE:string = "sprite";
+    public static readonly SPRITE3D:string = "sprite3D";
     public static readonly NAME_PREFIX:object = {
         image:"img",
         graph:"graph",

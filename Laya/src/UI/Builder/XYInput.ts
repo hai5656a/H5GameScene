@@ -7,16 +7,28 @@ export default class XYInput extends fgui.GLabel{
         text.restrict="0-9.";
     }
     changeValue(){
-        if( this.targetObj&&this.targetKey){
+        if( this.targetObj&&this.targetKey&&this.tKey){
+            let obj =  this.targetObj[this.tKey];
+            obj[this.targetKey] = Number(this.text); 
+            this.targetObj[this.tKey]=obj;
+        }
+        else if( this.targetObj&&this.targetKey){
             this.targetObj[this.targetKey] = Number(this.text); 
         }
     }
     targetObj;
     targetKey;
-    setObj(target,key){
+    tKey;
+    setObj(target,key,tKey?:any){
         this.targetObj = target;
         this.targetKey = key;
-        this.text = this.targetObj[this.targetKey]+"";
+        this.tKey = tKey;
+        if(tKey){
+            this.text = target[tKey][key]+"";
+        }
+        else{
+            this.text = target[key]+""; 
+        }
     }
     
 }

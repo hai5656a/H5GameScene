@@ -1,10 +1,13 @@
 import DocumentView from "../fgui/Builder/DocumentView";
-import Consts from "../editor/Consts";
+import Consts, { TreeType } from "../editor/Consts";
 import EditorEvent from "../editor/EditorEvent";
 import LayaEngine from "../editor/engine/LayaEngine";
 import EgretEngine from "../editor/engine/EgretEngine";
 import CCEngine from "../editor/engine/CCEngine";
 import FGUIManager from "../editor/display/FGUIManager";
+import LayaManager from "../editor/display/LayaManager";
+import CCManager from "../editor/display/CCManager";
+import EgretManager from "../editor/display/EgretManager";
 
 export default class DocumentUI{
     view:DocumentView;
@@ -38,6 +41,7 @@ export default class DocumentUI{
       this.resize();
       this.view.onClick(this,this.onClick);
       EditorEvent.on(EditorEvent.ClickChanged,this,this.onClickChange) ;
+      EditorEvent.on(EditorEvent.TreeTypeChanged,this,this.onListChange );
       document.onkeydown =this.keyDown.bind(this);
       document.onkeyup  = this.keyUp.bind(this);
     //   document.oncontextmenu=this.doNothing;
@@ -115,31 +119,14 @@ export default class DocumentUI{
             EditorEvent.event(EditorEvent.TreeChanged);
             if( Consts.engineManager)
                Consts.engineManager.addSelectModel();
-            // if(Consts.gameLaya){
-            //     Consts.gameLaya.stage.on("mouseup",this,this.selectClick);
-            // }else if(Consts.gameEgret){
-            //     Consts.gameEgret.lifecycle.stage.addEventListener("touchBegin",this.selectClick,this);
-            // }
         }else{
             if( Consts.engineManager)
                 Consts.engineManager.removeSelectModel();
-            // if(Consts.gameLaya){
-            //     Consts.gameLaya.stage.off("mouseup",this,this.selectClick);
-            // }else if(Consts.gameEgret){
-            //     Consts.gameEgret.lifecycle.stage.removeEventListener("touchBegin",this.selectClick,this);
-            // }
+
         }
     }
-    // egretClick(evt:egret.Event){
-    //     evt.stopPropagation()
-    //     if(evt.type){
-    //         this.selectClick(evt);
-    //     }
-    // }
-   
-    // mouseOver(evt){
-    //     this.selectClick(evt);
-    // }
+
+    loadTimes;
     goweb(url){
         Consts.gameWindow = null;
         if(Consts.displayList){
@@ -150,13 +137,15 @@ export default class DocumentUI{
             Consts.engineManager.end();
             Consts.engineManager = null;
         }
+        Consts.treeTypeList = [];
         this.view.m_editType.selectedIndex = 0;
         this.frame.src = url;
+        this.loadTimes = 0;
         Laya.timer.loop(100,this,this.frameLoad);
     }
     frameLoad(){
         var win = this.frame.contentWindow;
-        var gamefgui = win.fairygui?win.fairygui:win.fgui;
+       
         Consts.gameWindow = win;
         if(win.Laya){
             Consts.engineManager = LayaEngine.getInstance();
@@ -167,51 +156,102 @@ export default class DocumentUI{
         }else if(win.cc){
             Consts.engineManager = CCEngine.getInstance();
             Consts.engineManager.start(win.cc);
+
+            var toolbar = win.document.getElementsByClassName('toolbar')[0];
+            if(toolbar)
+               toolbar.style.display = 'none';
+             //getComputedStyle(toolbar).display = 'none';
         }
+        if(Consts.engineManager){
+            this.loadTimes++;
+            if(Consts.treeTypeList.indexOf(Consts.engineManager.type)==-1){
+                Consts.treeTypeList.push(Consts.engineManager.type);
+            }
+        }
+        var gamefgui = win.fairygui?win.fairygui:win.fgui;
         if(gamefgui){
-           
             if(!gamefgui.GRoot._inst)
               return;
-              Consts.displayList = FGUIManager.getInstance(); 
-              Consts.displayList.start(gamefgui.GRoot._inst,gamefgui);   
-             Laya.timer.clear(this,this.frameLoad);
-            // this.line = Consts.manager.createLineGraph();
+              Laya.timer.clear(this,this.frameLoad);
+             this.initFgui();
+           if(Consts.treeTypeList.indexOf(TreeType.FGUI)==-1)
+             Consts.treeTypeList.push(TreeType.FGUI);
+          EditorEvent.event(EditorEvent.TreeTypeDataChanged,Consts.treeTypeList.indexOf(TreeType.FGUI));
+        }else{
+            if(this.loadTimes>50){
+                Laya.timer.clear(this,this.frameLoad);
+                
+                this.initManager();
+                
+                EditorEvent.event(EditorEvent.TreeTypeDataChanged,Consts.treeTypeList.indexOf(Consts.engineManager.type));
            
-            // // this.line.setSize (100,100);
-            // this.line.visible = false;
-            EditorEvent.event(EditorEvent.TreeChanged);
-
-            this.frame.contentWindow.document.onkeydown=this.keyDown.bind(this);
-            this.frame.contentWindow.document.onkeyup = this.keyUp.bind(this);
-           
+            }
         }
+        if(Consts.displayList){
+            this.frame.contentWindow.document.onkeydown=this.keyDown.bind(this);
+            this.frame.contentWindow.document.onkeyup = this.keyUp.bind(this);  
+        }
+       
         // else {
         //     win.loadCallBack = this.loadCallBack.bind(this);
         // }
     }
+    initFgui(){
+        if(Consts.displayList){
+            Consts.displayList.end();
+            Consts.displayList = null;
+        }
+        var win = this.frame.contentWindow;
+        var gamefgui = win.fairygui?win.fairygui:win.fgui;
+        if(gamefgui){
+              Consts.displayList = FGUIManager.getInstance(); 
+              Consts.displayList.start(gamefgui.GRoot._inst,gamefgui);   
+            EditorEvent.event(EditorEvent.TreeChanged);
+           return true;
+        }
+    }
+    initManager(){
+        if(Consts.displayList){
+            Consts.displayList.end();
+            Consts.displayList = null;
+        }
+        var win = this.frame.contentWindow;
+        if(win.Laya){
+            Consts.displayList = LayaManager.getInstance(); 
+            Consts.displayList.start(win.Laya.stage,win.Laya); 
+            EditorEvent.event(EditorEvent.TreeChanged);
+           
+            return true;
+        }else if(win.cc){
+            Consts.displayList = CCManager.getInstance(); 
+            Consts.displayList.start(win.cc.director.getScene(),win.cc); 
+            EditorEvent.event(EditorEvent.TreeChanged);
+           
+            return true;
+        }else if(win.egret){
+            Consts.displayList = EgretManager.getInstance(); 
+            Consts.displayList.start(win.egret.lifecycle.stage ,win.egret); 
+            EditorEvent.event(EditorEvent.TreeChanged);
+        }
+    }
   
+    onListChange(type){
+        if(type==TreeType.FGUI){
+            this.initFgui();
+        }else{
+            this.initManager();
+        }
+    }
     loadCallBack(){
         this.frameLoad();
     }
-    selectItem(item:fgui.GObject){
+    selectItem(item){
         if(item){
-            let p = item.localToGlobal(0,0);
-            let pr = item.localToGlobal(item.width,item.height);
-            let x = p.x;
-            let y =p.y;
-            let width =pr.x-p.x;
-            let height = pr.y-p.y;
-            Consts.engineManager.showFGUIRect(x,y,width,height);
-            // this.line.setSize(width,height);
-            // this.line.x = x;
-            // this.line.y = y;
-            // this.line.visible = true;
-            // if(this.line.parent){
-            //     this.line.parent.setChildIndex(this.line,this.line.parent.numChildren-1);
-            // }else{
-            //     Consts.GRoot.addChild(this.line);
-            // }
-            
+            let rect = Consts.displayList.getDisPlayRect(item);
+            if(rect)
+            Consts.engineManager.showRect( rect[0],rect[1],rect[2],rect[3]);
+            else 
+            Consts.engineManager.hideFGUIRect();
             // this.lineStyle.display = "block";
             // this.lineStyle.left =(Number(this.frameStyle.left.replace("px","")) +p.x; )+"px";
             // this.lineStyle.top =( Number(this.frameStyle.top.replace("px","")) +p.y)+"px";

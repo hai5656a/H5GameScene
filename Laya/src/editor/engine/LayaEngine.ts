@@ -1,4 +1,4 @@
-import Consts from "../Consts";
+import Consts, { TreeType } from "../Consts";
 import EditorEvent from "../EditorEvent";
 import { IEngine } from "./IEngine";
 
@@ -10,7 +10,7 @@ export default class  LayaEngine implements IEngine{
         }
         return this.i;
     }
-    type:string="Laya";
+    type=TreeType.Laya;
     engine;
     start(game){
         this.engine = game;
@@ -20,39 +20,53 @@ export default class  LayaEngine implements IEngine{
           this.onFPS()
         this.removeSelectModel();
         this.engine = null;
+        this.removeRect();
     }
-    rect:fgui.GGraph;
+    rect:Laya.Sprite;
     createRectGraph(){
         if(this.rect){
-            this.rect.removeFromParent();
-            this.rect.dispose();
+            this.rect.destroy(true);
         }
-        let line =this.rect= new Consts.displayList.displayModule.GGraph();
-        let color = Consts.rectColorStr;
-        line.drawRect(Consts.rectLineSize,color,null);
+        let line:Laya.Sprite =this.rect= new this.engine.Sprite();
+        // let color = Consts.rectColorStr;
+        // line.graphics.drawRect(Consts.rectLineSize,color,null);
         // line.alpha = Consts.rectFill;
         line.name = Consts.EditorLineName;
-        line.touchable = false;  
+        line.mouseEnabled = false;
         
     }
-    showFGUIRect(x,y,w,h){
-        if(!this.rect||this.rect.isDisposed){
+    showRect(x,y,w,h){
+        if(!this.rect||this.rect.destroyed){
             this.createRectGraph();
         }
         this.rect.visible =  true;
-        this.rect.setSize(w,h);
-            this.rect.x = x;
-            this.rect.y = y;
-            this.rect.visible = true;
-            if(this.rect.parent){
-                this.rect.parent.setChildIndex(this.rect,this.rect.parent.numChildren-1);
-            }else{
-                Consts.displayList.root.addChild(this.rect);
-            }
+        // this.rect.setSize(w,h);
+        let color = Consts.rectColorStr;
+        this.rect.graphics.clear();
+        if(w>=0&&h>=0){
+            this.rect.graphics.drawRect(0,0,w,h,null,color,Consts.rectLineSize);
+        }else{
+            this.rect.graphics.drawLine(-20,0,20,0,color,Consts.rectLineSize);
+            this.rect.graphics.drawLine(0,-20,0,20,color,Consts.rectLineSize);
+        }
+        this.rect.x = x;
+        this.rect.y = y;
+        this.rect.visible = true;
+        if(this.rect.parent){
+            this.rect.parent.setChildIndex(this.rect,this.rect.parent.numChildren-1);
+        }else{
+            this.engine.stage.addChild(this.rect);
+        }
+        
     }
     hideFGUIRect(){
         if(this.rect)
           this.rect.visible = false;
+    }
+    removeRect(){
+        if (this.rect)
+           this.rect.destroy(true);
+        this.rect = null;
     }
     touchHander
     addSelectModel(){
@@ -63,12 +77,22 @@ export default class  LayaEngine implements IEngine{
     onMouseDown(evt){
         let mouseManager = this.engine.MouseManager.instance
         mouseManager.initEvent(evt);
-        mouseManager._checkAllBaseUI(mouseManager.mouseX, mouseManager.mouseY, ()=>{
-            if(mouseManager._target){
-                let comp = mouseManager._target["$owner"];
-                EditorEvent.event(EditorEvent.Selection,comp);
-            }
-        })
+        if(mouseManager.check){//laya
+            mouseManager.check( mouseManager._stage,mouseManager.mouseX, mouseManager.mouseY, ()=>{
+                if(mouseManager._target){
+                    let comp = mouseManager._target//["$owner"];
+                    EditorEvent.event(EditorEvent.Selection,comp);
+                }
+            })
+        }else if(mouseManager._checkAllBaseUI){//laya2
+            mouseManager._checkAllBaseUI(mouseManager.mouseX, mouseManager.mouseY, ()=>{
+                if(mouseManager._target){
+                    let comp = mouseManager._target//["$owner"];
+                    EditorEvent.event(EditorEvent.Selection,comp);
+                }
+            })
+        }
+       
        
     }
     removeSelectModel(){
@@ -108,7 +132,7 @@ export default class  LayaEngine implements IEngine{
         }else this.engine.timer.scale = 0;
     }
     checkFGUIVisible(gobj){
-        return gobj.internalVisible&& gobj.internalVisible2;
+        return  gobj._displayObject&&gobj.internalVisible&& gobj.internalVisible2;
     }
    
 }

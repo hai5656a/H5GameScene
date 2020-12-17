@@ -3,6 +3,7 @@
 export default class BasicPropsPanel extends fgui.GComponent {
 
 	public m_showRestrictSize:fgui.Controller;
+	public m_type:fgui.Controller;
 	public m_name:fgui.GLabel;
 	public m_x:fgui.GLabel;
 	public m_y:fgui.GLabel;
@@ -35,6 +36,7 @@ export default class BasicPropsPanel extends fgui.GComponent {
 
 	protected onConstruct():void {
 		this.m_showRestrictSize = this.getControllerAt(0);
+		this.m_type = this.getControllerAt(1);
 		this.m_name = <fgui.GLabel>(this.getChildAt(3));
 		this.m_x = <fgui.GLabel>(this.getChildAt(4));
 		this.m_y = <fgui.GLabel>(this.getChildAt(5));

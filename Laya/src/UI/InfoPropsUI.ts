@@ -4,14 +4,14 @@ import EditorEvent from "../editor/EditorEvent";
 
 export default class InfoPropsUI{
     view:InfoPropsPanel;
-    item:fgui.GObject;
+    item;
     constructor(view:InfoPropsPanel){
        
         this.view = view;
         this.view.m_title.onClick(this,this.clickItem);
         this.view.m_btnRefresh.onClick(this,this.refClick);
     }
-    public setData(item:fairygui.GObject){
+    public setData(item){
         this.item = item;
         this.view.m_icon.icon = Consts.displayList.getDisPlayIcon(item);
         this.view.m_title.text = Consts.getClassName(item);

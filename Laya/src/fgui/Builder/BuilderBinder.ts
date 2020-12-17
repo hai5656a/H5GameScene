@@ -1,5 +1,6 @@
 /** This is an automatically generated class by FairyGUI. Please do not modify it. **/
 
+import Basic3DPropsPanel from "./Basic3DPropsPanel";
 import BasicPropsPanel from "./BasicPropsPanel";
 import ComControllerPanel from "./ComControllerPanel";
 import ComControllerItem from "./ComControllerItem";
@@ -7,6 +8,8 @@ import ComTransitionPanel from "./ComTransitionPanel";
 import ComTransitionItem from "./ComTransitionItem";
 import LibView_sep from "./LibView_sep";
 import TitleBar from "./TitleBar";
+import CreatorPropsPanel from "./CreatorPropsPanel";
+import CreatorWidgetPanel from "./CreatorWidgetPanel";
 import DisplayTreeView from "./DisplayTreeView";
 import MainView from "./MainView";
 import DocumentView from "./DocumentView";
@@ -17,6 +20,7 @@ import RefreshButton from "./RefreshButton";
 
 export default class BuilderBinder {
 	public static bindAll():void {
+		fgui.UIObjectFactory.setExtension(Basic3DPropsPanel.URL, Basic3DPropsPanel);
 		fgui.UIObjectFactory.setExtension(BasicPropsPanel.URL, BasicPropsPanel);
 		fgui.UIObjectFactory.setExtension(ComControllerPanel.URL, ComControllerPanel);
 		fgui.UIObjectFactory.setExtension(ComControllerItem.URL, ComControllerItem);
@@ -24,6 +28,8 @@ export default class BuilderBinder {
 		fgui.UIObjectFactory.setExtension(ComTransitionItem.URL, ComTransitionItem);
 		fgui.UIObjectFactory.setExtension(LibView_sep.URL, LibView_sep);
 		fgui.UIObjectFactory.setExtension(TitleBar.URL, TitleBar);
+		fgui.UIObjectFactory.setExtension(CreatorPropsPanel.URL, CreatorPropsPanel);
+		fgui.UIObjectFactory.setExtension(CreatorWidgetPanel.URL, CreatorWidgetPanel);
 		fgui.UIObjectFactory.setExtension(DisplayTreeView.URL, DisplayTreeView);
 		fgui.UIObjectFactory.setExtension(MainView.URL, MainView);
 		fgui.UIObjectFactory.setExtension(DocumentView.URL, DocumentView);

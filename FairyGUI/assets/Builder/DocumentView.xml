@@ -12,14 +12,11 @@
     <graph id="n50" name="tabBar" xy="0,0" size="710,40" type="rect" fillColor="#00ffffff">
       <relation target="" sidePair="width-width"/>
     </graph>
-    <component id="n57" name="hand" src="gj1q8v" fileName="Button/FlatIconButton_Radio.xml" pkg="nk9ejx23" xy="35,6" size="28,24" tooltips="游戏模式">
-      <Button checked="true" icon="ui://2pshu6oiau3n1g" controller="editType" page="1"/>
-    </component>
-    <component id="n60" name="arrow" src="gj1q8v" fileName="Button/FlatIconButton_Radio.xml" pkg="nk9ejx23" xy="3,6" size="28,24" tooltips="鼠标右键选择模式(Ctrl快速切换) ">
+    <component id="n60" name="arrow" src="gj1q8s" fileName="Button/FlatIconButton_Check.xml" pkg="nk9ejx23" xy="3,6" size="28,24" tooltips="鼠标选择组件(Ctrl快速切换) ">
       <Button icon="ui://2pshu6oiau3n1i" controller="editType" page="0"/>
     </component>
-    <image id="n58" name="n58" src="au3n39" fileName="HzSeperator.png" pkg="nk9ejx23" xy="69,7" size="1,22"/>
-    <component id="n92_p0d9" name="device" src="gcza18" fileName="ComboBox/ComboBox.xml" pkg="nk9ejx23" xy="163,9" size="197,20">
+    <image id="n58" name="n58" src="au3n39" fileName="HzSeperator.png" pkg="nk9ejx23" xy="33,7" size="1,22"/>
+    <component id="n92_p0d9" name="device" src="gcza18" fileName="ComboBox/ComboBox.xml" pkg="nk9ejx23" xy="127,9" size="197,20">
       <ComboBox visibleItemCount="10" direction="up">
         <item title="全屏" value="0:0"/>
         <item title="Iphone6(16:9)" value="16:9"/>
@@ -28,18 +25,18 @@
         <item title="Android(2:1)" value="2:1"/>
       </ComboBox>
     </component>
-    <text id="n93_p0d9" name="n93" xy="84,10" size="77,19" fontSize="12" color="#bdbdbd" align="center" autoSize="none" text="分辨率"/>
-    <component id="n94_p0d9" name="landscape" src="gj1q8v" fileName="Button/FlatIconButton_Radio.xml" pkg="nk9ejx23" xy="370,6" tooltips="横屏">
+    <text id="n93_p0d9" name="n93" xy="48,10" size="77,19" fontSize="12" color="#bdbdbd" align="center" autoSize="none" text="分辨率"/>
+    <component id="n94_p0d9" name="landscape" src="gj1q8v" fileName="Button/FlatIconButton_Radio.xml" pkg="nk9ejx23" xy="334,6" tooltips="横屏">
       <Button checked="true" icon="ui://2pshu6oirvrnixicso" controller="orientation" page="0"/>
     </component>
-    <component id="n95_p0d9" name="portrait" src="gj1q8v" fileName="Button/FlatIconButton_Radio.xml" pkg="nk9ejx23" xy="398,6" tooltips="竖屏">
+    <component id="n95_p0d9" name="portrait" src="gj1q8v" fileName="Button/FlatIconButton_Radio.xml" pkg="nk9ejx23" xy="362,6" tooltips="竖屏">
       <Button icon="ui://2pshu6oirvrnixicsq" controller="orientation" page="1"/>
     </component>
-    <image id="n96_e1jj" name="n96" src="au3n39" fileName="HzSeperator.png" pkg="nk9ejx23" xy="422,7" size="1,22"/>
-    <component id="n97_e1jj" name="btnfps" src="xualm" fileName="Button/Button.xml" pkg="nk9ejx23" xy="434,5">
+    <image id="n96_e1jj" name="n96" src="au3n39" fileName="HzSeperator.png" pkg="nk9ejx23" xy="386,7" size="1,22"/>
+    <component id="n97_e1jj" name="btnfps" src="xualm" fileName="Button/Button.xml" pkg="nk9ejx23" xy="398,5" tooltips="显示/隐藏FPS面板">
       <Button title="FPS" titleFontSize="14"/>
     </component>
-    <component id="n98_jift" name="btnpause" src="xualm" fileName="Button/Button.xml" pkg="nk9ejx23" xy="531,5">
+    <component id="n98_jift" name="btnpause" src="xualm" fileName="Button/Button.xml" pkg="nk9ejx23" xy="495,5" tooltips="暂停/继续游戏时间">
       <Button title="Pause" titleFontSize="14"/>
     </component>
   </displayList>

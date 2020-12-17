@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="270,245" bgColorEnabled="true" bgColor="#383838">
+  <controller name="top" pages="0,,1," selected="0"/>
+  <controller name="left" pages="0,,1," selected="0"/>
+  <controller name="right" pages="0,,1," selected="0"/>
+  <controller name="bottom" pages="0,,1," selected="0"/>
+  <controller name="horizontal" pages="0,,1," selected="0"/>
+  <controller name="verticl" pages="0,,1," selected="0"/>
+  <displayList>
+    <text id="n33" name="n33" xy="5,185" size="80,19" fontSize="12" color="#bdbdbd" autoSize="none" text="Target"/>
+    <text id="n97_ixw7" name="n97" xy="5,214" size="80,19" fontSize="12" color="#bdbdbd" autoSize="none" text="Align Mode"/>
+    <component id="n9" name="TopValue" src="au3n69" fileName="Input/NumericInput.xml" pkg="nk9ejx23" xy="130,4" size="109,20" touchable="false" grayed="true">
+      <gearLook controller="top" pages="0" values="1,0,1,0" default="1,0,0,1"/>
+    </component>
+    <component id="n37" name="TargetValue" src="au3n69" fileName="Input/NumericInput.xml" pkg="nk9ejx23" xy="89,183" size="150,20"/>
+    <component id="n32" name="Top" src="dp4f7u" fileName="Button/EmCheckbox_as.xml" pkg="nk9ejx23" xy="5,5" size="45,19" tooltips="仅在测试和运行期可以看到效果，&#xA;设计界面中将始终保持可见">
+      <Button title="Top" controller="top" page="1"/>
+    </component>
+    <component id="n99_ixw7" name="AlignMode" src="gcza18" fileName="ComboBox/ComboBox.xml" pkg="nk9ejx23" xy="91,213" size="144,20">
+      <ComboBox visibleItemCount="10">
+        <item title="ONCE"/>
+        <item title="ON_WINDOW_RESIZE"/>
+        <item title="ALWARS"/>
+      </ComboBox>
+    </component>
+    <component id="n100_ixw7" name="LeftValue" src="au3n69" fileName="Input/NumericInput.xml" pkg="nk9ejx23" xy="130,34" size="109,20" touchable="false" grayed="true">
+      <gearLook controller="left" pages="0" values="1,0,1,0" default="1,0,0,1"/>
+    </component>
+    <component id="n101_ixw7" name="Left" src="dp4f7u" fileName="Button/EmCheckbox_as.xml" pkg="nk9ejx23" xy="5,35" size="46,19" tooltips="仅在测试和运行期可以看到效果，&#xA;设计界面中将始终保持可见">
+      <Button title="Left" controller="left" page="1"/>
+    </component>
+    <component id="n102_ixw7" name="RightValue" src="au3n69" fileName="Input/NumericInput.xml" pkg="nk9ejx23" xy="129,64" size="109,20" touchable="false" grayed="true">
+      <gearLook controller="right" pages="0" values="1,0,1,0" default="1,0,0,1"/>
+    </component>
+    <component id="n103_ixw7" name="Right" src="dp4f7u" fileName="Button/EmCheckbox_as.xml" pkg="nk9ejx23" xy="4,65" size="53,19" tooltips="仅在测试和运行期可以看到效果，&#xA;设计界面中将始终保持可见">
+      <Button title="Right" controller="right" page="1"/>
+    </component>
+    <component id="n104_ixw7" name="BottomValue" src="au3n69" fileName="Input/NumericInput.xml" pkg="nk9ejx23" xy="130,94" size="109,20" touchable="false" grayed="true">
+      <gearLook controller="bottom" pages="0" values="1,0,1,0" default="1,0,0,1"/>
+    </component>
+    <component id="n105_ixw7" name="Bottom" src="dp4f7u" fileName="Button/EmCheckbox_as.xml" pkg="nk9ejx23" xy="5,95" size="66,19" tooltips="仅在测试和运行期可以看到效果，&#xA;设计界面中将始终保持可见">
+      <Button title="Bottom" controller="bottom" page="1"/>
+    </component>
+    <component id="n106_ixw7" name="HorizontalCenterValue" src="au3n69" fileName="Input/NumericInput.xml" pkg="nk9ejx23" xy="129,124" size="109,20" touchable="false" grayed="true">
+      <gearLook controller="horizontal" pages="0" values="1,0,1,0" default="1,0,0,1"/>
+    </component>
+    <component id="n107_ixw7" name="HorizontalCenter" src="dp4f7u" fileName="Button/EmCheckbox_as.xml" pkg="nk9ejx23" xy="4,125" size="125,19" tooltips="仅在测试和运行期可以看到效果，&#xA;设计界面中将始终保持可见">
+      <Button title="Horizontal Center" controller="horizontal" page="1"/>
+    </component>
+    <component id="n108_ixw7" name="VerticlCenterValue" src="au3n69" fileName="Input/NumericInput.xml" pkg="nk9ejx23" xy="130,154" size="109,20" touchable="false" grayed="true">
+      <gearLook controller="verticl" pages="0" values="1,0,1,0" default="1,0,0,1"/>
+    </component>
+    <component id="n109_ixw7" name="VerticlCenter" src="dp4f7u" fileName="Button/EmCheckbox_as.xml" pkg="nk9ejx23" xy="5,155" size="102,19" tooltips="仅在测试和运行期可以看到效果，&#xA;设计界面中将始终保持可见">
+      <Button title="Verticl Center" controller="verticl" page="1"/>
+    </component>
+  </displayList>
+</component>

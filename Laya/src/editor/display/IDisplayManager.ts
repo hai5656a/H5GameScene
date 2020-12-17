@@ -1,4 +1,5 @@
 export interface IDisplayManager{
+    /**引擎库 */
     displayModule;
     root;
     /**初始化 */
@@ -8,6 +9,7 @@ export interface IDisplayManager{
     refreshList(parent:fgui.GTreeNode)
     getDisPlayIcon(obj)
     getDisPlayName(obj)
+    getDisPlayRect(obj)
     isShow(obj)
     isVisable(obj)
 }
