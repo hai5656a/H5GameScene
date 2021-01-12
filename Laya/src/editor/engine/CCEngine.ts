@@ -31,7 +31,7 @@ export default class CCEngine implements IEngine {
             this.rect.destroy();
         }
         this.rect = new this.engine.Node();//  new Consts.displayList.displayModule.Graphics;
-        this.rect.name = "Graphics";
+        this.rect.name =Consts.EditorLineName;// "Graphics";
         let line = this._content = this.rect.addComponent(this.engine.Graphics);
         let color = Consts.rectColorStr;
         let c = new this.engine.Color(0, 0, 0, 255);
@@ -105,15 +105,17 @@ export default class CCEngine implements IEngine {
             }
             this.fguirect.visible = true;
             this.fguirect.setSize(w, h);
-            this.fguirect.x = x;
-            this.fguirect.y = y;
+            // this.fguirect.x = x;
+            // this.fguirect.y = y;
             if (this.fguirect.parent) {
                 this.fguirect.parent.setChildIndex(this.fguirect, this.fguirect.parent.numChildren - 1);
             } else {
                 Consts.displayList.root.addChild(this.fguirect);
             }
-
-            // console.log(this.fguirect);
+            let p = this.fguirect.parent.globalToLocal(x,y);
+            this.fguirect.x = p.x;
+            this.fguirect.y = p.y;
+            console.log(this.fguirect);
        }
 
         

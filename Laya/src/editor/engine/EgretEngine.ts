@@ -28,7 +28,7 @@ export default class  EgretEngine implements IEngine{
             this.rect.parent.removeChild(this.rect);
             // this.rect.d();
         }
-        let line:egret.Sprite = this.rect = new Consts.displayList.displayModule.Sprite();
+        let line:egret.Sprite = this.rect = new this.engine.Sprite();
        
         // this.rect.graphics.drawRect(Consts.rectLineSize,Consts.rectColor,1,Consts.rectColor,Consts.rectFill);
         line.name = Consts.EditorLineName;
@@ -53,7 +53,7 @@ export default class  EgretEngine implements IEngine{
             if(this.rect.parent){
                 this.rect.parent.setChildIndex(this.rect,this.rect.parent.numChildren-1);
             }else{
-                Consts.displayList.root.addChild(this.rect);
+                this.engine.lifecycle.stage.addChild(this.rect);
             }
     }
     hideFGUIRect(){

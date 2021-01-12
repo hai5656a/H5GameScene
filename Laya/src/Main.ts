@@ -3,6 +3,7 @@ import MainUI from "./UI/MainUI";
 import BuilderBinder from "./fgui/Builder/BuilderBinder";
 import Consts from "./editor/Consts";
 import BuilderUI from "./UI/Builder/BuilderUI";
+
 class Main {
 	constructor() {
 		//根据IDE设置初始化引擎		
@@ -42,8 +43,10 @@ class Main {
 		// GameConfig.startScene && Laya.Scene.open(GameConfig.startScene);
 		BuilderBinder.bindAll();
 		BuilderUI.bindAll();
+
 		Consts.init()
 		new MainUI();
+
 	}
 }
 //激活启动类

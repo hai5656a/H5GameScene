@@ -4,7 +4,7 @@ export default class XYInput extends fgui.GLabel{
     protected onConstruct():void {
         let text = this.getTextField() as fgui.GTextInput;
         text.displayObject.on(Laya.Event.BLUR,this,this.changeValue);
-        text.restrict="0-9.";
+        text.restrict="0-9.-";
     }
     changeValue(){
         if( this.targetObj&&this.targetKey&&this.tKey){
