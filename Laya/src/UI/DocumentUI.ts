@@ -249,7 +249,7 @@ export default class DocumentUI{
         if(item){
             let rect = Consts.displayList.getDisPlayRect(item);
             if(rect)
-            Consts.engineManager.showRect( rect[0],rect[1],rect[2],rect[3]);
+            Consts.engineManager.showRect( rect[0],rect[1],Math.abs(rect[2]) ,Math.abs(rect[3]));
             else 
             Consts.engineManager.hideFGUIRect();
             // this.lineStyle.display = "block";

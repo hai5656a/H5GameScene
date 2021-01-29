@@ -430,7 +430,7 @@
             if (this.rect && this.rect.parent) {
                 this.rect.parent.removeChild(this.rect);
             }
-            let line = this.rect = new Consts.displayList.displayModule.Sprite();
+            let line = this.rect = new this.engine.Sprite();
             line.name = Consts.EditorLineName;
             line.touchEnabled = false;
         }
@@ -451,7 +451,7 @@
                 this.rect.parent.setChildIndex(this.rect, this.rect.parent.numChildren - 1);
             }
             else {
-                Consts.displayList.root.addChild(this.rect);
+                this.engine.lifecycle.stage.addChild(this.rect);
             }
         }
         hideFGUIRect() {
@@ -555,7 +555,7 @@
                 this.rect.destroy();
             }
             this.rect = new this.engine.Node();
-            this.rect.name = "Graphics";
+            this.rect.name = Consts.EditorLineName;
             let line = this._content = this.rect.addComponent(this.engine.Graphics);
             let color = Consts.rectColorStr;
             let c = new this.engine.Color(0, 0, 0, 255);
@@ -620,14 +620,16 @@
                 }
                 this.fguirect.visible = true;
                 this.fguirect.setSize(w, h);
-                this.fguirect.x = x;
-                this.fguirect.y = y;
                 if (this.fguirect.parent) {
                     this.fguirect.parent.setChildIndex(this.fguirect, this.fguirect.parent.numChildren - 1);
                 }
                 else {
                     Consts.displayList.root.addChild(this.fguirect);
                 }
+                let p = this.fguirect.parent.globalToLocal(x, y);
+                this.fguirect.x = p.x;
+                this.fguirect.y = p.y;
+                console.log(this.fguirect);
             }
         }
         hideFGUIRect() {
@@ -1404,7 +1406,7 @@
             if (item) {
                 let rect = Consts.displayList.getDisPlayRect(item);
                 if (rect)
-                    Consts.engineManager.showRect(rect[0], rect[1], rect[2], rect[3]);
+                    Consts.engineManager.showRect(rect[0], rect[1], Math.abs(rect[2]), Math.abs(rect[3]));
                 else
                     Consts.engineManager.hideFGUIRect();
             }
@@ -2109,7 +2111,7 @@
         onConstruct() {
             let text = this.getTextField();
             text.displayObject.on(Laya.Event.BLUR, this, this.changeValue);
-            text.restrict = "0-9.";
+            text.restrict = "0-9.-";
         }
         changeValue() {
             if (this.targetObj && this.targetKey && this.tKey) {
@@ -2144,6 +2146,76 @@
         }
     }
 
+    class Test {
+        constructor() {
+            console.log(this.decode("22"));
+            console.log(this.decode("226"));
+            console.log(this.decode("22222"));
+            console.log(this.decode("222666621"));
+            console.log(this.hitText(4, 4, 5, 3, 2, 8, 8));
+            console.log(this.hitText(4, 4, 3, 7, 2, 9, 8));
+        }
+        decode(str) {
+            let ss = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+            let len = str.length;
+            let max = ss.length;
+            let out = [''];
+            let out1 = [''];
+            for (var i = 0; i < len; i++) {
+                let temp = str.substring(i, i + 1);
+                let tempnum = Number(temp);
+                let outt = out.concat();
+                if (tempnum != 0) {
+                    for (let k = 0; k < out.length; k++) {
+                        out[k] += ss[tempnum - 1];
+                    }
+                }
+                if (i > 0) {
+                    temp = str.substring(i - 1, i + 1);
+                    tempnum = Number(temp);
+                    if (tempnum <= max) {
+                        for (let k = 0; k < out1.length; k++) {
+                            out1[k] += ss[tempnum - 1];
+                        }
+                        out = out.concat(out1);
+                        out1 = outt;
+                    }
+                }
+            }
+            return out.toString();
+        }
+        hitText(x, y, r, x1, y1, x2, y2) {
+            var xc = x1 + (x2 - x1) * 0.5;
+            var yc = y1 + (y2 - y1) * 0.5;
+            if (Math.sqrt((x1 - x) * (x1 - x) + (y1 - y) * (y1 - y)) <= r) {
+                return true;
+            }
+            if (Math.sqrt((x2 - x) * (x2 - x) + (y1 - y) * (y1 - y)) <= r) {
+                return true;
+            }
+            if (Math.sqrt((x1 - x) * (x1 - x) + (y2 - y) * (y2 - y)) <= r) {
+                return true;
+            }
+            if (Math.sqrt((x2 - x) * (x2 - x) + (y2 - y) * (y2 - y)) <= r) {
+                return true;
+            }
+            var w1 = Math.abs(x1 - x);
+            var w2 = Math.abs(x2 - x);
+            if (w1 > r && w2 > r) {
+                return false;
+            }
+            var h1 = Math.abs(y1 - y);
+            var h2 = Math.abs(y2 - y);
+            if (h1 > r && h2 > r) {
+                return false;
+            }
+            if ((x1 - x) * (x2 - x) > 0 && (y1 - x) * (y2 - y) > 0) {
+                return false;
+            }
+            return true;
+        }
+    }
+
     class Main {
         constructor() {
             if (window["Laya3D"])
@@ -2165,7 +2237,7 @@
             if (GameConfig.stat)
                 Laya.Stat.show();
             Laya.alertGlobalError(true);
-            Laya.ResourceVersion.enable("version.json", Laya.Handler.create(this, this.onVersionLoaded), Laya.ResourceVersion.FILENAME_VERSION);
+            new Test();
         }
         onVersionLoaded() {
             Laya.stage.addChild(fgui.GRoot.inst.displayObject);
@@ -2182,3 +2254,4 @@
     new Main();
 
 }());
+//# sourceMappingURL=bundle.js.map
