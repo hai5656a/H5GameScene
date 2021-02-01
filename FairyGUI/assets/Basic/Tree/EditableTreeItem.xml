@@ -2,7 +2,7 @@
 <component size="88,22" extention="Button">
   <controller name="button" pages="0,up,1,down,2,over,3,selectedOver" selected="0"/>
   <controller name="editing" pages="0,,1," selected="0"/>
-  <controller name="expanded" pages="0,,1," selected="0"/>
+  <controller name="expanded" pages="0,,1," selected="1"/>
   <controller name="leaf" pages="0,,1," selected="0"/>
   <displayList>
     <image id="n0" name="n0" src="au3n4v" fileName="List/images/listitem_hover.png" xy="0,0" size="88,22">
@@ -37,7 +37,7 @@
     <component id="n10" name="expandButton" src="au3n5n" fileName="Tree/TreeExpandButton.xml" xy="15,3">
       <gearDisplay controller="leaf" pages="0"/>
       <relation target="n3" sidePair="left-right"/>
-      <Button controller="expanded" page="1"/>
+      <Button checked="true" controller="expanded" page="1"/>
     </component>
     <loader id="n11_r74d" name="sign" xy="44,15" size="6,6">
       <relation target="n6" sidePair="left-left,top-top"/>

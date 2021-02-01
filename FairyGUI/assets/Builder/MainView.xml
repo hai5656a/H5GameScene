@@ -18,7 +18,7 @@
     <component id="n140_mlmb" name="document" src="mlmb1nry31x" fileName="DocumentView.xml" xy="293,55" size="612,725">
       <relation target="" sidePair="width-width,height-height"/>
     </component>
-    <component id="n141_mlmb" name="insp" src="mtrqiudk" fileName="Editor/InspectorView.xml" xy="914,55" size="286,725">
+    <component id="n141_mlmb" name="insp" src="mtrqiudk" fileName="InspectorView.xml" xy="914,55" size="286,725">
       <relation target="" sidePair="height-height,right-right"/>
     </component>
   </displayList>
