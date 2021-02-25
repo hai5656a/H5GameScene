@@ -668,7 +668,7 @@
             }
         }
         hitTest(node, pos) {
-            if (node.active && node != this.rectNode && node != this.rect) {
+            if (node.active && node != this.rectNode && node != this.rect && !node.mouseThrough) {
                 if (node._hitTest(pos)) {
                     this.target = node;
                 }
@@ -1263,10 +1263,10 @@
                     }
                 }
             }
-            this.frameStyle.left = p.x + "px";
-            this.frameStyle.top = p.y + "px";
-            this.frame.width = w;
-            this.frame.height = h;
+            this.frameStyle.left = p.x / Laya.Browser.pixelRatio + "px";
+            this.frameStyle.top = p.y / Laya.Browser.pixelRatio + "px";
+            this.frame.width = w / Laya.Browser.pixelRatio;
+            this.frame.height = h / Laya.Browser.pixelRatio;
             localStorage.setItem("device", this.view.m_device.selectedIndex + "");
             localStorage.setItem("orientation", this.view.m_orientation.selectedIndex + "");
             if (Consts.engineManager)
@@ -1642,10 +1642,11 @@
             this.view.m_alpha.setObj(item, "opacity");
             this.view.m_rotation.setObj(item, "rotation");
             this.view.m_visible.setObj(item, "active", false);
+            this.view.m_mouse.setObj(item, "mouseThrough", false);
             this.view.m_color.text = item.color.toCSS("#rrggbb");
         }
         changeValue() {
-            this.item.color.fromHEX(this.view.m_color.text);
+            this.item.color = this.item.color.fromHEX(this.view.m_color.text);
         }
     }
 
@@ -1918,21 +1919,22 @@
             return (fgui.UIPackage.createObject("Builder", "CreatorPropsPanel"));
         }
         onConstruct() {
-            this.m_name = (this.getChildAt(8));
-            this.m_x = (this.getChildAt(9));
-            this.m_y = (this.getChildAt(10));
-            this.m_width = (this.getChildAt(11));
-            this.m_height = (this.getChildAt(12));
-            this.m_scaleX = (this.getChildAt(14));
-            this.m_scaleY = (this.getChildAt(15));
-            this.m_skewX = (this.getChildAt(16));
-            this.m_skewY = (this.getChildAt(17));
-            this.m_pivotX = (this.getChildAt(18));
-            this.m_pivotY = (this.getChildAt(19));
-            this.m_alpha = (this.getChildAt(20));
-            this.m_rotation = (this.getChildAt(21));
-            this.m_visible = (this.getChildAt(22));
-            this.m_color = (this.getChildAt(23));
+            this.m_color = (this.getChildAt(9));
+            this.m_name = (this.getChildAt(10));
+            this.m_x = (this.getChildAt(11));
+            this.m_y = (this.getChildAt(12));
+            this.m_width = (this.getChildAt(13));
+            this.m_height = (this.getChildAt(14));
+            this.m_scaleX = (this.getChildAt(16));
+            this.m_scaleY = (this.getChildAt(17));
+            this.m_skewX = (this.getChildAt(18));
+            this.m_skewY = (this.getChildAt(19));
+            this.m_pivotX = (this.getChildAt(20));
+            this.m_pivotY = (this.getChildAt(21));
+            this.m_alpha = (this.getChildAt(22));
+            this.m_rotation = (this.getChildAt(23));
+            this.m_visible = (this.getChildAt(24));
+            this.m_mouse = (this.getChildAt(25));
         }
     }
     CreatorPropsPanel.URL = "ui://2pshu6oiixw71nry325";
@@ -2146,76 +2148,6 @@
         }
     }
 
-    class Test {
-        constructor() {
-            console.log(this.decode("22"));
-            console.log(this.decode("226"));
-            console.log(this.decode("22222"));
-            console.log(this.decode("222666621"));
-            console.log(this.hitText(4, 4, 5, 3, 2, 8, 8));
-            console.log(this.hitText(4, 4, 3, 7, 2, 9, 8));
-        }
-        decode(str) {
-            let ss = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-            let len = str.length;
-            let max = ss.length;
-            let out = [''];
-            let out1 = [''];
-            for (var i = 0; i < len; i++) {
-                let temp = str.substring(i, i + 1);
-                let tempnum = Number(temp);
-                let outt = out.concat();
-                if (tempnum != 0) {
-                    for (let k = 0; k < out.length; k++) {
-                        out[k] += ss[tempnum - 1];
-                    }
-                }
-                if (i > 0) {
-                    temp = str.substring(i - 1, i + 1);
-                    tempnum = Number(temp);
-                    if (tempnum <= max) {
-                        for (let k = 0; k < out1.length; k++) {
-                            out1[k] += ss[tempnum - 1];
-                        }
-                        out = out.concat(out1);
-                        out1 = outt;
-                    }
-                }
-            }
-            return out.toString();
-        }
-        hitText(x, y, r, x1, y1, x2, y2) {
-            var xc = x1 + (x2 - x1) * 0.5;
-            var yc = y1 + (y2 - y1) * 0.5;
-            if (Math.sqrt((x1 - x) * (x1 - x) + (y1 - y) * (y1 - y)) <= r) {
-                return true;
-            }
-            if (Math.sqrt((x2 - x) * (x2 - x) + (y1 - y) * (y1 - y)) <= r) {
-                return true;
-            }
-            if (Math.sqrt((x1 - x) * (x1 - x) + (y2 - y) * (y2 - y)) <= r) {
-                return true;
-            }
-            if (Math.sqrt((x2 - x) * (x2 - x) + (y2 - y) * (y2 - y)) <= r) {
-                return true;
-            }
-            var w1 = Math.abs(x1 - x);
-            var w2 = Math.abs(x2 - x);
-            if (w1 > r && w2 > r) {
-                return false;
-            }
-            var h1 = Math.abs(y1 - y);
-            var h2 = Math.abs(y2 - y);
-            if (h1 > r && h2 > r) {
-                return false;
-            }
-            if ((x1 - x) * (x2 - x) > 0 && (y1 - x) * (y2 - y) > 0) {
-                return false;
-            }
-            return true;
-        }
-    }
-
     class Main {
         constructor() {
             if (window["Laya3D"])
@@ -2237,7 +2169,7 @@
             if (GameConfig.stat)
                 Laya.Stat.show();
             Laya.alertGlobalError(true);
-            new Test();
+            Laya.ResourceVersion.enable("version.json", Laya.Handler.create(this, this.onVersionLoaded), Laya.ResourceVersion.FILENAME_VERSION);
         }
         onVersionLoaded() {
             Laya.stage.addChild(fgui.GRoot.inst.displayObject);
@@ -2254,4 +2186,3 @@
     new Main();
 
 }());
-//# sourceMappingURL=bundle.js.map

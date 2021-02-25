@@ -159,7 +159,7 @@ export default class CCEngine implements IEngine {
     }
     target
     hitTest(node, pos) {
-        if (node.active && node != this.rectNode && node != this.rect) {
+        if (node.active && node != this.rectNode && node != this.rect&&!node.mouseThrough) {
             if (node._hitTest(pos)) {
                 this.target = node;
             }

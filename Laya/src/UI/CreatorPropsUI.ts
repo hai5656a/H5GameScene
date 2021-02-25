@@ -36,12 +36,16 @@ export default class CreatorPropsUI{
         (this.view.m_alpha as XYInput).setObj(item,"opacity");
         (this.view.m_rotation as XYInput).setObj(item,"rotation");
         (this.view.m_visible as EmCheckbox).setObj(item,"active",false);
+        (this.view.m_mouse as EmCheckbox).setObj(item,"mouseThrough",false);
         this.view.m_color.text = item.color.toCSS("#rrggbb");
         
        
     }
+ 
+
     changeValue(){
-        this.item.color.fromHEX(this.view.m_color.text);
+        this.item.color = this.item.color.fromHEX(this.view.m_color.text);
     }
    
+
 }

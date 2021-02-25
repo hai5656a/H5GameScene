@@ -97,10 +97,10 @@ export default class DocumentUI{
             }  
         }
         
-        this.frameStyle.left = p.x+"px";
-        this.frameStyle.top = p.y+"px";
-        this.frame.width = w;
-        this.frame.height = h;
+        this.frameStyle.left = p.x/Laya.Browser.pixelRatio+"px";
+        this.frameStyle.top = p.y/Laya.Browser.pixelRatio+"px";
+        this.frame.width = w/Laya.Browser.pixelRatio;
+        this.frame.height = h/Laya.Browser.pixelRatio;
         localStorage.setItem("device",this.view.m_device.selectedIndex+"");
         localStorage.setItem("orientation",this.view.m_orientation.selectedIndex+"");
         if( Consts.engineManager)
