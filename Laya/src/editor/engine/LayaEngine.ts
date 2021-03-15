@@ -59,7 +59,7 @@ export default class  LayaEngine implements IEngine{
         }
         
     }
-    hideFGUIRect(){
+    hideRect(){
         if(this.rect)
           this.rect.visible = false;
     }

@@ -56,7 +56,7 @@ export default class  EgretEngine implements IEngine{
                 this.engine.lifecycle.stage.addChild(this.rect);
             }
     }
-    hideFGUIRect(){
+    hideRect(){
         if(this.rect)
           this.rect.visible = false;
     }

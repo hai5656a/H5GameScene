@@ -47,7 +47,7 @@
         ""
     ],
     "packfile": false,
-    "keepPlatformFile": true,
+    "keepPlatformFile": false,
     "packfileFilter": [
         ""
     ],
@@ -62,8 +62,8 @@
     "compile": false,
     "forceCompile": false,
     "onlyIndexJS": true,
-    "useMinJsLibs": false,
+    "useMinJsLibs": true,
     "es6toes5": false,
     "projectType": "ts",
-    "pubTime": 1614170595683
+    "pubTime": 1615813587709
 }

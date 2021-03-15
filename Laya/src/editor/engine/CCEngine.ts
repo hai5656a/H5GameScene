@@ -120,7 +120,7 @@ export default class CCEngine implements IEngine {
 
         
     }
-    hideFGUIRect() {
+    hideRect() {
         if (this.rect)
             this.rect.active = false;
         if (this.fguirect&&this.fguirect["_node"])

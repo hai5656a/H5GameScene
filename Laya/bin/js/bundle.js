@@ -338,7 +338,7 @@
                 this.engine.stage.addChild(this.rect);
             }
         }
-        hideFGUIRect() {
+        hideRect() {
             if (this.rect)
                 this.rect.visible = false;
         }
@@ -454,7 +454,7 @@
                 this.engine.lifecycle.stage.addChild(this.rect);
             }
         }
-        hideFGUIRect() {
+        hideRect() {
             if (this.rect)
                 this.rect.visible = false;
         }
@@ -632,7 +632,7 @@
                 console.log(this.fguirect);
             }
         }
-        hideFGUIRect() {
+        hideRect() {
             if (this.rect)
                 this.rect.active = false;
             if (this.fguirect && this.fguirect["_node"])
@@ -1187,8 +1187,13 @@
     class DocumentUI {
         constructor(view) {
             this.frame = document.getElementById('gameFrame');
-            this.frameStyle = this.frame.style;
-            this.frame.onload = this.frameLoad.bind(this);
+            if (this.frame) {
+                this.frameStyle = this.frame.style;
+                this.frame.onload = this.frameLoad.bind(this);
+            }
+            else {
+                window["setGameFrame"] = this.setGameFrame.bind(this);
+            }
             EditorEvent.on(EditorEvent.SelectionChanged, this, this.selectItem);
             this.view = view;
             let device = localStorage.getItem("device");
@@ -1212,6 +1217,21 @@
             document.onkeydown = this.keyDown.bind(this);
             document.onkeyup = this.keyUp.bind(this);
         }
+        setGameFrame(frame) {
+            if (this.frame) {
+                this.reset();
+                this.frame = null;
+                this.onClickChange();
+            }
+            else {
+                this.frame = frame;
+                this.frameStyle = frame.style;
+                this.reset();
+                this.loadTimes = 100;
+                this.frameLoad();
+                this.resize();
+            }
+        }
         keyDown(e) {
             if (e.keyCode == Laya.Keyboard.CONTROL) {
                 this.view.m_editType.selectedIndex = 1;
@@ -1227,9 +1247,12 @@
         }
         onClickChange() {
             if (Consts.engineManager)
-                Consts.engineManager.hideFGUIRect();
+                Consts.engineManager.hideRect();
         }
         resize() {
+            if (!this.frame) {
+                return;
+            }
             let value = this.view.m_device.value.split(":");
             let p = this.view.m_docBg.localToGlobal(0, 0);
             let w = this.view.m_docBg.width;
@@ -1270,7 +1293,7 @@
             localStorage.setItem("device", this.view.m_device.selectedIndex + "");
             localStorage.setItem("orientation", this.view.m_orientation.selectedIndex + "");
             if (Consts.engineManager)
-                Consts.engineManager.hideFGUIRect();
+                Consts.engineManager.hideRect();
         }
         onFPS() {
             if (Consts.engineManager)
@@ -1292,6 +1315,11 @@
             }
         }
         goweb(url) {
+            this.frame.src = url;
+            this.reset();
+            Laya.timer.loop(100, this, this.frameLoad);
+        }
+        reset() {
             Consts.gameWindow = null;
             if (Consts.displayList) {
                 Consts.displayList.end();
@@ -1303,9 +1331,7 @@
             }
             Consts.treeTypeList = [];
             this.view.m_editType.selectedIndex = 0;
-            this.frame.src = url;
             this.loadTimes = 0;
-            Laya.timer.loop(100, this, this.frameLoad);
         }
         frameLoad() {
             var win = this.frame.contentWindow;
@@ -1408,10 +1434,10 @@
                 if (rect)
                     Consts.engineManager.showRect(rect[0], rect[1], Math.abs(rect[2]), Math.abs(rect[3]));
                 else
-                    Consts.engineManager.hideFGUIRect();
+                    Consts.engineManager.hideRect();
             }
             else {
-                Consts.engineManager.hideFGUIRect();
+                Consts.engineManager.hideRect();
             }
         }
     }
@@ -2186,3 +2212,4 @@
     new Main();
 
 }());
+//# sourceMappingURL=bundle.js.map

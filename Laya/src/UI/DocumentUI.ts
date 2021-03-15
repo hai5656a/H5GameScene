@@ -15,10 +15,15 @@ export default class DocumentUI{
     frameStyle:CSSStyleDeclaration;
     constructor(view:DocumentView){
         this.frame = document.getElementById('gameFrame');
-        this.frameStyle =  this.frame.style;
-        // this.line = document.getElementById("line");
-        // this.lineStyle = this.line.style;
-        this.frame.onload = this.frameLoad.bind(this);
+        if(this.frame){
+            this.frameStyle =  this.frame.style;
+            // this.line = document.getElementById("line");
+            // this.lineStyle = this.line.style;
+            this.frame.onload = this.frameLoad.bind(this);
+        }else{
+            window["setGameFrame"] = this.setGameFrame.bind(this);
+        }
+      
         EditorEvent.on(EditorEvent.SelectionChanged,this,this.selectItem) ;
         this.view = view;
        
@@ -46,6 +51,21 @@ export default class DocumentUI{
       document.onkeyup  = this.keyUp.bind(this);
     //   document.oncontextmenu=this.doNothing;
     }
+    setGameFrame(frame){
+        
+        if(this.frame){
+            this.reset();
+            this.frame = null;
+            this.onClickChange();
+        }else{
+            this.frame = frame;
+            this.frameStyle = frame.style;
+            this.reset();
+            this.loadTimes = 100;
+            this.frameLoad();
+            this.resize();
+        }
+    }
     keyDown(e){
         if(e.keyCode==Laya.Keyboard.CONTROL){
             this.view.m_editType.selectedIndex = 1;
@@ -61,9 +81,12 @@ export default class DocumentUI{
     }
     onClickChange(){
         if( Consts.engineManager)
-          Consts.engineManager.hideFGUIRect()
+          Consts.engineManager.hideRect()
     }
     resize(){
+        if(!this.frame){
+            return;
+        }
         let value =  this.view.m_device.value.split(":");
         let p = this.view.m_docBg.localToGlobal(0,0);
         let w = this.view.m_docBg.width;
@@ -104,7 +127,7 @@ export default class DocumentUI{
         localStorage.setItem("device",this.view.m_device.selectedIndex+"");
         localStorage.setItem("orientation",this.view.m_orientation.selectedIndex+"");
         if( Consts.engineManager)
-          Consts.engineManager.hideFGUIRect()
+          Consts.engineManager.hideRect()
     }
     onFPS(){
         if( Consts.engineManager)
@@ -128,6 +151,12 @@ export default class DocumentUI{
 
     loadTimes;
     goweb(url){
+       
+        this.frame.src = url;
+       this.reset();
+        Laya.timer.loop(100,this,this.frameLoad);
+    }
+    reset(){
         Consts.gameWindow = null;
         if(Consts.displayList){
             Consts.displayList.end();
@@ -139,9 +168,7 @@ export default class DocumentUI{
         }
         Consts.treeTypeList = [];
         this.view.m_editType.selectedIndex = 0;
-        this.frame.src = url;
         this.loadTimes = 0;
-        Laya.timer.loop(100,this,this.frameLoad);
     }
     frameLoad(){
         var win = this.frame.contentWindow;
@@ -251,7 +278,7 @@ export default class DocumentUI{
             if(rect)
             Consts.engineManager.showRect( rect[0],rect[1],Math.abs(rect[2]) ,Math.abs(rect[3]));
             else 
-            Consts.engineManager.hideFGUIRect();
+            Consts.engineManager.hideRect();
             // this.lineStyle.display = "block";
             // this.lineStyle.left =(Number(this.frameStyle.left.replace("px","")) +p.x; )+"px";
             // this.lineStyle.top =( Number(this.frameStyle.top.replace("px","")) +p.y)+"px";
@@ -260,7 +287,7 @@ export default class DocumentUI{
         }else{
             // this.lineStyle.display = "none";
             // this.line.visible = false;
-            Consts.engineManager.hideFGUIRect();
+            Consts.engineManager.hideRect();
         }
     }
 }

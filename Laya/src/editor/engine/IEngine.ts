@@ -9,10 +9,10 @@ export interface IEngine{
     start(game);
     /**引擎结束 */
     end();
-    /**显示FGUI选中方块 */
+    /**显示选中方块 */
     showRect(x,y,w,h);
-    /**隐藏FGUI选中方块 */
-    hideFGUIRect();
+    /**隐藏选中方块 */
+    hideRect();
     /**设置选择模式 */
     addSelectModel();
     /**取消选择模式 */
