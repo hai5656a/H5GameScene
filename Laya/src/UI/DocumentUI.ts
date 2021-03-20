@@ -151,9 +151,9 @@ export default class DocumentUI{
 
     loadTimes;
     goweb(url){
-       
         this.frame.src = url;
-       this.reset();
+        this.reset();
+        Laya.timer.clear(this,this.frameLoad);
         Laya.timer.loop(100,this,this.frameLoad);
     }
     reset(){
@@ -170,6 +170,7 @@ export default class DocumentUI{
         this.view.m_editType.selectedIndex = 0;
         this.loadTimes = 0;
     }
+
     frameLoad(){
         var win = this.frame.contentWindow;
        
@@ -187,6 +188,12 @@ export default class DocumentUI{
             var toolbar = win.document.getElementsByClassName('toolbar')[0];
             if(toolbar)
                toolbar.style.display = 'none';
+               win.onbeforeunload = ()=>{
+                    this.reset();
+                    Laya.timer.clear(this,this.frameLoad);
+                    Laya.timer.loop(100,this,this.frameLoad);
+               }
+  
              //getComputedStyle(toolbar).display = 'none';
         }
         if(Consts.engineManager){

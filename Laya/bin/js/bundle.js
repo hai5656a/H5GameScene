@@ -1317,6 +1317,7 @@
         goweb(url) {
             this.frame.src = url;
             this.reset();
+            Laya.timer.clear(this, this.frameLoad);
             Laya.timer.loop(100, this, this.frameLoad);
         }
         reset() {
@@ -1350,6 +1351,11 @@
                 var toolbar = win.document.getElementsByClassName('toolbar')[0];
                 if (toolbar)
                     toolbar.style.display = 'none';
+                win.onbeforeunload = () => {
+                    this.reset();
+                    Laya.timer.clear(this, this.frameLoad);
+                    Laya.timer.loop(100, this, this.frameLoad);
+                };
             }
             if (Consts.engineManager) {
                 this.loadTimes++;
@@ -2212,4 +2218,3 @@
     new Main();
 
 }());
-//# sourceMappingURL=bundle.js.map
