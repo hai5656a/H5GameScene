@@ -8,26 +8,27 @@ import ComTransitionUI from "./ComTransitionUI";
 import Basic3DPropsUI from "./Basic3DPropsUI";
 import CreatorPropsUI from "./CreatorPropsUI";
 import CreatorWidgetUI from "./CreatorWidgetUI";
+import PropsUI, { IPropsUI } from "./PropsUI";
 
 export default class InspectorUI{
     view:InspectorView;
-    baseProps:BasicPropsUI;
-    base3DProps:Basic3DPropsUI;
+    baseProps:IPropsUI;
+    base3DProps:IPropsUI;
+    controllerComp:IPropsUI;
+    transitionComp:IPropsUI;
+    ccInfoComp: IPropsUI;
+    ccWidget:IPropsUI;
     infoComp:InfoPropsUI;
-    controllerComp:ComControllerUI;
-    transitionComp:ComTransitionUI;
-    ccInfoComp: CreatorPropsUI;
-    ccWidget:CreatorWidgetUI;
     constructor(view:InspectorView){
         EditorEvent.on(EditorEvent.SelectionChanged,this,this.selectItem) ;
         this.view = view;
-        this.baseProps = new BasicPropsUI(this.view.m_baseComp);
-        this.base3DProps = new Basic3DPropsUI(this.view.m_base3DComp);
+        this.baseProps = (this.view.m_baseBar as PropsUI).propsui ;
+        this.base3DProps = (this.view.m_base3DBar as PropsUI).propsui ;
+        this.controllerComp = (this.view.m_controllerBar as PropsUI).propsui ;
+        this.transitionComp = (this.view.m_transitionBar as PropsUI).propsui ;
+        this.ccInfoComp =  (this.view.m_nodeBar as PropsUI).propsui ;
+        this.ccWidget = (this.view.m_widgetBar as PropsUI).propsui ;
         this.infoComp = new InfoPropsUI(this.view.m_infoComp);
-        this.controllerComp = new ComControllerUI(this.view.m_controllerComp);
-        this.transitionComp = new ComTransitionUI(this.view.m_transitionComp);
-        this.ccInfoComp =  new CreatorPropsUI(this.view.m_nodeComp);
-        this.ccWidget = new CreatorWidgetUI(this.view.m_widgetComp);
     }
     selectItem(item){
         if(item){

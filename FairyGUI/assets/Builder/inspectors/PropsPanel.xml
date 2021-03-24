@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="270,20" extention="Button">
+  <controller name="type" homePageType="specific" homePage="1" pages="0,,1," selected="1"/>
+  <displayList>
+    <component id="n0_s4ys" name="title" src="itme7iudp" fileName="basic/TitleBar.xml" xy="0,0" group="n2_s4ys">
+      <Button controller="type" page="0"/>
+    </component>
+    <loader id="n1_s4ys" name="icon" xy="0,20" size="270,0" group="n2_s4ys" autoSize="true">
+      <gearDisplay controller="type" pages="1"/>
+    </loader>
+    <group id="n2_s4ys" name="n2" xy="0,0" size="270,20" advanced="true" layout="vt" excludeInvisibles="true"/>
+  </displayList>
+  <Button/>
+  <relation target="n2_s4ys" sidePair="height-height"/>
+</component>

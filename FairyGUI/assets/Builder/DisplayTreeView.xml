@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="283,580" designImageOffsetX="-428" designImageAlpha="100" bgColorEnabled="true" bgColor="#383838">
   <displayList>
-    <graph id="n12_qilr" name="n12" xy="0,26" size="283,1" type="rect" lineColor="#ff292828" fillColor="#00383838">
+    <graph id="n12_qilr" name="n12" xy="0,51" size="283,1" type="rect" lineColor="#ff292828" fillColor="#00383838">
       <relation target="" sidePair="width-width"/>
     </graph>
     <component id="n6_qilr" name="btnRefresh" src="so5uixicsd" fileName="basic/RefreshButton.xml" xy="236,1" size="22,22" group="n9_qilr" tooltips="刷新">
@@ -22,12 +22,29 @@
     <group id="n9_qilr" name="n9" xy="236,1" size="44,22" advanced="true" layout="hz" excludeInvisibles="true">
       <relation target="" sidePair="right-right"/>
     </group>
-    <component id="n11_qilr" name="group" src="gcza18" fileName="ComboBox/ComboBox.xml" pkg="nk9ejx23" xy="5,3" size="136,20" restrictSize="0,200,0,0" visible="false">
+    <component id="n11_qilr" name="group" src="gcza18" fileName="ComboBox/ComboBox.xml" pkg="nk9ejx23" xy="5,3" size="136,20" restrictSize="0,200,0,0">
       <relation target="" sidePair="width-width"/>
       <ComboBox visibleItemCount="10"/>
     </component>
-    <list id="n3" name="treeView" xy="0,27" size="283,553" group="n16_emg4" overflow="scroll" margin="1,1,1,1" defaultItem="ui://nk9ejx23au3n6t" autoClearItems="true" treeView="true" indent="15" clickToExpand="2">
-      <relation target="" sidePair=""/>
+    <text id="n22_s4ys" name="numSearch" xy="165,28" size="60,19" fontSize="12" color="#bdbdbd" align="center" vAlign="middle" autoSize="shrink" text="">
+      <relation target="" sidePair="right-right"/>
+    </text>
+    <component id="n23_s4ys" name="btnSearchLeft" src="so5uixicsd" fileName="basic/RefreshButton.xml" xy="141,26" size="22,22" visible="false" tooltips="搜索">
+      <relation target="" sidePair="right-right"/>
+      <Button icon="ui://2pshu6oig1zau6e"/>
+    </component>
+    <component id="n24_s4ys" name="btnSearchRight" src="so5uixicsd" fileName="basic/RefreshButton.xml" xy="226,26" size="22,22" visible="false" tooltips="搜索">
+      <relation target="" sidePair="right-right"/>
+      <Button icon="ui://2pshu6oig1zau6d"/>
+    </component>
+    <component id="n20_s4ys" name="txtSearch" src="gcza1s" fileName="Input/TextInput.xml" pkg="nk9ejx23" xy="5,28" size="136,20" controller="noBorder,0,showClear,0">
+      <relation target="" sidePair="width-width"/>
+    </component>
+    <component id="n21_s4ys" name="btnSearch" src="so5uixicsd" fileName="basic/RefreshButton.xml" xy="256,26" size="22,22" tooltips="搜索">
+      <relation target="" sidePair="right-right"/>
+      <Button icon="ui://2pshu6oic3ppiu9h"/>
+    </component>
+    <list id="n3" name="treeView" xy="0,53" size="283,527" group="n16_emg4" overflow="scroll" margin="1,1,1,1" defaultItem="ui://nk9ejx23au3n6t" autoClearItems="true" treeView="true" indent="15" clickToExpand="2">
       <item title="Package" icon="ui://2pshu6oiptssa7iug6" level="0"/>
       <item title="Folder" icon="ui://2pshu6oin8o8a7iug2" level="1"/>
       <item title="Component" icon="ui://2pshu6oiau3n1p" level="2"/>
@@ -50,9 +67,9 @@
       <item title="Misc" icon="ui://2pshu6oiifjkixicwq" level="2"/>
       <item title="Sound" icon="ui://2pshu6oig5gnixics8" level="2"/>
     </list>
-    <component id="n14_emg4" name="sep" src="e80aixictx" fileName="Editor/LibView_sep.xml" xy="137,27" restrictSize="4,4,0,0" group="n16_emg4" visible="false"/>
-    <list id="n15_emg4" name="listView" xy="141,27" size="142,531" group="n16_emg4" visible="false" selectionMode="multiple" overflow="scroll" margin="1,1,1,1" defaultItem="ui://nk9ejx23d8p07iuek"/>
-    <group id="n16_emg4" name="columns" xy="0,27" size="283,553" advanced="true" layout="hz" excludeInvisibles="true" autoSizeDisabled="true" mainGridIndex="2">
+    <component id="n14_emg4" name="sep" src="e80aixictx" fileName="Editor/LibView_sep.xml" xy="137,53" size="4,526" restrictSize="4,4,0,0" group="n16_emg4" visible="false"/>
+    <list id="n15_emg4" name="listView" xy="141,53" size="142,505" group="n16_emg4" visible="false" selectionMode="multiple" overflow="scroll" margin="1,1,1,1" defaultItem="ui://nk9ejx23d8p07iuek"/>
+    <group id="n16_emg4" name="columns" xy="0,53" size="283,527" advanced="true" layout="hz" excludeInvisibles="true" autoSizeDisabled="true" mainGridIndex="2">
       <relation target="" sidePair="width-width,height-height"/>
     </group>
     <component id="n18_ep4r" name="iconSize" src="nw20ixicv7" fileName="Editor/LibraryView_Slider.xml" xy="138,558" size="145,21" visible="false">

@@ -577,6 +577,7 @@
     <component id="6who1nry324" name="Basic3DPropsPanel.xml" path="/inspectors/" exported="true"/>
     <component id="ixw71nry325" name="CreatorPropsPanel.xml" path="/inspectors/" exported="true"/>
     <component id="ixw71nry326" name="CreatorWidgetPanel.xml" path="/inspectors/" exported="true"/>
+    <component id="s4ys1nry32c" name="PropsPanel.xml" path="/inspectors/"/>
   </resources>
   <publish name="Builder" genCode="true"/>
 </packageDescription>

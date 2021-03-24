@@ -63,9 +63,7 @@ export default class  CCManager implements IDisplayManager{
         
     }
     public getDisPlayName(gobj:cc.Node){
-       
-        
-        let cname = Consts.getClassName(gobj);
+        let cname ="Node";// Consts.getClassName(gobj);
         if(cname){
             cname = gobj.name+"("+cname+")"
         }else cname = gobj.name;
@@ -81,20 +79,22 @@ export default class  CCManager implements IDisplayManager{
         return [x,y,width,height];    
     }
     public getDisPlayIcon(obj:cc.Node){
-
-        let gamecc = this.displayModule; 
-        // if(cc.Node &&obj instanceof gameLaya.Clip){
+        if(obj["_components"]&&obj["_components"].length>0){
+            let name:string = obj["_components"][0].name;
+            if(name){
+ 
+            // if(cc.Node &&obj instanceof gameLaya.Clip){
         //     return Consts.icons[FObjectType.MOVIECLIP];
         // }
-        // if(gameLaya.Image&&obj instanceof gameLaya.Image){
-        //     return Consts.icons[FObjectType.IMAGE];
-        // }
+        if(name.indexOf("<Sprite>")>-1){
+            return Consts.icons[FObjectType.IMAGE];
+        }
         // if(gameLaya.ComboBox&&obj instanceof gameLaya.ComboBox){
         //     return Consts.icons[FObjectType.EXT_COMBOBOX];
         // }
-        // if(gameLaya.Slider&&obj instanceof gameLaya.Slider){
-        //     return Consts.icons[FObjectType.EXT_SLIDER];
-        // }
+        if(name.indexOf("<Slider>")>-1){
+            return Consts.icons[FObjectType.EXT_SLIDER];
+        }
    
         // if(gameLaya.Tree&&obj instanceof gameLaya.Tree){
         //     return Consts.icons[FObjectType.TREE];
@@ -103,28 +103,33 @@ export default class  CCManager implements IDisplayManager{
         //     return Consts.icons[FObjectType.LIST];
         // }
 
-        // if(gameLaya.TextInput&&obj instanceof gameLaya.TextInput){
-        //     return Consts.icons[FObjectType.INPUTTEXT];
-        // }
+        if(name.indexOf("<EditBox>")>-1){
+            return Consts.icons[FObjectType.INPUTTEXT];
+        }
 
         // if(gameLaya.ProgressBar&&obj instanceof gameLaya.ProgressBar){
         //     return Consts.icons[FObjectType.EXT_PROGRESS_BAR];
         // }
-        // if( gameLaya.Label&&obj instanceof gameLaya.Label){
-        //     return Consts.icons[FObjectType.EXT_LABEL];
-        // }
-        // if(gameLaya.Button&&obj instanceof gameLaya.Button){
-        //     return Consts.icons[FObjectType.EXT_BUTTON];
-        // }
-        // if( gameLaya.Panel&&obj instanceof gameLaya.Panel){
-        //     return Consts.icons[FObjectType.COMPONENT];
-        // }
+        if( name.indexOf("<Label>")>-1){
+            return Consts.icons[FObjectType.EXT_LABEL];
+        }
+        if(name.indexOf("<Button>")>-1){
+            return Consts.icons[FObjectType.EXT_BUTTON];
+        }
+        if(name.indexOf("<Canvas>")>-1){
+            return Consts.icons[FObjectType.COMPONENT];
+        }
         // if( obj instanceof gameLaya.Sprite){
         //     return Consts.icons[FObjectType.SPRITE];
         // }
         // if(gameLaya.Sprite3D&& obj instanceof gameLaya.Sprite3D){
         //     return Consts.icons[FObjectType.SPRITE3D];
         // }
+            }
+          
+        }
+      
+        
         return  Consts.icons["GObject"];
     }
 }

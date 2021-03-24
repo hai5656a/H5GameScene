@@ -1,13 +1,14 @@
 import ComControllerPanel from "../fgui/Builder/ComControllerPanel";
 import ComControllerItem from "../fgui/Builder/ComControllerItem";
+import { IPropsUI } from "./PropsUI";
 
-export default class ComControllerUI{
-    view:ComControllerPanel;
+export default class ComControllerUI extends ComControllerPanel implements IPropsUI{
+ 
     allController:fairygui.Controller[];
     allControllerNames;
-     constructor(view:ComControllerPanel){
-        this.view = view;
-        this.view.m_list.itemRenderer = Laya.Handler.create(this,this.itemRenderer,null,false);
+    protected onConstruct():void {
+        super.onConstruct();
+        this.m_list.itemRenderer = Laya.Handler.create(this,this.itemRenderer,null,false);
      }
      itemRenderer(index:number,item:ComControllerItem){
          let data = this.allController[index];
@@ -32,10 +33,10 @@ export default class ComControllerUI{
                      }
                      this.allControllerNames[i]=item;
                  }
-                 this.view.m_list.numItems = this.allController.length;
-             }else this.view.m_list.numItems = 0;
-             let h = this.view.m_list.numItems*30;
-             this.view.m_list.height = Math.min(h,300)
+                 this.m_list.numItems = this.allController.length;
+             }else this.m_list.numItems = 0;
+             let h = this.m_list.numItems*30;
+             this.m_list.height = Math.min(h,300)
          }
      }
      onChanged(item:ComControllerItem){
