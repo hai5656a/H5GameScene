@@ -223,16 +223,23 @@
             this.view.m_treeView.on(fairygui.Events.CLICK_ITEM, this, this.onClickItem);
             this.view.m_btnRefresh.onClick(this, this.onRefresh);
             this.view.m_btnCollapseAll.onClick(this, this.onCollapseAll);
+            this.view.m_btnSearch.onClick(this, this.onSearch, [1]);
+            this.view.m_btnSearchLeft.onClick(this, this.onSearch, [-1]);
+            this.view.m_btnSearchRight.onClick(this, this.onSearch, [1]);
+            this.view.m_txtSearch.getTextField().on(Laya.Event.KEY_DOWN, this, this.onChanged);
             this.view.m_group.on(fairygui.Events.STATE_CHANGED, this, this.changeType);
             EditorEvent.on(EditorEvent.Selection, this, this.selectTree);
             EditorEvent.on(EditorEvent.TreeChanged, this, this.onRefresh);
             EditorEvent.on(EditorEvent.TreeTypeDataChanged, this, this.onTreeType);
         }
         initTree() {
+            this.allSearch = undefined;
+            this.lastSearch = undefined;
             if (!Consts.displayList || !Consts.displayList.root)
                 return;
             this.isExpand = false;
             this.view.m_btnCollapseAll.tooltips = "全部展开";
+            this.view.m_treeView.rootNode.removeChildren(0, -1);
             this.view.m_treeView.numItems = 0;
             Consts.displayList.refreshList(this.view.m_treeView.rootNode);
             this.selectItem = null;
@@ -241,8 +248,7 @@
         selectTree(item) {
             if (item && item[Consts.EditorNodeName]) {
                 let itemNode = item[Consts.EditorNodeName];
-                this.view.m_treeView.selectNode(itemNode, true);
-                EditorEvent.event(EditorEvent.SelectionChanged, itemNode.data);
+                this.selectTreeNode(itemNode, true);
             }
         }
         renderTreeNode(node, obj) {
@@ -253,12 +259,18 @@
         }
         onClickItem(item) {
             this.selectItem = item;
-            if (item.treeNode && item.treeNode.data) {
-                if (!Consts.displayList.isShow(item.treeNode.data)) {
+            this.selectTreeNode(item.treeNode, false);
+        }
+        selectTreeNode(treeNode, select) {
+            if (treeNode && treeNode.data) {
+                if (!Consts.displayList.isShow(treeNode.data)) {
                     alert("对象已不显示，请刷新列表");
                     return;
                 }
-                EditorEvent.event(EditorEvent.SelectionChanged, item.treeNode.data);
+                if (select) {
+                    this.view.m_treeView.selectNode(treeNode, true);
+                }
+                EditorEvent.event(EditorEvent.SelectionChanged, treeNode.data);
             }
         }
         onRefresh() {
@@ -283,6 +295,49 @@
         }
         changeType() {
             EditorEvent.event(EditorEvent.TreeTypeChanged, Consts.treeTypeList[this.view.m_group.selectedIndex]);
+        }
+        onChanged(e) {
+            if (e.keyCode == Laya.Keyboard.ENTER) {
+                this.onSearch();
+            }
+        }
+        onSearch(add = 1, evt) {
+            var serarchText = this.view.m_txtSearch.text;
+            if (serarchText) {
+                this.serarchText = serarchText.toLowerCase();
+                if (this.lastSearch == serarchText && this.allSearch && this.allSearch.length > 0) {
+                    this.nowindex = (this.nowindex + add + this.allSearch.length) % this.allSearch.length;
+                }
+                else {
+                    this.allSearch = [];
+                    this.nowindex = 0;
+                    this.searchNode(this.view.m_treeView.rootNode);
+                }
+            }
+            if (this.allSearch && this.allSearch.length > 0) {
+                this.lastSearch = this.serarchText;
+                this.view.m_numSearch.text = (this.nowindex + 1) + "/" + this.allSearch.length;
+                this.selectTreeNode(this.allSearch[this.nowindex], true);
+                this.view.m_btnSearchLeft.visible = this.view.m_btnSearchRight.visible = true;
+            }
+            else {
+                this.view.m_numSearch.text = "0/0";
+                this.view.m_btnSearchLeft.visible = this.view.m_btnSearchRight.visible = false;
+            }
+        }
+        searchNode(node) {
+            let gobj = node.data;
+            if (gobj) {
+                var name = Consts.displayList.getDisPlayName(gobj);
+                if (name && name.toLocaleLowerCase().indexOf(this.serarchText) > -1) {
+                    this.allSearch.push(node);
+                }
+            }
+            if (node["_children"]) {
+                for (var i = 0; i < node.numChildren; i++) {
+                    this.searchNode(node.getChildAt(i));
+                }
+            }
         }
     }
 
@@ -1053,7 +1108,7 @@
             return item == this.root || item.active;
         }
         getDisPlayName(gobj) {
-            let cname = Consts.getClassName(gobj);
+            let cname = "Node";
             if (cname) {
                 cname = gobj.name + "(" + cname + ")";
             }
@@ -1071,7 +1126,29 @@
             return [x, y, width, height];
         }
         getDisPlayIcon(obj) {
-            let gamecc = this.displayModule;
+            if (obj["_components"] && obj["_components"].length > 0) {
+                let name = obj["_components"][0].name;
+                if (name) {
+                    if (name.indexOf("<Sprite>") > -1) {
+                        return Consts.icons[FObjectType.IMAGE];
+                    }
+                    if (name.indexOf("<Slider>") > -1) {
+                        return Consts.icons[FObjectType.EXT_SLIDER];
+                    }
+                    if (name.indexOf("<EditBox>") > -1) {
+                        return Consts.icons[FObjectType.INPUTTEXT];
+                    }
+                    if (name.indexOf("<Label>") > -1) {
+                        return Consts.icons[FObjectType.EXT_LABEL];
+                    }
+                    if (name.indexOf("<Button>") > -1) {
+                        return Consts.icons[FObjectType.EXT_BUTTON];
+                    }
+                    if (name.indexOf("<Canvas>") > -1) {
+                        return Consts.icons[FObjectType.COMPONENT];
+                    }
+                }
+            }
             return Consts.icons["GObject"];
         }
     }
@@ -1448,79 +1525,6 @@
         }
     }
 
-    class BasicPropsUI {
-        constructor(view) {
-            this.view = view;
-            this.view.m_name.editable = false;
-        }
-        setData(item) {
-            let gameModule = Consts.displayList.displayModule;
-            if (gameModule.GObject && item instanceof gameModule.GObject) {
-                this.setFGUIData(item);
-            }
-            else if (gameModule.DisplayObject && item instanceof gameModule.DisplayObject) {
-                this.setEgretData(item);
-            }
-            else if (gameModule.Sprite && item instanceof gameModule.Sprite) {
-                this.setLaya2DData(item);
-            }
-        }
-        setFGUIData(item) {
-            this.view.m_name.text = item.name;
-            this.view.m_x.setObj(item, "x");
-            this.view.m_y.setObj(item, "y");
-            this.view.m_width.setObj(item, "width");
-            this.view.m_height.setObj(item, "height");
-            this.view.m_minWidth.setObj(item, "minWidth");
-            this.view.m_minHeight.setObj(item, "minHeight");
-            this.view.m_maxWidth.setObj(item, "maxWidth");
-            this.view.m_maxHeight.setObj(item, "maxHeight");
-            this.view.m_scaleX.setObj(item, "scaleX");
-            this.view.m_scaleY.setObj(item, "scaleY");
-            this.view.m_skewX.setObj(item, "skewY");
-            this.view.m_pivotX.setObj(item, "pivotX");
-            this.view.m_pivotY.setObj(item, "pivotY");
-            this.view.m_alpha.setObj(item, "alpha");
-            this.view.m_rotation.setObj(item, "rotation");
-            this.view.m_anchor.setObj(item, "pivotAsAnchor", false);
-            this.view.m_visible.setObj(item, "visible", true);
-            this.view.m_grayed.setObj(item, "grayed", false);
-            this.view.m_touchable.setObj(item, "touchable", true);
-        }
-        setLaya2DData(item) {
-            this.view.m_name.text = item.name;
-            this.view.m_x.setObj(item, "x");
-            this.view.m_y.setObj(item, "y");
-            this.view.m_width.setObj(item, "width");
-            this.view.m_height.setObj(item, "height");
-            this.view.m_scaleX.setObj(item, "scaleX");
-            this.view.m_scaleY.setObj(item, "scaleY");
-            this.view.m_skewX.setObj(item, "skewY");
-            this.view.m_pivotX.setObj(item, "pivotX");
-            this.view.m_pivotY.setObj(item, "pivotY");
-            this.view.m_alpha.setObj(item, "alpha");
-            this.view.m_rotation.setObj(item, "rotation");
-            this.view.m_visible.setObj(item, "visible", true);
-            this.view.m_touchable.setObj(item, "mouseThrough", false);
-        }
-        setEgretData(item) {
-            this.view.m_name.text = item.name;
-            this.view.m_x.setObj(item, "x");
-            this.view.m_y.setObj(item, "y");
-            this.view.m_width.setObj(item, "width");
-            this.view.m_height.setObj(item, "height");
-            this.view.m_scaleX.setObj(item, "scaleX");
-            this.view.m_scaleY.setObj(item, "scaleY");
-            this.view.m_skewX.setObj(item, "skewY");
-            this.view.m_pivotX.setObj(item, "anchorOffsetX");
-            this.view.m_pivotY.setObj(item, "anchorOffsetY");
-            this.view.m_alpha.setObj(item, "alpha");
-            this.view.m_rotation.setObj(item, "rotation");
-            this.view.m_visible.setObj(item, "visible", true);
-            this.view.m_touchable.setObj(item, "touchEnabled", true);
-        }
-    }
-
     class InfoPropsUI {
         constructor(view) {
             this.view = view;
@@ -1541,205 +1545,17 @@
         }
     }
 
-    class ComControllerUI {
-        constructor(view) {
-            this.view = view;
-            this.view.m_list.itemRenderer = Laya.Handler.create(this, this.itemRenderer, null, false);
-        }
-        itemRenderer(index, item) {
-            let data = this.allController[index];
-            item.data = data;
-            item.text = data.name;
-            item.m_pageController.off(fairygui.Events.STATE_CHANGED, this, this.onChanged);
-            item.m_pageController.selectedIndex = data.selectedIndex;
-            item.m_pageController.items = this.allControllerNames[index];
-            item.m_pageController.on(fairygui.Events.STATE_CHANGED, this, this.onChanged, [item]);
-        }
-        setData(item) {
-            if (item) {
-                this.allController = item._controllers;
-                if (this.allController && this.allController.length > 0) {
-                    this.allControllerNames = [];
-                    for (var i = 0; i < this.allController.length; i++) {
-                        let item = [];
-                        let c = this.allController[i];
-                        for (let j = 0; j < c._pageNames.length; j++) {
-                            item[j] = j + ":" + c._pageNames[j];
-                        }
-                        this.allControllerNames[i] = item;
-                    }
-                    this.view.m_list.numItems = this.allController.length;
-                }
-                else
-                    this.view.m_list.numItems = 0;
-                let h = this.view.m_list.numItems * 30;
-                this.view.m_list.height = Math.min(h, 300);
-            }
-        }
-        onChanged(item) {
-            let c = item.data;
-            c.selectedIndex = item.m_pageController.selectedIndex;
-        }
-    }
-
-    class ComTransitionUI {
-        constructor(view) {
-            this.view = view;
-            view.m_list.itemRenderer = Laya.Handler.create(this, this.itemRenderer, null, false);
-        }
-        itemRenderer(index, item) {
-            let data = this.allTransition[index];
-            item.data = data;
-            item.text = data.name;
-            item.offClick(this, this.clickItem);
-            item.m_btnPlay.onClick(this, this.clickItem, [data]);
-        }
-        clickItem(t) {
-            t.play();
-        }
-        setData(item) {
-            if (item) {
-                this.allTransition = item._transitions;
-                if (this.allTransition && this.allTransition.length > 0) {
-                    this.view.m_list.numItems = this.allTransition.length;
-                }
-                else
-                    this.view.m_list.numItems = 0;
-                let h = this.view.m_list.numItems * 30;
-                this.view.m_list.height = Math.min(h, 300);
-            }
-        }
-    }
-
-    class Basic3DPropsUI {
-        constructor(view) {
-            this.view = view;
-            this.view.m_name.editable = false;
-        }
-        setData(item) {
-            let gameModule = Consts.displayList.displayModule;
-            if (gameModule && gameModule.Sprite3D && item instanceof gameModule.Sprite3D) {
-                this.setLaya3DData(item);
-            }
-        }
-        setLaya3DData(item) {
-            this.view.m_name.text = item.name;
-            let transform = item.transform;
-            this.view.m_x.setObj(transform, "x", "position");
-            this.view.m_y.setObj(transform, "y", "position");
-            this.view.m_z.setObj(transform, "z", "position");
-            this.view.m_scaleX.setObj(transform, "x", "scale");
-            this.view.m_scaleY.setObj(transform, "y", "scale");
-            this.view.m_scaleZ.setObj(transform, "z", "scale");
-            this.view.m_rotationX.setObj(transform, "x", "rotationEuler");
-            this.view.m_rotationY.setObj(transform, "y", "rotationEuler");
-            this.view.m_rotationZ.setObj(transform, "z", "rotationEuler");
-            this.view.m_localx.setObj(transform, "x", "localPosition");
-            this.view.m_localy.setObj(transform, "y", "localPosition");
-            this.view.m_localz.setObj(transform, "z", "localPosition");
-            this.view.m_localscaleX.setObj(transform, "x", "localRotationEuler");
-            this.view.m_localscaleY.setObj(transform, "y", "localRotationEuler");
-            this.view.m_localscaleZ.setObj(transform, "z", "localRotationEuler");
-            this.view.m_localrotationX.setObj(transform, "x", "localScale");
-            this.view.m_localrotationY.setObj(transform, "y", "localScale");
-            this.view.m_localrotationZ.setObj(transform, "z", "localScale");
-            this.view.m_visible.setObj(item, "active", true);
-            this.view.m_static.setObj(item, "isStatic", false);
-        }
-    }
-
-    class CreatorPropsUI {
-        constructor(view) {
-            this.view = view;
-            this.view.m_name.editable = false;
-            let text = this.view.m_color.getTextField();
-            text.displayObject.on(Laya.Event.BLUR, this, this.changeValue);
-        }
-        setData(item) {
-            this.setCCData(item);
-        }
-        setCCData(item) {
-            this.item = item;
-            this.view.m_name.text = item.name;
-            this.view.m_x.setObj(item, "x");
-            this.view.m_y.setObj(item, "y");
-            this.view.m_width.setObj(item, "width");
-            this.view.m_height.setObj(item, "height");
-            this.view.m_scaleX.setObj(item, "scaleX");
-            this.view.m_scaleY.setObj(item, "scaleY");
-            this.view.m_skewX.setObj(item, "skewX");
-            this.view.m_skewY.setObj(item, "skewY");
-            this.view.m_pivotX.setObj(item, "anchorX");
-            this.view.m_pivotY.setObj(item, "anchorY");
-            this.view.m_alpha.setObj(item, "opacity");
-            this.view.m_rotation.setObj(item, "rotation");
-            this.view.m_visible.setObj(item, "active", false);
-            this.view.m_mouse.setObj(item, "mouseThrough", false);
-            this.view.m_color.text = item.color.toCSS("#rrggbb");
-        }
-        changeValue() {
-            this.item.color = this.item.color.fromHEX(this.view.m_color.text);
-        }
-    }
-
-    class CreatorWidgetUI {
-        constructor(view) {
-            this.view = view;
-            this.view.m_TargetValue.editable = false;
-            this.view.m_AlignMode.on(fairygui.Events.STATE_CHANGED, this, this.onChanged);
-        }
-        setData(item) {
-            this.setCCData(item);
-        }
-        setCCData(item) {
-            let gameModule = Consts.displayList.displayModule;
-            var widget = item.getComponent(gameModule.Widget);
-            this.widget = widget;
-            if (widget) {
-                this.view.visible = true;
-                this.view.m_Top.setObj(widget, "isAlignTop", false);
-                this.view.m_TopValue.setObj(widget, "top");
-                this.view.m_Left.setObj(widget, "isAlignLeft", false);
-                this.view.m_LeftValue.setObj(widget, "left");
-                this.view.m_Right.setObj(widget, "isAlignRight", false);
-                this.view.m_RightValue.setObj(widget, "right");
-                this.view.m_Bottom.setObj(widget, "isAlignBottom", false);
-                this.view.m_BottomValue.setObj(widget, "bottom");
-                this.view.m_HorizontalCenter.setObj(widget, "isAlignHorizontalCenter", false);
-                this.view.m_HorizontalCenterValue.setObj(widget, "horizontalCenter");
-                this.view.m_VerticlCenter.setObj(widget, "isAlignVerticalCenter", false);
-                this.view.m_VerticlCenterValue.setObj(widget, "verticalCenter");
-                this.view.m_TargetValue.setObj(widget, "isAlignXX", false);
-                this.view.m_AlignMode.selectedIndex = this.widget.alignMode;
-                if (widget.target) {
-                    this.view.m_TargetValue.text = widget.target.name;
-                }
-                else if (item.parent) {
-                    this.view.m_TargetValue.text = item.parent.name;
-                }
-                else
-                    this.view.m_TargetValue.text = "";
-            }
-            else {
-                this.view.visible = false;
-            }
-        }
-        onChanged() {
-            this.widget.alignMode = this.view.m_AlignMode.selectedIndex;
-        }
-    }
-
     class InspectorUI {
         constructor(view) {
             EditorEvent.on(EditorEvent.SelectionChanged, this, this.selectItem);
             this.view = view;
-            this.baseProps = new BasicPropsUI(this.view.m_baseComp);
-            this.base3DProps = new Basic3DPropsUI(this.view.m_base3DComp);
+            this.baseProps = this.view.m_baseBar.propsui;
+            this.base3DProps = this.view.m_base3DBar.propsui;
+            this.controllerComp = this.view.m_controllerBar.propsui;
+            this.transitionComp = this.view.m_transitionBar.propsui;
+            this.ccInfoComp = this.view.m_nodeBar.propsui;
+            this.ccWidget = this.view.m_widgetBar.propsui;
             this.infoComp = new InfoPropsUI(this.view.m_infoComp);
-            this.controllerComp = new ComControllerUI(this.view.m_controllerComp);
-            this.transitionComp = new ComTransitionUI(this.view.m_transitionComp);
-            this.ccInfoComp = new CreatorPropsUI(this.view.m_nodeComp);
-            this.ccWidget = new CreatorWidgetUI(this.view.m_widgetComp);
         }
         selectItem(item) {
             if (item) {
@@ -2011,11 +1827,16 @@
             this.m_btnTwoColumn = (this.getChildAt(4));
             this.m_btnCollapseAll = (this.getChildAt(5));
             this.m_group = (this.getChildAt(7));
-            this.m_treeView = (this.getChildAt(8));
-            this.m_sep = (this.getChildAt(9));
-            this.m_listView = (this.getChildAt(10));
-            this.m_columns = (this.getChildAt(11));
-            this.m_iconSize = (this.getChildAt(12));
+            this.m_numSearch = (this.getChildAt(8));
+            this.m_btnSearchLeft = (this.getChildAt(9));
+            this.m_btnSearchRight = (this.getChildAt(10));
+            this.m_txtSearch = (this.getChildAt(11));
+            this.m_btnSearch = (this.getChildAt(12));
+            this.m_treeView = (this.getChildAt(13));
+            this.m_sep = (this.getChildAt(14));
+            this.m_listView = (this.getChildAt(15));
+            this.m_columns = (this.getChildAt(16));
+            this.m_iconSize = (this.getChildAt(17));
         }
     }
     DisplayTreeView.URL = "ui://2pshu6oimlmb1nry31v";
@@ -2045,25 +1866,15 @@
             return (fgui.UIPackage.createObject("Builder", "InspectorView"));
         }
         onConstruct() {
-            this.m_base = this.getControllerAt(0);
-            this.m_controller = this.getControllerAt(1);
-            this.m_transition = this.getControllerAt(2);
-            this.m_type = this.getControllerAt(3);
-            this.m_node = this.getControllerAt(4);
-            this.m_widget = this.getControllerAt(5);
+            this.m_type = this.getControllerAt(0);
             this.m_infoComp = (this.getChildAt(1));
             this.m_baseBar = (this.getChildAt(2));
-            this.m_baseComp = (this.getChildAt(3));
-            this.m_base3DComp = (this.getChildAt(4));
-            this.m_controllerBar = (this.getChildAt(5));
-            this.m_controllerComp = (this.getChildAt(6));
-            this.m_transitionBar = (this.getChildAt(7));
-            this.m_transitionComp = (this.getChildAt(8));
-            this.m_NodeBar = (this.getChildAt(9));
-            this.m_nodeComp = (this.getChildAt(10));
-            this.m_WidgetBar = (this.getChildAt(11));
-            this.m_widgetComp = (this.getChildAt(12));
-            this.m_group = (this.getChildAt(13));
+            this.m_base3DBar = (this.getChildAt(3));
+            this.m_controllerBar = (this.getChildAt(4));
+            this.m_transitionBar = (this.getChildAt(5));
+            this.m_nodeBar = (this.getChildAt(6));
+            this.m_widgetBar = (this.getChildAt(7));
+            this.m_group = (this.getChildAt(8));
         }
     }
     InspectorView.URL = "ui://2pshu6oimtrqiudk";
@@ -2089,6 +1900,16 @@
         }
     }
     InfoPropsPanel.URL = "ui://2pshu6oir1st7iues";
+
+    class PropsPanel extends fgui.GButton {
+        static createInstance() {
+            return (fgui.UIPackage.createObject("Builder", "PropsPanel"));
+        }
+        onConstruct() {
+            this.m_type = this.getControllerAt(0);
+        }
+    }
+    PropsPanel.URL = "ui://2pshu6ois4ys1nry32c";
 
     class RefreshButton extends fgui.GButton {
         static createInstance() {
@@ -2119,7 +1940,291 @@
             fgui.UIObjectFactory.setExtension(InspectorView.URL, InspectorView);
             fgui.UIObjectFactory.setExtension(LibraryView_Slider.URL, LibraryView_Slider);
             fgui.UIObjectFactory.setExtension(InfoPropsPanel.URL, InfoPropsPanel);
+            fgui.UIObjectFactory.setExtension(PropsPanel.URL, PropsPanel);
             fgui.UIObjectFactory.setExtension(RefreshButton.URL, RefreshButton);
+        }
+    }
+
+    class Basic3DPropsUI extends Basic3DPropsPanel {
+        onConstruct() {
+            super.onConstruct();
+            this.m_name.editable = false;
+        }
+        setData(item) {
+            let gameModule = Consts.displayList.displayModule;
+            if (gameModule && gameModule.Sprite3D && item instanceof gameModule.Sprite3D) {
+                this.setLaya3DData(item);
+            }
+        }
+        setLaya3DData(item) {
+            this.m_name.text = item.name;
+            let transform = item.transform;
+            this.m_x.setObj(transform, "x", "position");
+            this.m_y.setObj(transform, "y", "position");
+            this.m_z.setObj(transform, "z", "position");
+            this.m_scaleX.setObj(transform, "x", "scale");
+            this.m_scaleY.setObj(transform, "y", "scale");
+            this.m_scaleZ.setObj(transform, "z", "scale");
+            this.m_rotationX.setObj(transform, "x", "rotationEuler");
+            this.m_rotationY.setObj(transform, "y", "rotationEuler");
+            this.m_rotationZ.setObj(transform, "z", "rotationEuler");
+            this.m_localx.setObj(transform, "x", "localPosition");
+            this.m_localy.setObj(transform, "y", "localPosition");
+            this.m_localz.setObj(transform, "z", "localPosition");
+            this.m_localscaleX.setObj(transform, "x", "localRotationEuler");
+            this.m_localscaleY.setObj(transform, "y", "localRotationEuler");
+            this.m_localscaleZ.setObj(transform, "z", "localRotationEuler");
+            this.m_localrotationX.setObj(transform, "x", "localScale");
+            this.m_localrotationY.setObj(transform, "y", "localScale");
+            this.m_localrotationZ.setObj(transform, "z", "localScale");
+            this.m_visible.setObj(item, "active", true);
+            this.m_static.setObj(item, "isStatic", false);
+        }
+    }
+
+    class BasicPropsUI extends BasicPropsPanel {
+        onConstruct() {
+            super.onConstruct();
+            this.m_name.editable = false;
+        }
+        setData(item) {
+            let gameModule = Consts.displayList.displayModule;
+            if (gameModule.GObject && item instanceof gameModule.GObject) {
+                this.m_type.selectedIndex = 0;
+                this.setFGUIData(item);
+            }
+            else if (gameModule.DisplayObject && item instanceof gameModule.DisplayObject) {
+                this.m_type.selectedIndex = 4;
+                this.setEgretData(item);
+            }
+            else if (gameModule.Sprite && item instanceof gameModule.Sprite) {
+                this.m_type.selectedIndex = 1;
+                this.setLaya2DData(item);
+            }
+        }
+        setFGUIData(item) {
+            this.m_name.text = item.name;
+            this.m_x.setObj(item, "x");
+            this.m_y.setObj(item, "y");
+            this.m_width.setObj(item, "width");
+            this.m_height.setObj(item, "height");
+            this.m_minWidth.setObj(item, "minWidth");
+            this.m_minHeight.setObj(item, "minHeight");
+            this.m_maxWidth.setObj(item, "maxWidth");
+            this.m_maxHeight.setObj(item, "maxHeight");
+            this.m_scaleX.setObj(item, "scaleX");
+            this.m_scaleY.setObj(item, "scaleY");
+            this.m_skewX.setObj(item, "skewY");
+            this.m_pivotX.setObj(item, "pivotX");
+            this.m_pivotY.setObj(item, "pivotY");
+            this.m_alpha.setObj(item, "alpha");
+            this.m_rotation.setObj(item, "rotation");
+            this.m_anchor.setObj(item, "pivotAsAnchor", false);
+            this.m_visible.setObj(item, "visible", true);
+            this.m_grayed.setObj(item, "grayed", false);
+            this.m_touchable.setObj(item, "touchable", true);
+        }
+        setLaya2DData(item) {
+            this.m_name.text = item.name;
+            this.m_x.setObj(item, "x");
+            this.m_y.setObj(item, "y");
+            this.m_width.setObj(item, "width");
+            this.m_height.setObj(item, "height");
+            this.m_scaleX.setObj(item, "scaleX");
+            this.m_scaleY.setObj(item, "scaleY");
+            this.m_skewX.setObj(item, "skewY");
+            this.m_pivotX.setObj(item, "pivotX");
+            this.m_pivotY.setObj(item, "pivotY");
+            this.m_alpha.setObj(item, "alpha");
+            this.m_rotation.setObj(item, "rotation");
+            this.m_visible.setObj(item, "visible", true);
+            this.m_touchable.setObj(item, "mouseThrough", false);
+        }
+        setEgretData(item) {
+            this.m_name.text = item.name;
+            this.m_x.setObj(item, "x");
+            this.m_y.setObj(item, "y");
+            this.m_width.setObj(item, "width");
+            this.m_height.setObj(item, "height");
+            this.m_scaleX.setObj(item, "scaleX");
+            this.m_scaleY.setObj(item, "scaleY");
+            this.m_skewX.setObj(item, "skewY");
+            this.m_pivotX.setObj(item, "anchorOffsetX");
+            this.m_pivotY.setObj(item, "anchorOffsetY");
+            this.m_alpha.setObj(item, "alpha");
+            this.m_rotation.setObj(item, "rotation");
+            this.m_visible.setObj(item, "visible", true);
+            this.m_touchable.setObj(item, "touchEnabled", true);
+        }
+    }
+
+    class ComControllerUI extends ComControllerPanel {
+        onConstruct() {
+            super.onConstruct();
+            this.m_list.itemRenderer = Laya.Handler.create(this, this.itemRenderer, null, false);
+        }
+        itemRenderer(index, item) {
+            let data = this.allController[index];
+            item.data = data;
+            item.text = data.name;
+            item.m_pageController.off(fairygui.Events.STATE_CHANGED, this, this.onChanged);
+            item.m_pageController.selectedIndex = data.selectedIndex;
+            item.m_pageController.items = this.allControllerNames[index];
+            item.m_pageController.on(fairygui.Events.STATE_CHANGED, this, this.onChanged, [item]);
+        }
+        setData(item) {
+            if (item) {
+                this.allController = item._controllers;
+                if (this.allController && this.allController.length > 0) {
+                    this.allControllerNames = [];
+                    for (var i = 0; i < this.allController.length; i++) {
+                        let item = [];
+                        let c = this.allController[i];
+                        for (let j = 0; j < c._pageNames.length; j++) {
+                            item[j] = j + ":" + c._pageNames[j];
+                        }
+                        this.allControllerNames[i] = item;
+                    }
+                    this.m_list.numItems = this.allController.length;
+                }
+                else
+                    this.m_list.numItems = 0;
+                let h = this.m_list.numItems * 30;
+                this.m_list.height = Math.min(h, 300);
+            }
+        }
+        onChanged(item) {
+            let c = item.data;
+            c.selectedIndex = item.m_pageController.selectedIndex;
+        }
+    }
+
+    class ComTransitionUI extends ComTransitionPanel {
+        onConstruct() {
+            super.onConstruct();
+            this.m_list.itemRenderer = Laya.Handler.create(this, this.itemRenderer, null, false);
+        }
+        itemRenderer(index, item) {
+            let data = this.allTransition[index];
+            item.data = data;
+            item.text = data.name;
+            item.offClick(this, this.clickItem);
+            item.m_btnPlay.onClick(this, this.clickItem, [data]);
+        }
+        clickItem(t) {
+            t.play();
+        }
+        setData(item) {
+            if (item) {
+                this.allTransition = item._transitions;
+                if (this.allTransition && this.allTransition.length > 0) {
+                    this.m_list.numItems = this.allTransition.length;
+                }
+                else
+                    this.m_list.numItems = 0;
+                let h = this.m_list.numItems * 30;
+                this.m_list.height = Math.min(h, 300);
+            }
+        }
+    }
+
+    class CreatorPropsUI extends CreatorPropsPanel {
+        onConstruct() {
+            super.onConstruct();
+            this.m_name.editable = false;
+            let text = this.m_color.getTextField();
+            text.displayObject.on(Laya.Event.BLUR, this, this.changeValue);
+        }
+        setData(item) {
+            this.setCCData(item);
+        }
+        setCCData(item) {
+            this.item = item;
+            this.m_name.text = item.name;
+            this.m_x.setObj(item, "x");
+            this.m_y.setObj(item, "y");
+            this.m_width.setObj(item, "width");
+            this.m_height.setObj(item, "height");
+            this.m_scaleX.setObj(item, "scaleX");
+            this.m_scaleY.setObj(item, "scaleY");
+            this.m_skewX.setObj(item, "skewX");
+            this.m_skewY.setObj(item, "skewY");
+            this.m_pivotX.setObj(item, "anchorX");
+            this.m_pivotY.setObj(item, "anchorY");
+            this.m_alpha.setObj(item, "opacity");
+            this.m_rotation.setObj(item, "rotation");
+            this.m_visible.setObj(item, "active", false);
+            this.m_mouse.setObj(item, "mouseThrough", false);
+            this.m_color.text = item.color.toCSS("#rrggbb");
+        }
+        changeValue() {
+            this.item.color = this.item.color.fromHEX(this.m_color.text);
+        }
+        dispose() {
+            let text = this.m_color.getTextField();
+            text.displayObject.off(Laya.Event.BLUR, this, this.changeValue);
+            super.dispose();
+        }
+    }
+
+    class CreatorWidgetUI extends CreatorWidgetPanel {
+        onConstruct() {
+            super.onConstruct();
+            this.m_TargetValue.editable = false;
+            this.m_AlignMode.on(fairygui.Events.STATE_CHANGED, this, this.onChanged);
+        }
+        setData(item) {
+            this.setCCData(item);
+        }
+        setCCData(item) {
+            let gameModule = Consts.displayList.displayModule;
+            var widget = item.getComponent(gameModule.Widget);
+            this.widget = widget;
+            if (widget) {
+                this.visible = true;
+                this.m_Top.setObj(widget, "isAlignTop", false);
+                this.m_TopValue.setObj(widget, "top");
+                this.m_Left.setObj(widget, "isAlignLeft", false);
+                this.m_LeftValue.setObj(widget, "left");
+                this.m_Right.setObj(widget, "isAlignRight", false);
+                this.m_RightValue.setObj(widget, "right");
+                this.m_Bottom.setObj(widget, "isAlignBottom", false);
+                this.m_BottomValue.setObj(widget, "bottom");
+                this.m_HorizontalCenter.setObj(widget, "isAlignHorizontalCenter", false);
+                this.m_HorizontalCenterValue.setObj(widget, "horizontalCenter");
+                this.m_VerticlCenter.setObj(widget, "isAlignVerticalCenter", false);
+                this.m_VerticlCenterValue.setObj(widget, "verticalCenter");
+                this.m_TargetValue.setObj(widget, "isAlignXX", false);
+                this.m_AlignMode.selectedIndex = this.widget.alignMode;
+                if (widget.target) {
+                    this.m_TargetValue.text = widget.target.name;
+                }
+                else if (item.parent) {
+                    this.m_TargetValue.text = item.parent.name;
+                }
+                else
+                    this.m_TargetValue.text = "";
+            }
+            else {
+                this.visible = false;
+            }
+        }
+        onChanged() {
+            this.widget.alignMode = this.m_AlignMode.selectedIndex;
+        }
+        dispose() {
+            this.m_AlignMode.off(fairygui.Events.STATE_CHANGED, this, this.onChanged);
+            super.dispose();
+        }
+    }
+
+    class PropsUI extends PropsPanel {
+        onConstruct() {
+            super.onConstruct();
+        }
+        get propsui() {
+            if (this._iconObject)
+                return this._iconObject["_content2"];
         }
     }
 
@@ -2177,6 +2282,13 @@
             fgui.UIObjectFactory.setExtension(EmCheckbox.URL, EmCheckbox);
             fgui.UIObjectFactory.setExtension(XYInput.URL, XYInput);
             fgui.UIObjectFactory.setExtension(XYInput.URLNumber, XYInput);
+            fgui.UIObjectFactory.setExtension(Basic3DPropsPanel.URL, Basic3DPropsUI);
+            fgui.UIObjectFactory.setExtension(BasicPropsPanel.URL, BasicPropsUI);
+            fgui.UIObjectFactory.setExtension(ComControllerPanel.URL, ComControllerUI);
+            fgui.UIObjectFactory.setExtension(ComTransitionPanel.URL, ComTransitionUI);
+            fgui.UIObjectFactory.setExtension(CreatorPropsPanel.URL, CreatorPropsUI);
+            fgui.UIObjectFactory.setExtension(CreatorWidgetPanel.URL, CreatorWidgetUI);
+            fgui.UIObjectFactory.setExtension(PropsPanel.URL, PropsUI);
         }
     }
 

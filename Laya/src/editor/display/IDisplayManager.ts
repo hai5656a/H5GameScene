@@ -8,7 +8,7 @@ export interface IDisplayManager{
     end();
     refreshList(parent:fgui.GTreeNode)
     getDisPlayIcon(obj)
-    getDisPlayName(obj)
+    getDisPlayName(obj):string
     getDisPlayRect(obj)
     isShow(obj)
     isVisable(obj)

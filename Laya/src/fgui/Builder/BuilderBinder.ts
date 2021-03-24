@@ -16,6 +16,7 @@ import DocumentView from "./DocumentView";
 import InspectorView from "./InspectorView";
 import LibraryView_Slider from "./LibraryView_Slider";
 import InfoPropsPanel from "./InfoPropsPanel";
+import PropsPanel from "./PropsPanel";
 import RefreshButton from "./RefreshButton";
 
 export default class BuilderBinder {
@@ -36,6 +37,7 @@ export default class BuilderBinder {
 		fgui.UIObjectFactory.setExtension(InspectorView.URL, InspectorView);
 		fgui.UIObjectFactory.setExtension(LibraryView_Slider.URL, LibraryView_Slider);
 		fgui.UIObjectFactory.setExtension(InfoPropsPanel.URL, InfoPropsPanel);
+		fgui.UIObjectFactory.setExtension(PropsPanel.URL, PropsPanel);
 		fgui.UIObjectFactory.setExtension(RefreshButton.URL, RefreshButton);
 	}
 }

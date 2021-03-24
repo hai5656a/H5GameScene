@@ -12,6 +12,11 @@ export default class DisplayTreeView extends fgui.GComponent {
 	public m_btnTwoColumn:fgui.GButton;
 	public m_btnCollapseAll:fgui.GButton;
 	public m_group:fgui.GComboBox;
+	public m_numSearch:fgui.GTextField;
+	public m_btnSearchLeft:RefreshButton;
+	public m_btnSearchRight:RefreshButton;
+	public m_txtSearch:fgui.GLabel;
+	public m_btnSearch:RefreshButton;
 	public m_treeView:fgui.GTree;
 	public m_sep:LibView_sep;
 	public m_listView:fgui.GList;
@@ -30,10 +35,15 @@ export default class DisplayTreeView extends fgui.GComponent {
 		this.m_btnTwoColumn = <fgui.GButton>(this.getChildAt(4));
 		this.m_btnCollapseAll = <fgui.GButton>(this.getChildAt(5));
 		this.m_group = <fgui.GComboBox>(this.getChildAt(7));
-		this.m_treeView = <fgui.GTree>(this.getChildAt(8));
-		this.m_sep = <LibView_sep>(this.getChildAt(9));
-		this.m_listView = <fgui.GList>(this.getChildAt(10));
-		this.m_columns = <fgui.GGroup>(this.getChildAt(11));
-		this.m_iconSize = <LibraryView_Slider>(this.getChildAt(12));
+		this.m_numSearch = <fgui.GTextField>(this.getChildAt(8));
+		this.m_btnSearchLeft = <RefreshButton>(this.getChildAt(9));
+		this.m_btnSearchRight = <RefreshButton>(this.getChildAt(10));
+		this.m_txtSearch = <fgui.GLabel>(this.getChildAt(11));
+		this.m_btnSearch = <RefreshButton>(this.getChildAt(12));
+		this.m_treeView = <fgui.GTree>(this.getChildAt(13));
+		this.m_sep = <LibView_sep>(this.getChildAt(14));
+		this.m_listView = <fgui.GList>(this.getChildAt(15));
+		this.m_columns = <fgui.GGroup>(this.getChildAt(16));
+		this.m_iconSize = <LibraryView_Slider>(this.getChildAt(17));
 	}
 }
