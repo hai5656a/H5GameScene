@@ -14,12 +14,21 @@
     </graph>
     <component id="n139_mlmb" name="list" src="mlmb1nry31v" fileName="DisplayTreeView.xml" xy="4,55" size="283,725">
       <relation target="" sidePair="height-height,left-left"/>
+      <relation target="n144_fyi9" sidePair="rightext-left"/>
     </component>
-    <component id="n140_mlmb" name="document" src="mlmb1nry31x" fileName="DocumentView.xml" xy="293,55" size="612,725">
-      <relation target="" sidePair="width-width,height-height"/>
+    <component id="n144_fyi9" name="sep1" src="e80aixictx" fileName="Editor/LibView_sep.xml" xy="286,55" size="8,725">
+      <relation target="" sidePair="height-height"/>
+    </component>
+    <component id="n140_mlmb" name="document" src="mlmb1nry31x" fileName="DocumentView.xml" xy="293,55" size="614,725">
+      <relation target="" sidePair="height-height"/>
+      <relation target="n139_mlmb" sidePair="leftext-right"/>
+      <relation target="n141_mlmb" sidePair="rightext-left"/>
     </component>
     <component id="n141_mlmb" name="insp" src="mtrqiudk" fileName="InspectorView.xml" xy="914,55" size="286,725">
       <relation target="" sidePair="height-height,right-right"/>
     </component>
+    <text id="n146_fyi9" name="version" xy="6,779" size="40,19" fontSize="12" color="#bdbdbd" text="">
+      <relation target="" sidePair="bottom-bottom"/>
+    </text>
   </displayList>
 </component>

@@ -12,7 +12,7 @@ export default class InspectorView extends fgui.GComponent {
 	public m_controllerBar:PropsPanel;
 	public m_transitionBar:PropsPanel;
 	public m_nodeBar:PropsPanel;
-	public m_widgetBar:PropsPanel;
+	public m_creatorlist:fgui.GList;
 	public m_group:fgui.GGroup;
 	public static URL:string = "ui://2pshu6oimtrqiudk";
 
@@ -28,7 +28,7 @@ export default class InspectorView extends fgui.GComponent {
 		this.m_controllerBar = <PropsPanel>(this.getChildAt(4));
 		this.m_transitionBar = <PropsPanel>(this.getChildAt(5));
 		this.m_nodeBar = <PropsPanel>(this.getChildAt(6));
-		this.m_widgetBar = <PropsPanel>(this.getChildAt(7));
+		this.m_creatorlist = <fgui.GList>(this.getChildAt(7));
 		this.m_group = <fgui.GGroup>(this.getChildAt(8));
 	}
 }

@@ -24,11 +24,14 @@ class Main {
 		if (GameConfig.physicsDebug && Laya["PhysicsDebugDraw"]) Laya["PhysicsDebugDraw"].enable();
 		if (GameConfig.stat) Laya.Stat.show();
 		Laya.alertGlobalError(true);
-
+		Laya.timer.once(100,this,this.onStartVersionLoaded)
+		// this.onVersionLoaded();
 		//激活资源版本控制，version.json由IDE发布功能自动生成，如果没有也不影响后续流程
-		Laya.ResourceVersion.enable("version.json", Laya.Handler.create(this, this.onVersionLoaded), Laya.ResourceVersion.FILENAME_VERSION);
+		
 	}
-
+	onStartVersionLoaded():void{
+        Laya.ResourceVersion.enable("version.json?v="+Consts.version, Laya.Handler.create(this, this.onVersionLoaded), Laya.ResourceVersion.FILENAME_VERSION);
+	}
 	onVersionLoaded(): void {
 		Laya.stage.addChild(fgui.GRoot.inst.displayObject);
 		fgui.UIConfig.tooltipsWin = "ui://nk9ejx23fj4c6y"

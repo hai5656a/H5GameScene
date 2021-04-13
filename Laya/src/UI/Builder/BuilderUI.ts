@@ -14,13 +14,23 @@ import CreatorWidgetUI from "../CreatorWidgetUI";
 import PropsUI from "../PropsUI";
 import EmCheckbox from "./EmCheckbox";
 import XYInput from "./XYInput";
+import LibView_sep from "../../fgui/Builder/LibView_sep";
+import SetUI from "../SepUI";
+import TextInput from "./TextInput";
+import ComboBox from "./ComboBox";
+import CreatorComp from "../../fgui/Builder/CreatorComp";
+import CreatorCompUI from "../CreatorCompUI";
+import CreatorLabelPropsPanel from "../../fgui/Builder/CreatorLabelPropsPanel";
+import CreatorLabelUI from "../CreatorLabelUI";
 
 export default class BuilderUI {
 	public static bindAll():void {
 		fgui.UIObjectFactory.setExtension(EmCheckbox.URL, EmCheckbox);
         fgui.UIObjectFactory.setExtension(XYInput.URL, XYInput);
         fgui.UIObjectFactory.setExtension(XYInput.URLNumber, XYInput);
-
+		fgui.UIObjectFactory.setExtension(TextInput.URLInput, TextInput);
+		fgui.UIObjectFactory.setExtension(TextInput.URLArea, TextInput);
+		fgui.UIObjectFactory.setExtension(ComboBox.URL, ComboBox);
 		fgui.UIObjectFactory.setExtension(Basic3DPropsPanel.URL, Basic3DPropsUI);
 		fgui.UIObjectFactory.setExtension(BasicPropsPanel.URL, BasicPropsUI);
 		fgui.UIObjectFactory.setExtension(ComControllerPanel.URL, ComControllerUI);
@@ -28,5 +38,8 @@ export default class BuilderUI {
 		fgui.UIObjectFactory.setExtension(CreatorPropsPanel.URL, CreatorPropsUI);
 		fgui.UIObjectFactory.setExtension(CreatorWidgetPanel.URL, CreatorWidgetUI);
 		fgui.UIObjectFactory.setExtension(PropsPanel.URL, PropsUI);
+		fgui.UIObjectFactory.setExtension(LibView_sep.URL, SetUI);
+		fgui.UIObjectFactory.setExtension(CreatorComp.URL, CreatorCompUI);
+		fgui.UIObjectFactory.setExtension(CreatorLabelPropsPanel.URL, CreatorLabelUI);
 	}
 }

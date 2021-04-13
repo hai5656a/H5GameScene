@@ -7,6 +7,7 @@ export default class PropsUI extends PropsPanel{
     protected onConstruct():void {
         super.onConstruct();
         // this.propsui = this._iconObject["_content2"];
+        this.m_type.selectedIndex = 1;
     }
     get propsui():IPropsUI{
         if( this._iconObject)

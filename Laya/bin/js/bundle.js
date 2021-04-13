@@ -31,8 +31,10 @@
             this.m_btngo = (this.getChildAt(1));
             this.m_holder = (this.getChildAt(2));
             this.m_list = (this.getChildAt(3));
-            this.m_document = (this.getChildAt(4));
-            this.m_insp = (this.getChildAt(5));
+            this.m_sep1 = (this.getChildAt(4));
+            this.m_document = (this.getChildAt(5));
+            this.m_insp = (this.getChildAt(6));
+            this.m_version = (this.getChildAt(7));
         }
     }
     MainView.URL = "ui://2pshu6oimlmb1nry31w";
@@ -178,6 +180,7 @@
             return null;
         }
     }
+    Consts.version = "1.0.0";
     Consts.icons = {};
     Consts.EditorLineName = "$$EditorLine";
     Consts.EditorNodeName = "$$Node";
@@ -1263,10 +1266,10 @@
 
     class DocumentUI {
         constructor(view) {
-            this.frame = document.getElementById('gameFrame');
-            if (this.frame) {
-                this.frameStyle = this.frame.style;
-                this.frame.onload = this.frameLoad.bind(this);
+            Consts.frame = document.getElementById('gameFrame');
+            if (Consts.frame) {
+                Consts.frameStyle = Consts.frame.style;
+                Consts.frame.onload = this.frameLoad.bind(this);
             }
             else {
                 window["setGameFrame"] = this.setGameFrame.bind(this);
@@ -1283,10 +1286,10 @@
             }
             this.view.m_device.on(fairygui.Events.STATE_CHANGED, this, this.resize);
             this.view.m_orientation.on(fairygui.Events.STATE_CHANGED, this, this.resize);
+            this.view.on(fairygui.Events.SIZE_CHANGED, this, this.resize);
             this.view.m_editType.on(fairygui.Events.STATE_CHANGED, this, this.changeType);
             this.view.m_btnfps.onClick(this, this.onFPS);
             this.view.m_btnpause.onClick(this, this.onPause);
-            Laya.stage.on(Laya.Event.RESIZE, this, this.resize);
             this.resize();
             this.view.onClick(this, this.onClick);
             EditorEvent.on(EditorEvent.ClickChanged, this, this.onClickChange);
@@ -1295,14 +1298,14 @@
             document.onkeyup = this.keyUp.bind(this);
         }
         setGameFrame(frame) {
-            if (this.frame) {
+            if (Consts.frame) {
                 this.reset();
-                this.frame = null;
+                Consts.frame = null;
                 this.onClickChange();
             }
             else {
-                this.frame = frame;
-                this.frameStyle = frame.style;
+                Consts.frame = frame;
+                Consts.frameStyle = frame.style;
                 this.reset();
                 this.loadTimes = 100;
                 this.frameLoad();
@@ -1327,7 +1330,7 @@
                 Consts.engineManager.hideRect();
         }
         resize() {
-            if (!this.frame) {
+            if (!Consts.frame) {
                 return;
             }
             let value = this.view.m_device.value.split(":");
@@ -1363,10 +1366,10 @@
                     }
                 }
             }
-            this.frameStyle.left = p.x / Laya.Browser.pixelRatio + "px";
-            this.frameStyle.top = p.y / Laya.Browser.pixelRatio + "px";
-            this.frame.width = w / Laya.Browser.pixelRatio;
-            this.frame.height = h / Laya.Browser.pixelRatio;
+            Consts.frameStyle.left = p.x / Laya.Browser.pixelRatio + "px";
+            Consts.frameStyle.top = p.y / Laya.Browser.pixelRatio + "px";
+            Consts.frame.width = w / Laya.Browser.pixelRatio;
+            Consts.frame.height = h / Laya.Browser.pixelRatio;
             localStorage.setItem("device", this.view.m_device.selectedIndex + "");
             localStorage.setItem("orientation", this.view.m_orientation.selectedIndex + "");
             if (Consts.engineManager)
@@ -1392,7 +1395,7 @@
             }
         }
         goweb(url) {
-            this.frame.src = url;
+            Consts.frame.src = url;
             this.reset();
             Laya.timer.clear(this, this.frameLoad);
             Laya.timer.loop(100, this, this.frameLoad);
@@ -1412,7 +1415,7 @@
             this.loadTimes = 0;
         }
         frameLoad() {
-            var win = this.frame.contentWindow;
+            var win = Consts.frame.contentWindow;
             Consts.gameWindow = win;
             if (win.Laya) {
                 Consts.engineManager = LayaEngine.getInstance();
@@ -1457,9 +1460,9 @@
                     EditorEvent.event(EditorEvent.TreeTypeDataChanged, Consts.treeTypeList.indexOf(Consts.engineManager.type));
                 }
             }
-            if (Consts.displayList) {
-                this.frame.contentWindow.document.onkeydown = this.keyDown.bind(this);
-                this.frame.contentWindow.document.onkeyup = this.keyUp.bind(this);
+            if (Consts.displayList && Consts.frame && Consts.frame.contentDocument) {
+                Consts.frame.contentDocument.onkeydown = this.keyDown.bind(this);
+                Consts.frame.contentDocument.onkeyup = this.keyUp.bind(this);
             }
         }
         initFgui() {
@@ -1467,7 +1470,7 @@
                 Consts.displayList.end();
                 Consts.displayList = null;
             }
-            var win = this.frame.contentWindow;
+            var win = Consts.frame.contentWindow;
             var gamefgui = win.fairygui ? win.fairygui : win.fgui;
             if (gamefgui) {
                 Consts.displayList = FGUIManager.getInstance();
@@ -1481,7 +1484,7 @@
                 Consts.displayList.end();
                 Consts.displayList = null;
             }
-            var win = this.frame.contentWindow;
+            var win = Consts.frame.contentWindow;
             if (win.Laya) {
                 Consts.displayList = LayaManager.getInstance();
                 Consts.displayList.start(win.Laya.stage, win.Laya);
@@ -1554,8 +1557,8 @@
             this.controllerComp = this.view.m_controllerBar.propsui;
             this.transitionComp = this.view.m_transitionBar.propsui;
             this.ccInfoComp = this.view.m_nodeBar.propsui;
-            this.ccWidget = this.view.m_widgetBar.propsui;
             this.infoComp = new InfoPropsUI(this.view.m_infoComp);
+            this.view.m_creatorlist.itemRenderer = Laya.Handler.create(this, this.creatorRenderListItem, null, false);
         }
         selectItem(item) {
             if (item) {
@@ -1584,7 +1587,10 @@
                 else if (Consts.nowTreeType == TreeType.CC) {
                     this.view.m_type.selectedIndex = 3;
                     this.ccInfoComp.setData(item);
-                    this.ccWidget.setData(item);
+                    let itemnumber = 0;
+                    if (item._components)
+                        itemnumber = item._components.length;
+                    this.view.m_creatorlist.numItems = itemnumber;
                 }
                 else if (Consts.nowTreeType == TreeType.Egret) {
                     this.view.m_type.selectedIndex = 4;
@@ -1592,8 +1598,115 @@
                 }
             }
         }
+        creatorRenderListItem(index, obj) {
+            obj.visible = true;
+            let component = this.infoComp.item._components[index];
+            let url = "ui://2pshu6ois4ys1nry32e";
+            if (component.name) {
+                if (component.name.indexOf("<Widget>") != -1) {
+                    url = "ui://2pshu6oiixw71nry326";
+                }
+                if (component.name.indexOf("<Label>") != -1) {
+                    url = "ui://2pshu6ois4ys1nry32d";
+                }
+                let start = component.name.indexOf("<");
+                let end = component.name.indexOf(">");
+                if (start > -1 && end > -1)
+                    obj.text = component.name.substring(start + 1, end);
+                else
+                    obj.text = component.name;
+            }
+            obj.icon = url;
+            obj.propsui.setData(component);
+        }
         onClick() {
             EditorEvent.event(EditorEvent.ClickChanged);
+        }
+    }
+
+    class LibView_sep extends fgui.GComponent {
+        static createInstance() {
+            return (fgui.UIPackage.createObject("Builder", "LibView_sep"));
+        }
+        onConstruct() {
+            this.m_sep = (this.getChildAt(0));
+        }
+    }
+    LibView_sep.URL = "ui://2pshu6oie80aixictx";
+
+    var CursorType;
+    (function (CursorType) {
+        CursorType["Default"] = "default";
+        CursorType["H_RESIZE"] = "w-resize";
+        CursorType["V_RESIZE"] = "s-resize";
+    })(CursorType || (CursorType = {}));
+    class SetUI extends LibView_sep {
+        onConstruct() {
+            super.onConstruct();
+            this.on(Laya.Event.MOUSE_OVER, this, this.onMouseover);
+            this.on(Laya.Event.MOUSE_DOWN, this, this.onMousedown);
+            this.on(Laya.Event.MOUSE_OUT, this, this.onMouseout);
+        }
+        onMouseover() {
+            document.body.style.cursor = this.type;
+        }
+        onMousedown(event) {
+            if (!this.parent)
+                return;
+            this.isMouseDown = true;
+            this.lastp = this.parent.globalToLocal(event.stageX, event.stageY);
+            document.onmousemove = this.onMousemove.bind(this);
+            document.onmouseup = this.onMouseup.bind(this);
+            if (!this.div) {
+                this.div = document.createElement('div');
+                this.div.style.width = "100%";
+                this.div.style.height = "100%";
+                this.div.style.position = 'absolute';
+                this.div.style.zIndex = "99999";
+                document.body.appendChild(this.div);
+            }
+        }
+        onMouseup() {
+            this.isMouseDown = false;
+            this.onMouseout();
+        }
+        onMouseout() {
+            if (this.isMouseDown)
+                return;
+            document.onmousemove = document.onmouseup = null;
+            document.body.style.cursor = CursorType.Default;
+            const div = this.div;
+            div && div.parentNode && div.parentNode.removeChild(div);
+            this.div = null;
+        }
+        onFrameMousemove(event) {
+            if (Consts.frame) {
+                var fpos = Consts.frame.getBoundingClientRect();
+                var x = event.clientX + fpos.left;
+                var y = event.clientY + fpos.top;
+                this.mouseMove(x, y);
+            }
+        }
+        onMousemove(event) {
+            this.mouseMove(event.clientX, event.clientY);
+        }
+        mouseMove(x, y) {
+            if (!this.parent)
+                return;
+            var mx = x * Laya.Browser.pixelRatio;
+            var my = y * Laya.Browser.pixelRatio;
+            var p = this.parent.globalToLocal(mx, my);
+            if (this.type == CursorType.H_RESIZE) {
+                var px = p.x - this.lastp.x;
+                var tox = this.x + px;
+                this.x = Math.min(this.parent.width, Math.max(0, tox));
+            }
+            else if (this.type == CursorType.V_RESIZE) {
+                var py = p.y - this.lastp.y;
+                var toy = this.y + py;
+                this.y = Math.min(this.parent.height, Math.max(0, toy));
+            }
+            this.lastp = p;
         }
     }
 
@@ -1608,6 +1721,9 @@
             this.list = new DisplayTreeUI(this.view.m_list);
             this.document = new DocumentUI(this.view.m_document);
             this.insp = new InspectorUI(this.view.m_insp);
+            this.m_sep1 = this.view.m_sep1;
+            this.m_sep1.type = CursorType.H_RESIZE;
+            this.view.m_version.text = "version:" + Consts.version;
             let str = Consts.GetQueryString("url");
             if (str) {
                 this.view.m_webset.text = decodeURIComponent(str);
@@ -1741,16 +1857,6 @@
     }
     ComTransitionItem.URL = "ui://2pshu6oie1jj1nry321";
 
-    class LibView_sep extends fgui.GComponent {
-        static createInstance() {
-            return (fgui.UIPackage.createObject("Builder", "LibView_sep"));
-        }
-        onConstruct() {
-            this.m_sep = (this.getChildAt(0));
-        }
-    }
-    LibView_sep.URL = "ui://2pshu6oie80aixictx";
-
     class TitleBar extends fgui.GButton {
         static createInstance() {
             return (fgui.UIPackage.createObject("Builder", "TitleBar"));
@@ -1873,7 +1979,7 @@
             this.m_controllerBar = (this.getChildAt(4));
             this.m_transitionBar = (this.getChildAt(5));
             this.m_nodeBar = (this.getChildAt(6));
-            this.m_widgetBar = (this.getChildAt(7));
+            this.m_creatorlist = (this.getChildAt(7));
             this.m_group = (this.getChildAt(8));
         }
     }
@@ -1911,6 +2017,38 @@
     }
     PropsPanel.URL = "ui://2pshu6ois4ys1nry32c";
 
+    class CreatorLabelPropsPanel extends fgui.GComponent {
+        static createInstance() {
+            return (fgui.UIPackage.createObject("Builder", "CreatorLabelPropsPanel"));
+        }
+        onConstruct() {
+            this.m_text = (this.getChildAt(8));
+            this.m_bold = (this.getChildAt(9));
+            this.m_italic = (this.getChildAt(10));
+            this.m_underline = (this.getChildAt(11));
+            this.m_fontSize = (this.getChildAt(12));
+            this.m_font = (this.getChildAt(13));
+            this.m_lineHeight = (this.getChildAt(14));
+            this.m_cachemode = (this.getChildAt(15));
+            this.m_overflow = (this.getChildAt(16));
+            this.m_hAlign = (this.getChildAt(17));
+            this.m_vAlign = (this.getChildAt(18));
+        }
+    }
+    CreatorLabelPropsPanel.URL = "ui://2pshu6ois4ys1nry32d";
+
+    class CreatorComp extends fgui.GComponent {
+        static createInstance() {
+            return (fgui.UIPackage.createObject("Builder", "CreatorComp"));
+        }
+        onConstruct() {
+            this.m_title = (this.getChildAt(0));
+            this.m_key = (this.getChildAt(1));
+            this.m_value = (this.getChildAt(2));
+        }
+    }
+    CreatorComp.URL = "ui://2pshu6ois4ys1nry32e";
+
     class RefreshButton extends fgui.GButton {
         static createInstance() {
             return (fgui.UIPackage.createObject("Builder", "RefreshButton"));
@@ -1941,6 +2079,8 @@
             fgui.UIObjectFactory.setExtension(LibraryView_Slider.URL, LibraryView_Slider);
             fgui.UIObjectFactory.setExtension(InfoPropsPanel.URL, InfoPropsPanel);
             fgui.UIObjectFactory.setExtension(PropsPanel.URL, PropsPanel);
+            fgui.UIObjectFactory.setExtension(CreatorLabelPropsPanel.URL, CreatorLabelPropsPanel);
+            fgui.UIObjectFactory.setExtension(CreatorComp.URL, CreatorComp);
             fgui.UIObjectFactory.setExtension(RefreshButton.URL, RefreshButton);
         }
     }
@@ -2171,14 +2311,11 @@
         onConstruct() {
             super.onConstruct();
             this.m_TargetValue.editable = false;
-            this.m_AlignMode.on(fairygui.Events.STATE_CHANGED, this, this.onChanged);
         }
         setData(item) {
             this.setCCData(item);
         }
-        setCCData(item) {
-            let gameModule = Consts.displayList.displayModule;
-            var widget = item.getComponent(gameModule.Widget);
+        setCCData(widget) {
             this.widget = widget;
             if (widget) {
                 this.visible = true;
@@ -2195,12 +2332,12 @@
                 this.m_VerticlCenter.setObj(widget, "isAlignVerticalCenter", false);
                 this.m_VerticlCenterValue.setObj(widget, "verticalCenter");
                 this.m_TargetValue.setObj(widget, "isAlignXX", false);
-                this.m_AlignMode.selectedIndex = this.widget.alignMode;
+                this.m_AlignMode.setObj(widget, "alignMode");
                 if (widget.target) {
                     this.m_TargetValue.text = widget.target.name;
                 }
-                else if (item.parent) {
-                    this.m_TargetValue.text = item.parent.name;
+                else if (widget.node && widget.node.parent) {
+                    this.m_TargetValue.text = widget.node.parent.name;
                 }
                 else
                     this.m_TargetValue.text = "";
@@ -2209,18 +2346,12 @@
                 this.visible = false;
             }
         }
-        onChanged() {
-            this.widget.alignMode = this.m_AlignMode.selectedIndex;
-        }
-        dispose() {
-            this.m_AlignMode.off(fairygui.Events.STATE_CHANGED, this, this.onChanged);
-            super.dispose();
-        }
     }
 
     class PropsUI extends PropsPanel {
         onConstruct() {
             super.onConstruct();
+            this.m_type.selectedIndex = 1;
         }
         get propsui() {
             if (this._iconObject)
@@ -2277,11 +2408,115 @@
     XYInput.URL = "ui://nk9ejx23wqe79a";
     XYInput.URLNumber = "ui://nk9ejx23au3n69";
 
+    class TextInput extends fgui.GLabel {
+        onConstruct() {
+            let text = this.getTextField();
+            text.displayObject.on(Laya.Event.BLUR, this, this.changeValue);
+        }
+        changeValue() {
+            if (this.targetObj && this.targetKey && this.tKey) {
+                let obj = this.targetObj[this.tKey];
+                obj[this.targetKey] = this.text;
+                this.targetObj[this.tKey] = obj;
+            }
+            else if (this.targetObj && this.targetKey) {
+                this.targetObj[this.targetKey] = this.text;
+            }
+        }
+        setObj(target, key, tKey) {
+            this.targetObj = target;
+            this.targetKey = key;
+            this.tKey = tKey;
+            if (tKey) {
+                this.text = target[tKey][key] + "";
+            }
+            else {
+                this.text = target[key] + "";
+            }
+        }
+    }
+    TextInput.URLInput = "ui://nk9ejx23au3n6k";
+    TextInput.URLArea = "ui://nk9ejx23gcza1s";
+
+    class ComboBox extends fgui.GComboBox {
+        onConstruct() {
+            this.on(fgui.Events.STATE_CHANGED, this, this.changeValue);
+        }
+        changeValue() {
+            if (this.targetObj && this.targetKey) {
+                this.targetObj[this.targetKey] = this.selectedIndex;
+            }
+        }
+        setObj(target, key) {
+            this.targetObj = target;
+            this.targetKey = key;
+            this.selectedIndex = this.targetObj[this.targetKey];
+        }
+        dispose() {
+            this.off(fairygui.Events.STATE_CHANGED, this, this.changeValue);
+            super.dispose();
+        }
+    }
+    ComboBox.URL = "ui://nk9ejx23gcza18";
+
+    class CreatorCompUI extends CreatorComp {
+        onConstruct() {
+            super.onConstruct();
+            this.m_title.onClick(this, this.showlog);
+        }
+        setData(item) {
+            this.setCCData(item);
+        }
+        showlog() {
+            console.log(this.component);
+        }
+        setCCData(component) {
+            this.component = component;
+            this.m_title.text = Consts.getClassName(component);
+        }
+    }
+
+    class CreatorLabelUI extends CreatorLabelPropsPanel {
+        onConstruct() {
+            super.onConstruct();
+            this.m_font.editable = false;
+        }
+        setData(item) {
+            this.setCCData(item);
+        }
+        setCCData(label) {
+            this.label = label;
+            if (label) {
+                this.visible = true;
+                this.m_text.setObj(label, "string");
+                this.m_bold.setObj(label, "enableBold");
+                this.m_italic.setObj(label, "enableItalic");
+                this.m_underline.setObj(label, "enableUnderline");
+                this.m_fontSize.setObj(label, "fontSize");
+                this.m_lineHeight.setObj(label, "lineHeight");
+                this.m_cachemode.setObj(label, "cacheMode");
+                this.m_overflow.setObj(label, "overflow");
+                this.m_hAlign.setObj(label, "horizontalAlign");
+                this.m_vAlign.setObj(label, "verticalAlign");
+                this.m_font.setObj(label, "fontFamily");
+                if (!label.useSystemFont) {
+                    this.m_font.text = label.font.name;
+                }
+            }
+            else {
+                this.visible = false;
+            }
+        }
+    }
+
     class BuilderUI {
         static bindAll() {
             fgui.UIObjectFactory.setExtension(EmCheckbox.URL, EmCheckbox);
             fgui.UIObjectFactory.setExtension(XYInput.URL, XYInput);
             fgui.UIObjectFactory.setExtension(XYInput.URLNumber, XYInput);
+            fgui.UIObjectFactory.setExtension(TextInput.URLInput, TextInput);
+            fgui.UIObjectFactory.setExtension(TextInput.URLArea, TextInput);
+            fgui.UIObjectFactory.setExtension(ComboBox.URL, ComboBox);
             fgui.UIObjectFactory.setExtension(Basic3DPropsPanel.URL, Basic3DPropsUI);
             fgui.UIObjectFactory.setExtension(BasicPropsPanel.URL, BasicPropsUI);
             fgui.UIObjectFactory.setExtension(ComControllerPanel.URL, ComControllerUI);
@@ -2289,6 +2524,9 @@
             fgui.UIObjectFactory.setExtension(CreatorPropsPanel.URL, CreatorPropsUI);
             fgui.UIObjectFactory.setExtension(CreatorWidgetPanel.URL, CreatorWidgetUI);
             fgui.UIObjectFactory.setExtension(PropsPanel.URL, PropsUI);
+            fgui.UIObjectFactory.setExtension(LibView_sep.URL, SetUI);
+            fgui.UIObjectFactory.setExtension(CreatorComp.URL, CreatorCompUI);
+            fgui.UIObjectFactory.setExtension(CreatorLabelPropsPanel.URL, CreatorLabelUI);
         }
     }
 
@@ -2313,7 +2551,10 @@
             if (GameConfig.stat)
                 Laya.Stat.show();
             Laya.alertGlobalError(true);
-            Laya.ResourceVersion.enable("version.json", Laya.Handler.create(this, this.onVersionLoaded), Laya.ResourceVersion.FILENAME_VERSION);
+            Laya.timer.once(100, this, this.onStartVersionLoaded);
+        }
+        onStartVersionLoaded() {
+            Laya.ResourceVersion.enable("version.json?v=" + Consts.version, Laya.Handler.create(this, this.onVersionLoaded), Laya.ResourceVersion.FILENAME_VERSION);
         }
         onVersionLoaded() {
             Laya.stage.addChild(fgui.GRoot.inst.displayObject);
@@ -2330,3 +2571,4 @@
     new Main();
 
 }());
+//# sourceMappingURL=bundle.js.map

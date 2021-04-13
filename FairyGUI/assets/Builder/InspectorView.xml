@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="286,746" restrictSize="286,0,0,0" overflow="scroll" scrollBarFlags="96" bgColorEnabled="true" bgColor="#383838">
-  <controller name="type" pages="0,FGUI,1,Laya,5,Laya3D,6,Creator,7,Egret" selected="0">
+<component size="286,746" restrictSize="286,0,0,0" bgColorEnabled="true" bgColor="#383838">
+  <controller name="type" pages="0,FGUI,1,Laya,5,Laya3D,6,Creator,7,Egret" selected="3">
     <action type="change_page" fromPage="" toPage="" objectId="n76_e1jj" controller="type" targetPage="~1"/>
   </controller>
   <displayList>
     <graph id="n74_p0d9" name="n74" xy="0,0" size="286,746" type="rect" lineColor="#ff292828" fillColor="#00383838">
       <relation target="" sidePair="width-width,height-height"/>
     </graph>
-    <component id="n78_e1jj" name="infoComp" src="r1st7iues" fileName="inspectors/InfoPropsPanel.xml" xy="8,10" group="n77_e1jj"/>
-    <component id="n75_e1jj" name="baseBar" src="s4ys1nry32c" fileName="inspectors/PropsPanel.xml" xy="0,36" group="n77_e1jj">
+    <component id="n78_e1jj" name="infoComp" src="r1st7iues" fileName="inspectors/base/InfoPropsPanel.xml" xy="8,10" group="n77_e1jj"/>
+    <component id="n75_e1jj" name="baseBar" src="s4ys1nry32c" fileName="inspectors/base/PropsPanel.xml" xy="0,36" group="n77_e1jj">
       <gearDisplay controller="type" pages="0,1,7"/>
       <relation target="" sidePair="width-width"/>
       <Button title="基本" icon="ui://2pshu6oiau3n5"/>
     </component>
-    <component id="n88_s4ys" name="base3DBar" src="s4ys1nry32c" fileName="inspectors/PropsPanel.xml" xy="0,36" group="n77_e1jj">
+    <component id="n88_s4ys" name="base3DBar" src="s4ys1nry32c" fileName="inspectors/base/PropsPanel.xml" xy="0,36" group="n77_e1jj">
       <gearDisplay controller="type" pages="5"/>
       <relation target="" sidePair="width-width"/>
       <Button title="基本" icon="ui://2pshu6oi6who1nry324"/>
     </component>
-    <component id="n79_e1jj" name="controllerBar" src="s4ys1nry32c" fileName="inspectors/PropsPanel.xml" xy="0,56" group="n77_e1jj">
+    <component id="n79_e1jj" name="controllerBar" src="s4ys1nry32c" fileName="inspectors/base/PropsPanel.xml" xy="0,56" group="n77_e1jj">
       <gearDisplay controller="type" pages="0"/>
       <relation target="" sidePair="width-width"/>
       <Button title="控制器" icon="ui://2pshu6oie1jj1nry31y"/>
     </component>
-    <component id="n80_e1jj" name="transitionBar" src="s4ys1nry32c" fileName="inspectors/PropsPanel.xml" xy="0,76" group="n77_e1jj">
+    <component id="n80_e1jj" name="transitionBar" src="s4ys1nry32c" fileName="inspectors/base/PropsPanel.xml" xy="0,76" group="n77_e1jj">
       <gearDisplay controller="type" pages="0"/>
       <relation target="" sidePair="width-width"/>
       <Button title="动效" icon="ui://2pshu6oie1jj1nry320"/>
     </component>
-    <component id="n84_ixw7" name="nodeBar" src="s4ys1nry32c" fileName="inspectors/PropsPanel.xml" xy="0,36" group="n77_e1jj">
+    <component id="n84_ixw7" name="nodeBar" src="s4ys1nry32c" fileName="inspectors/base/PropsPanel.xml" xy="0,36" group="n77_e1jj">
       <gearDisplay controller="type" pages="6"/>
       <relation target="" sidePair="width-width"/>
       <Button title="Node" icon="ui://2pshu6oiixw71nry325"/>
     </component>
-    <component id="n86_ixw7" name="widgetBar" src="s4ys1nry32c" fileName="inspectors/PropsPanel.xml" xy="0,56" group="n77_e1jj">
+    <list id="n90_fyi9" name="creatorlist" xy="0,56" size="286,690" group="n77_e1jj" overflow="scroll" defaultItem="ui://2pshu6ois4ys1nry32c">
       <gearDisplay controller="type" pages="6"/>
-      <relation target="" sidePair="width-width"/>
-      <Button title="Widget" icon="ui://2pshu6oiixw71nry326"/>
-    </component>
-    <group id="n77_e1jj" name="group" xy="0,10" size="278,86" advanced="true" layout="vt" excludeInvisibles="true"/>
+      <relation target="" sidePair="width-width,bottomext-bottom"/>
+      <relation target="n84_ixw7" sidePair="topext-bottom"/>
+    </list>
+    <group id="n77_e1jj" name="group" xy="0,10" size="286,736" advanced="true" layout="vt" excludeInvisibles="true"/>
   </displayList>
 </component>

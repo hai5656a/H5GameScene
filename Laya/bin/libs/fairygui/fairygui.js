@@ -1942,7 +1942,7 @@
                 if (this._templateVars)
                     text2 = this.parseTemplate(text2);
                 if (this._ubbEnabled) //laya还不支持同一个文本不同样式
-                    this._textField.text = fgui.UBBParser.inst.parse(fgui.ToolSet.encodeHTML(text2), true);
+                    this._textField.text = fgui.UBBParser.inst.parse(text2, true);
                 else
                     this._textField.text = text2;
             }
@@ -4920,7 +4920,7 @@
             if (buffer.version >= 2) {
                 this._excludeInvisibles = buffer.readBool();
                 this._autoSizeDisabled = buffer.readBool();
-                this._mainChildIndex = buffer.getInt16();
+                this._mainGridIndex = buffer.getInt16();
             }
         }
         setup_afterAdd(buffer, beginPos) {
@@ -8395,6 +8395,7 @@
             if (this._templateVars)
                 text2 = this.parseTemplate(text2);
             try {
+                this._div.size(this._width, this._height);
                 if (this._ubbEnabled)
                     this._div.innerHTML = fgui.UBBParser.inst.parse(text2);
                 else
@@ -12355,7 +12356,7 @@
             if (delay == 0)
                 this.onDelayedPlay();
             else
-                fgui.GTween.delayedCall(delay).onComplete(this.onDelayedPlay, this);
+                fgui.GTween.delayedCall(delay).setTarget(this).onComplete(this.onDelayedPlay, this);
         }
         stop(setToComplete, processCallback) {
             if (!this._playing)
@@ -12690,7 +12691,7 @@
         internalPlay() {
             this._ownerBaseX = this._owner.x;
             this._ownerBaseY = this._owner.y;
-            this._totalTasks = 0;
+            this._totalTasks = 1;
             var cnt = this._items.length;
             var item;
             var needSkipAnimations = false;
@@ -12717,6 +12718,7 @@
             }
             if (needSkipAnimations)
                 this.skipAnimations();
+            this._totalTasks--;
         }
         playItem(item) {
             var time;
@@ -12989,11 +12991,16 @@
             if (this._playing && this._totalTasks == 0) {
                 if (this._totalTimes < 0) {
                     this.internalPlay();
+                    if (this._totalTasks == 0)
+                        fgui.GTween.delayedCall(0).setTarget(this).onComplete(this.checkAllComplete, this);
                 }
                 else {
                     this._totalTimes--;
-                    if (this._totalTimes > 0)
+                    if (this._totalTimes > 0) {
                         this.internalPlay();
+                        if (this._totalTasks == 0)
+                            fgui.GTween.delayedCall(0).setTarget(this).onComplete(this.checkAllComplete, this);
+                    }
                     else {
                         this._playing = false;
                         var cnt = this._items.length;
@@ -13753,7 +13760,7 @@
                             if (!UIPackage._instById[pkg.id]) {
                                 UIPackage._instById[pkg.id] = pkg;
                                 UIPackage._instByName[pkg.name] = pkg;
-                                UIPackage._instByName[pkg._resKey] = pkg;
+                                UIPackage._instById[pkg._resKey] = pkg;
                             }
                         }
                         completeHandler.runWith([pkgArr]);
@@ -13765,7 +13772,7 @@
                         if (!UIPackage._instById[pkg.id]) {
                             UIPackage._instById[pkg.id] = pkg;
                             UIPackage._instByName[pkg.name] = pkg;
-                            UIPackage._instByName[pkg._resKey] = pkg;
+                            UIPackage._instById[pkg._resKey] = pkg;
                         }
                     }
                     completeHandler.runWith([pkgArr]);
@@ -14128,7 +14135,12 @@
                         var sprite = this._sprites[item.id];
                         if (sprite) {
                             var atlasTexture = (this.getItemAsset(sprite.atlas));
-                            item.texture = Laya.Texture.create(atlasTexture, sprite.rect.x, sprite.rect.y, sprite.rect.width, sprite.rect.height, sprite.offset.x, sprite.offset.y, sprite.originalSize.x, sprite.originalSize.y);
+                            if (atlasTexture) {
+                                item.texture = Laya.Texture.create(atlasTexture, sprite.rect.x, sprite.rect.y, sprite.rect.width, sprite.rect.height, sprite.offset.x, sprite.offset.y, sprite.originalSize.x, sprite.originalSize.y);
+                            }
+                            else {
+                                item.texture = null;
+                            }
                         }
                         else
                             item.texture = null;

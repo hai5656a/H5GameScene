@@ -4,12 +4,14 @@ import Consts from "../editor/Consts";
 import EditorEvent from "../editor/EditorEvent";
 import DocumentUI from "./DocumentUI";
 import InspectorUI from "./InspectorUI";
+import SetUI, { CursorType } from "./SepUI";
 
 export default class MainUI{
     view:MainView;
     list:DisplayTreeUI;
     document:DocumentUI;
     insp:InspectorUI;
+    m_sep1:SetUI;
     // lineStyle:CSSStyleDeclaration;
    
     constructor(){
@@ -23,6 +25,9 @@ export default class MainUI{
         this.list = new DisplayTreeUI(this.view.m_list);
         this.document = new DocumentUI(this.view.m_document);
         this.insp = new InspectorUI(this.view.m_insp);
+        this.m_sep1 = this.view.m_sep1 as SetUI; 
+        this.m_sep1.type = CursorType.H_RESIZE
+        this.view.m_version.text ="version:"+ Consts.version;
         let str = Consts.GetQueryString("url");
         if(str){
             this.view.m_webset.text = decodeURIComponent(str);

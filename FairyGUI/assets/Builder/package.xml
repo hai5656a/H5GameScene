@@ -4,7 +4,7 @@
     <component id="au3n0" name="MainView.xml" path="/Editor/"/>
     <component id="au3n3" name="LibraryView.xml" path="/Editor/"/>
     <component id="au3n4" name="PreviewView.xml" path="/Editor/"/>
-    <component id="au3n5" name="BasicPropsPanel.xml" path="/inspectors/" exported="true"/>
+    <component id="au3n5" name="BasicPropsPanel.xml" path="/inspectors/base/" exported="true"/>
     <image id="au3nf" name="menubar_bg.png" path="/images/" duplicatePadding="true"/>
     <component id="au3ng" name="MenuBar.xml" path="/Editor/"/>
     <component id="au3nh" name="DocumentView.xml" path="/Editor/"/>
@@ -37,11 +37,11 @@
     <image id="au3n2a" name="test.svg" path="/icons/" qualityOption="source" width="18" height="18"/>
     <image id="au3n2c" name="save_all.png" path="/icons/" qualityOption="source"/>
     <image id="au3n2d" name="save.svg" path="/icons/" qualityOption="source" width="16" height="16"/>
-    <component id="au3n2r" name="GearPropsPanel.xml" path="/inspectors/"/>
-    <component id="au3n2s" name="TextPropsPanel.xml" path="/inspectors/"/>
-    <component id="au3n2t" name="GraphPropsPanel.xml" path="/inspectors/"/>
-    <component id="au3n2u" name="ListPropsPanel.xml" path="/inspectors/"/>
-    <component id="au3n2v" name="LoaderPropsPanel.xml" path="/inspectors/"/>
+    <component id="au3n2r" name="GearPropsPanel.xml" path="/inspectors/fgui/"/>
+    <component id="au3n2s" name="TextPropsPanel.xml" path="/inspectors/fgui/"/>
+    <component id="au3n2t" name="GraphPropsPanel.xml" path="/inspectors/fgui/"/>
+    <component id="au3n2u" name="ListPropsPanel.xml" path="/inspectors/fgui/"/>
+    <component id="au3n2v" name="LoaderPropsPanel.xml" path="/inspectors/fgui/"/>
     <component id="au3n3g" name="ControllerItem.xml" path="/controller/"/>
     <component id="au3n3h" name="ControllerPanel.xml" path="/controller/"/>
     <component id="au3n3k" name="SaveConfirmDialog.xml" path="/dialogs/"/>
@@ -62,24 +62,24 @@
     <component id="au3n44" name="InputDialog.xml" path="/dialogs/"/>
     <component id="au3n45" name="FixConflictedNameDialog.xml" path="/dialogs/"/>
     <component id="au3n46" name="ConfirmDialog.xml" path="/dialogs/"/>
-    <component id="au3n47" name="ComPropsPanel.xml" path="/inspectors/"/>
-    <component id="au3n4a" name="RelationPropsPanel.xml" path="/inspectors/"/>
-    <component id="au3n4d" name="GroupPropsPanel.xml" path="/inspectors/"/>
-    <component id="au3n4e" name="MovieClipPropsPanel.xml" path="/inspectors/"/>
-    <component id="au3n4f" name="SwfPropsPanel.xml" path="/inspectors/"/>
-    <component id="au3n4i" name="RelationPropsItem.xml" path="/inspectors/"/>
-    <component id="au3n4k" name="ButtonPropsPanel2.xml" path="/inspectors/extention/"/>
+    <component id="au3n47" name="ComPropsPanel.xml" path="/inspectors/fgui/"/>
+    <component id="au3n4a" name="RelationPropsPanel.xml" path="/inspectors/fgui/"/>
+    <component id="au3n4d" name="GroupPropsPanel.xml" path="/inspectors/fgui/"/>
+    <component id="au3n4e" name="MovieClipPropsPanel.xml" path="/inspectors/fgui/"/>
+    <component id="au3n4f" name="SwfPropsPanel.xml" path="/inspectors/fgui/"/>
+    <component id="au3n4i" name="RelationPropsItem.xml" path="/inspectors/fgui/"/>
+    <component id="au3n4k" name="ButtonPropsPanel2.xml" path="/inspectors/fgui/extention/"/>
     <image id="au3n4l" name="icon_font.png" path="/icons_obj/" exported="true" qualityOption="source"/>
-    <component id="au3n4r" name="ButtonPropsPanel.xml" path="/inspectors/extention/"/>
-    <component id="au3n4s" name="ComboBoxPropsPanel2.xml" path="/inspectors/extention/"/>
-    <component id="au3n4t" name="ComboBoxPropsPanel.xml" path="/inspectors/extention/"/>
-    <component id="au3n4u" name="ProgressBarPropsPanel2.xml" path="/inspectors/extention/"/>
-    <component id="au3n4v" name="ProgressBarPropsPanel.xml" path="/inspectors/extention/"/>
-    <component id="au3n4w" name="SliderPropsPanel2.xml" path="/inspectors/extention/"/>
-    <component id="au3n4x" name="SliderPropsPanel.xml" path="/inspectors/extention/"/>
-    <component id="au3n4y" name="ScrollBarPropsPanel2.xml" path="/inspectors/extention/"/>
-    <component id="au3n50" name="LabelPropsPanel2.xml" path="/inspectors/extention/"/>
-    <component id="au3n51" name="LabelPropsPanel.xml" path="/inspectors/extention/"/>
+    <component id="au3n4r" name="ButtonPropsPanel.xml" path="/inspectors/fgui/extention/"/>
+    <component id="au3n4s" name="ComboBoxPropsPanel2.xml" path="/inspectors/fgui/extention/"/>
+    <component id="au3n4t" name="ComboBoxPropsPanel.xml" path="/inspectors/fgui/extention/"/>
+    <component id="au3n4u" name="ProgressBarPropsPanel2.xml" path="/inspectors/fgui/extention/"/>
+    <component id="au3n4v" name="ProgressBarPropsPanel.xml" path="/inspectors/fgui/extention/"/>
+    <component id="au3n4w" name="SliderPropsPanel2.xml" path="/inspectors/fgui/extention/"/>
+    <component id="au3n4x" name="SliderPropsPanel.xml" path="/inspectors/fgui/extention/"/>
+    <component id="au3n4y" name="ScrollBarPropsPanel2.xml" path="/inspectors/fgui/extention/"/>
+    <component id="au3n50" name="LabelPropsPanel2.xml" path="/inspectors/fgui/extention/"/>
+    <component id="au3n51" name="LabelPropsPanel.xml" path="/inspectors/fgui/extention/"/>
     <component id="au3n53" name="TestView.xml" path="/Editor/"/>
     <component id="au3n54" name="PublishDialog.xml" path="/dialogs/"/>
     <component id="au3n55" name="ListItemsEditDialog.xml" path="/dialogs/"/>
@@ -89,18 +89,18 @@
     <component id="au3n5c" name="ReplaceObjectDialog.xml" path="/dialogs/"/>
     <component id="au3n5d" name="MovieClipEditDialog.xml" path="/dialogs/"/>
     <component id="au3n5e" name="PasteOptionDialog.xml" path="/dialogs/"/>
-    <component id="au3n5f" name="SelectObjectPanel.xml" path="/inspectors/"/>
+    <component id="au3n5f" name="SelectObjectPanel.xml" path="/inspectors/fgui/"/>
     <component id="au3n5h" name="ControllerNameItem.xml" path="/controller/"/>
     <component id="au3n5i" name="CustomArrangePanel.xml" path="/Editor/"/>
-    <component id="sl3v5j" name="RelationTypePopup.xml" path="/inspectors/"/>
+    <component id="sl3v5j" name="RelationTypePopup.xml" path="/inspectors/fgui/"/>
     <image id="x5ao5k" name="cog.svg" path="/icons/" scale9grid="0,0,4,4" qualityOption="source" width="20" height="20"/>
     <component id="io7w5r" name="PreferencesDialog.xml" path="/dialogs/"/>
     <component id="ofk55u" name="PackageGroupsEditDialog.xml" path="/dialogs/"/>
     <component id="gs6u5w" name="PromptDialog.xml" path="/dialogs/"/>
     <component id="vdh75x" name="ChooseFolderDialog.xml" path="/dialogs/"/>
     <image id="bfc35y" name="collapse_all.png" path="/icons/" qualityOption="source"/>
-    <component id="ud2n61" name="ComDesignPropsPanel.xml" path="/inspectors/"/>
-    <component id="guki62" name="EtcPropsPanel.xml" path="/inspectors/"/>
+    <component id="ud2n61" name="ComDesignPropsPanel.xml" path="/inspectors/fgui/"/>
+    <component id="guki62" name="EtcPropsPanel.xml" path="/inspectors/fgui/"/>
     <component id="104iu63" name="DownloadDialog.xml" path="/dialogs/"/>
     <component id="l2gzu66" name="AboutDialog.xml" path="/dialogs/"/>
     <image id="uzegu6a" name="eye.svg" path="/icons/" qualityOption="source" width="16" height="16"/>
@@ -114,15 +114,15 @@
     <component id="f814u6n" name="CreateLabelDialog.xml" path="/dialogs/"/>
     <image id="psdnu6r" name="delete.png" path="/icons/" qualityOption="source"/>
     <component id="mellu6u" name="AtlasList_item.xml" path="/dialogs/"/>
-    <component id="pstgu6v" name="ImagePropsPanel.xml" path="/inspectors/"/>
+    <component id="pstgu6v" name="ImagePropsPanel.xml" path="/inspectors/fgui/"/>
     <image id="pi83u6x" name="down_arrow.svg" path="/icons/" qualityOption="source" width="14" height="14"/>
     <component id="pi83u6y" name="PopupMenuButton.xml" path="/basic/"/>
     <component id="tvg7u72" name="TimelineView.xml" path="/timeline/"/>
-    <component id="tvg7u73" name="TransitionPropsPanel.xml" path="/inspectors/"/>
+    <component id="tvg7u73" name="TransitionPropsPanel.xml" path="/inspectors/fgui/"/>
     <component id="nkoeu75" name="TimelineHead.xml" path="/timeline/"/>
     <component id="mduxu76" name="TimelineRange.xml" path="/timeline/"/>
     <component id="vplzu77" name="TimelineIndicator.xml" path="/timeline/"/>
-    <component id="wzy5u7a" name="FramePropsPanel.xml" path="/inspectors/"/>
+    <component id="wzy5u7a" name="FramePropsPanel.xml" path="/inspectors/fgui/"/>
     <image id="cnolu7b" name="tweenline2.png" path="/timeline/" qualityOption="source" duplicatePadding="true"/>
     <image id="cnolu7c" name="dot.svg" path="/icons/" qualityOption="source" width="6" height="6"/>
     <component id="cnolu7e" name="TweenLine.xml" path="/timeline/"/>
@@ -131,12 +131,12 @@
     <component id="85piu7h" name="TimelineSelection2.xml" path="/timeline/"/>
     <component id="f9sbu7i" name="TimelinePanelInner.xml" path="/timeline/"/>
     <component id="j9jou7j" name="TimelineNameItem.xml" path="/timeline/"/>
-    <component id="q5ueu7m" name="BasicPropsInTransPanel.xml" path="/inspectors/"/>
-    <component id="jcdgu7r" name="GearSettingsPanel.xml" path="/inspectors/popup/"/>
-    <component id="m4vsu7x" name="ScrollPropsPanel.xml" path="/inspectors/popup/"/>
+    <component id="q5ueu7m" name="BasicPropsInTransPanel.xml" path="/inspectors/fgui/"/>
+    <component id="jcdgu7r" name="GearSettingsPanel.xml" path="/inspectors/fgui/popup/"/>
+    <component id="m4vsu7x" name="ScrollPropsPanel.xml" path="/inspectors/fgui/popup/"/>
     <image id="ehmsu7y" name="info.png" path="/icons/" qualityOption="source"/>
     <component id="ehmsu7z" name="InfoButton.xml" path="/basic/"/>
-    <component id="qacnu81" name="MultiSelectionPanel.xml" path="/inspectors/"/>
+    <component id="qacnu81" name="MultiSelectionPanel.xml" path="/inspectors/fgui/"/>
     <image id="pia6u83" name="guide_combo.png" path="/images/"/>
     <component id="fmz5u85" name="CreateScrollBarDialog.xml" path="/dialogs/"/>
     <image id="fmz5u86" name="guide_scrollbar.png" path="/images/"/>
@@ -149,7 +149,7 @@
     <component id="t3skiu8g" name="CreatePopupMenuDialog.xml" path="/dialogs/"/>
     <image id="t3skiu8h" name="guide_menu.png" path="/images/" qualityOption="source"/>
     <component id="f5apiu8i" name="FontList_item.xml" path="/dialogs/"/>
-    <component id="pb9oiu8p" name="InputPropsPanel.xml" path="/inspectors/popup/"/>
+    <component id="pb9oiu8p" name="InputPropsPanel.xml" path="/inspectors/fgui/popup/"/>
     <component id="ocfaiu8q" name="PlugInView.xml" path="/Editor/"/>
     <component id="ocfaiu8s" name="PlugInView_item.xml" path="/Editor/"/>
     <component id="ryi8iu8t" name="ImportResourceDialog.xml" path="/dialogs/"/>
@@ -159,15 +159,15 @@
     <image id="izo1iu9d" name="dot2.svg" path="/icons/" qualityOption="source" width="6" height="6"/>
     <component id="oj7qiu9e" name="HierarchyView.xml" path="/Editor/"/>
     <image id="c3ppiu9h" name="search.svg" path="/icons/" qualityOption="source" width="16" height="16"/>
-    <component id="k3u8iu9m" name="EffectPropsPanel.xml" path="/inspectors/"/>
-    <component id="fr0ciu9n" name="GearPropsItem.xml" path="/inspectors/"/>
+    <component id="k3u8iu9m" name="EffectPropsPanel.xml" path="/inspectors/fgui/"/>
+    <component id="fr0ciu9n" name="GearPropsItem.xml" path="/inspectors/fgui/"/>
     <component id="qgdeiu9q" name="ExcludedResourceEdit_item.xml" path="/dialogs/"/>
-    <component id="9pwriu9r" name="TextInputPanel.xml" path="/inspectors/"/>
+    <component id="9pwriu9r" name="TextInputPanel.xml" path="/inspectors/fgui/"/>
     <image id="9vz0iu9s" name="tweenline_tail.png" path="/timeline/" qualityOption="source" duplicatePadding="true"/>
     <image id="9vz0iu9t" name="tweenline_body.png" path="/timeline/" qualityOption="source" duplicatePadding="true"/>
     <image id="9vz0iu9u" name="tweenline_head.png" path="/timeline/" qualityOption="source" duplicatePadding="true"/>
     <component id="mx0siu9v" name="ComPropertyInput.xml" path="/basic/"/>
-    <component id="pq8giu9w" name="ComPropsPanel2.xml" path="/inspectors/"/>
+    <component id="pq8giu9w" name="ComPropsPanel2.xml" path="/inspectors/fgui/"/>
     <image id="ih9xiua2" name="refresh.svg" path="/icons/" qualityOption="source" width="16" height="16"/>
     <image id="kpzgiua3" name="chess_bg.png" path="/images/" scale="tile" atlas="alone_npot"/>
     <component id="ah2biuaa" name="NewVersionPrompt.xml" path="/Editor/"/>
@@ -178,9 +178,9 @@
     <image id="k8kliuag" name="location.svg" path="/icons/" qualityOption="source" width="16" height="16"/>
     <image id="ruiliual" name="up_arrow.svg" path="/icons/" qualityOption="source" width="16" height="16"/>
     <component id="gmjuiuan" name="ChildObjectInput.xml" path="/basic/"/>
-    <component id="mfi3iuaq" name="MarginPropsPanel.xml" path="/inspectors/popup/"/>
-    <component id="byixiuar" name="ListLayoutPropsPanel.xml" path="/inspectors/popup/"/>
-    <component id="a9x3iuat" name="FilterPropsPanel.xml" path="/inspectors/popup/"/>
+    <component id="mfi3iuaq" name="MarginPropsPanel.xml" path="/inspectors/fgui/popup/"/>
+    <component id="byixiuar" name="ListLayoutPropsPanel.xml" path="/inspectors/fgui/popup/"/>
+    <component id="a9x3iuat" name="FilterPropsPanel.xml" path="/inspectors/fgui/popup/"/>
     <image id="ikoviuau" name="copy.svg" path="/icons/" qualityOption="source" width="16" height="16"/>
     <image id="ikoviuav" name="paste.svg" path="/icons/" qualityOption="source" width="16" height="16"/>
     <image id="ikoviuaw" name="reset.svg" path="/icons/" qualityOption="source" width="16" height="16"/>
@@ -221,7 +221,7 @@
     <image id="o213iucy" name="text_font_size.svg" path="/icons/" qualityOption="source" width="16" height="16"/>
     <component id="qwjciucz" name="RichTextInput_Component1.xml" path="/dialogs/"/>
     <image id="nejciud0" name="ungroup.png" path="/icons/" qualityOption="source"/>
-    <component id="gwcniud1" name="Instructions.xml" path="/inspectors/extention/"/>
+    <component id="gwcniud1" name="Instructions.xml" path="/inspectors/fgui/extention/"/>
     <image id="u3n8iud5" name="move_down.svg" path="/icons/" qualityOption="source" width="16" height="16"/>
     <image id="u3n8iud6" name="move_up.svg" path="/icons/" qualityOption="source" width="16" height="16"/>
     <image id="dpcriuda" name="flag.svg" path="/timeline/" qualityOption="source" width="11" height="11"/>
@@ -243,23 +243,23 @@
     <image id="hj4f7iudz" name="panel_preview.svg" path="/icons_panel/" qualityOption="source" width="16" height="16"/>
     <image id="hj4f7iue1" name="panel_timeline.svg" path="/icons_panel/" qualityOption="source" width="16" height="16"/>
     <image id="njbq7iue2" name="panel_lib.svg" path="/icons_panel/" qualityOption="source" width="16" height="16"/>
-    <component id="qkqy7iue4" name="FrameValuePropsPanel.xml" path="/inspectors/"/>
+    <component id="qkqy7iue4" name="FrameValuePropsPanel.xml" path="/inspectors/fgui/"/>
     <image id="e4cx7iue7" name="add.svg" path="/icons/" scale="9grid" scale9grid="4,4,8,8" qualityOption="source" width="16" height="16"/>
     <image id="e4cx7iuea" name="remove.svg" path="/icons/" qualityOption="source" width="16" height="16"/>
     <image id="e4cx7iued" name="select_all.svg" path="/icons/" qualityOption="source" width="16" height="16"/>
     <image id="e4cx7iueg" name="select_reverse.svg" path="/icons/" qualityOption="source" width="16" height="16"/>
     <image id="gj1q7iuek" name="lang.svg" path="/icons/" scale9grid="0,0,4,4" qualityOption="source" width="16" height="16"/>
     <component id="gj1q7iuen" name="LangSetting_item.xml" path="/dialogs/"/>
-    <component id="gj1q7iuep" name="RelationPercent.xml" path="/inspectors/"/>
-    <component id="gj1q7iueq" name="RelationLabel.xml" path="/inspectors/"/>
-    <component id="gj1q7iuer" name="RelationTypePopup2.xml" path="/inspectors/"/>
-    <component id="r1st7iues" name="InfoPropsPanel.xml" path="/inspectors/"/>
+    <component id="gj1q7iuep" name="RelationPercent.xml" path="/inspectors/fgui/"/>
+    <component id="gj1q7iueq" name="RelationLabel.xml" path="/inspectors/fgui/"/>
+    <component id="gj1q7iuer" name="RelationTypePopup2.xml" path="/inspectors/fgui/"/>
+    <component id="r1st7iues" name="InfoPropsPanel.xml" path="/inspectors/base/"/>
     <component id="x3927iueu" name="PublishGlobalSettings.xml" path="/dialogs/"/>
     <component id="x3927iuev" name="PublishPackageSettings.xml" path="/dialogs/"/>
     <component id="j5yv7iuex" name="ControllerPanel_test.xml" path="/controller/"/>
     <component id="j5yv94" name="FileTabBarScroll.xml" path="/basic/"/>
     <component id="aall7iuez" name="addOtherButton.xml" path="/basic/"/>
-    <component id="aall7iuf0" name="GearPropsItem2.xml" path="/inspectors/"/>
+    <component id="aall7iuf0" name="GearPropsItem2.xml" path="/inspectors/fgui/"/>
     <component id="qilr7iuf1" name="CanvasSettingsPanel.xml" path="/Editor/"/>
     <image id="qilr7iuf2" name="publish_settings.svg" path="/icons/" qualityOption="source" width="16" height="16"/>
     <image id="qilr7iuf3" name="reload.svg" path="/icons/" qualityOption="source" width="16" height="16"/>
@@ -278,7 +278,7 @@
     <image id="dp9p7iufi" name="rename.svg" path="/icons/" qualityOption="source" width="16" height="16"/>
     <component id="dp9p7iufj" name="InlineSearchBar.xml" path="/Editor/"/>
     <component id="dp9p7iufl" name="ControllerMultiPageInput2.xml" path="/basic/"/>
-    <component id="dp9p7iufm" name="CustomPropsPanel.xml" path="/inspectors/"/>
+    <component id="dp9p7iufm" name="CustomPropsPanel.xml" path="/inspectors/fgui/"/>
     <image id="wqe77iufn" name="panel_tab.png" path="/icons_panel/" qualityOption="source"/>
     <component id="wqe77iufo" name="ProjectSettings_quick.xml" path="/dialogs/"/>
     <image id="te5p7iufq" name="select_none.svg" path="/icons/" width="16" height="16"/>
@@ -476,12 +476,12 @@
     <image id="96nvixicu6" name="tweenline_head@2x.png" path="/timeline/" duplicatePadding="true"/>
     <image id="96nvixicu7" name="tweenline_tail@2x.png" path="/timeline/" duplicatePadding="true"/>
     <image id="rnvgixicu8" name="tweenline2@2x.png" path="/timeline/" duplicatePadding="true"/>
-    <component id="cx5rixicu9" name="ListItemPropsPanel.xml" path="/inspectors/"/>
+    <component id="cx5rixicu9" name="ListItemPropsPanel.xml" path="/inspectors/fgui/"/>
     <image id="oskoixicub" name="insert.svg" path="/icons/" width="16" height="16"/>
     <image id="oskoixicuc" name="insert@2x.png" path="/icons/"/>
-    <component id="oskoixicud" name="TreeSettingsPanel.xml" path="/inspectors/popup/"/>
+    <component id="oskoixicud" name="TreeSettingsPanel.xml" path="/inspectors/fgui/popup/"/>
     <component id="ht85ixicue" name="MultiObjectSelectPanel.xml" path="/basic/"/>
-    <component id="rladixicuf" name="ComEtcPropsPanel.xml" path="/inspectors/"/>
+    <component id="rladixicuf" name="ComEtcPropsPanel.xml" path="/inspectors/fgui/"/>
     <component id="dx25ixicug" name="ComPropertyEditDialog.xml" path="/dialogs/"/>
     <component id="dx25ixicuh" name="ComPropertyEdit_item.xml" path="/dialogs/"/>
     <component id="b6xrixicui" name="EditingVerticesBar.xml" path="/Editor/"/>
@@ -511,7 +511,7 @@
     <image id="mvnbixicvj" name="restart@2x.png" path="/icons/"/>
     <image id="mvnbixicvk" name="panel_plugin.svg" path="/icons_panel/" width="16" height="16"/>
     <image id="mvnbixicvl" name="panel_plugin@2x.png" path="/icons_panel/"/>
-    <component id="twdeixicvm" name="Loader3DPropsPanel.xml" path="/inspectors/"/>
+    <component id="twdeixicvm" name="Loader3DPropsPanel.xml" path="/inspectors/fgui/"/>
     <image id="fnb6ixicvn" name="strike.svg" path="/icons/" width="18" height="18"/>
     <image id="bkvgixicvo" name="strike@2x.png" path="/icons/"/>
     <component id="yaznixicvp" name="TTFFontInfoDialog.xml" path="/dialogs/"/>
@@ -548,8 +548,8 @@
     <image id="jgx6ixicws" name="icon_loader3D@2x.png" path="/icons_obj/" exported="true"/>
     <image id="qj25ixicwt" name="emmylua.png" path="/icons/"/>
     <image id="qj25ixicwu" name="emmylua@2x.png" path="/icons/"/>
-    <component id="eld4ixicwv" name="TextEffectPropsPanel.xml" path="/inspectors/"/>
-    <component id="13hgbixicww" name="TextEffectProPropsPanel.xml" path="/inspectors/"/>
+    <component id="eld4ixicwv" name="TextEffectPropsPanel.xml" path="/inspectors/fgui/"/>
+    <component id="13hgbixicww" name="TextEffectProPropsPanel.xml" path="/inspectors/fgui/"/>
     <image id="bh7u1nry31d" name="dotted_line.png" path="/images/" scale="tile" atlas="alone_npot"/>
     <image id="b44f1nry31e" name="timeline_frame.png" path="/timeline/" scale="tile" atlas="alone_npot"/>
     <image id="7s7j1nry31f" name="timeline_ind.png" path="/timeline/" scale="tile" atlas="alone_npot"/>
@@ -569,15 +569,18 @@
     <component id="mlmb1nry31v" name="DisplayTreeView.xml" path="/" exported="true"/>
     <component id="mlmb1nry31w" name="MainView.xml" path="/" exported="true"/>
     <component id="mlmb1nry31x" name="DocumentView.xml" path="/"/>
-    <component id="e1jj1nry31y" name="ComControllerPanel.xml" path="/inspectors/"/>
-    <component id="e1jj1nry31z" name="ComControllerItem.xml" path="/inspectors/"/>
-    <component id="e1jj1nry320" name="ComTransitionPanel.xml" path="/inspectors/"/>
-    <component id="e1jj1nry321" name="ComTransitionItem.xml" path="/inspectors/"/>
+    <component id="e1jj1nry31y" name="ComControllerPanel.xml" path="/inspectors/base/"/>
+    <component id="e1jj1nry31z" name="ComControllerItem.xml" path="/inspectors/fgui/"/>
+    <component id="e1jj1nry320" name="ComTransitionPanel.xml" path="/inspectors/base/"/>
+    <component id="e1jj1nry321" name="ComTransitionItem.xml" path="/inspectors/fgui/"/>
     <image id="6who1nry322" name="icon_Sprite.png" path="/icons_obj/" exported="true"/>
-    <component id="6who1nry324" name="Basic3DPropsPanel.xml" path="/inspectors/" exported="true"/>
-    <component id="ixw71nry325" name="CreatorPropsPanel.xml" path="/inspectors/" exported="true"/>
-    <component id="ixw71nry326" name="CreatorWidgetPanel.xml" path="/inspectors/" exported="true"/>
-    <component id="s4ys1nry32c" name="PropsPanel.xml" path="/inspectors/"/>
+    <component id="6who1nry324" name="Basic3DPropsPanel.xml" path="/inspectors/base/" exported="true"/>
+    <component id="ixw71nry325" name="CreatorPropsPanel.xml" path="/inspectors/creator/" exported="true"/>
+    <component id="ixw71nry326" name="CreatorWidgetPanel.xml" path="/inspectors/creator/" exported="true"/>
+    <component id="s4ys1nry32c" name="PropsPanel.xml" path="/inspectors/base/"/>
+    <component id="s4ys1nry32d" name="CreatorLabelPropsPanel.xml" path="/inspectors/creator/" exported="true"/>
+    <component id="s4ys1nry32e" name="CreatorComp.xml" path="/inspectors/creator/" exported="true"/>
+    <component id="fyi91nry32f" name="CreatorLabelPropsPanel(1).xml" path="/inspectors/creator/"/>
   </resources>
   <publish name="Builder" genCode="true"/>
 </packageDescription>

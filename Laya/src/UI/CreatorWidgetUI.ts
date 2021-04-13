@@ -4,13 +4,14 @@ import Consts from "../editor/Consts";
 import XYInput from "./Builder/XYInput";
 import EmCheckbox from "./Builder/EmCheckbox";
 import { IPropsUI } from "./PropsUI";
+import ComboBox from "./Builder/ComboBox";
 
 export default class CreatorWidgetUI extends CreatorWidgetPanel implements IPropsUI{
     widget:cc.Widget;
     protected onConstruct():void {
         super.onConstruct();
         this.m_TargetValue.editable = false;
-        this.m_AlignMode.on(fairygui.Events.STATE_CHANGED,this,this.onChanged)
+        // this.m_AlignMode.on(fairygui.Events.STATE_CHANGED,this,this.onChanged)
         // let text =  this.m_color.getTextField() as fgui.GTextInput;
         // text.displayObject.on(Laya.Event.BLUR,this,this.changeValue);
     }
@@ -19,10 +20,10 @@ export default class CreatorWidgetUI extends CreatorWidgetPanel implements IProp
          this.setCCData(item);
       
     }
-    private  setCCData(item:cc.Node){
+    private  setCCData(widget:cc.Widget){
       
-        let gameModule = Consts.displayList.displayModule; 
-        var widget:cc.Widget = item.getComponent(gameModule.Widget);
+        // let gameModule = Consts.displayList.displayModule; 
+        // var widget:cc.Widget = item.getComponent(gameModule.Widget);
         this.widget = widget;
        if(widget){
            this.visible = true;
@@ -40,11 +41,12 @@ export default class CreatorWidgetUI extends CreatorWidgetPanel implements IProp
            (this.m_VerticlCenter as EmCheckbox).setObj(widget,"isAlignVerticalCenter",false);
            (this.m_VerticlCenterValue as XYInput).setObj(widget,"verticalCenter");
            (this.m_TargetValue as XYInput).setObj(widget,"isAlignXX",false);
-           this.m_AlignMode.selectedIndex = this.widget.alignMode;
+        //    this.m_AlignMode.selectedIndex = this.widget.alignMode;
+           (this.m_AlignMode as ComboBox).setObj(widget,"alignMode")
            if(widget.target){
             this.m_TargetValue.text = widget.target.name;
-           }else if(item.parent){
-            this.m_TargetValue.text =item.parent.name;
+           }else if(widget.node&&widget.node.parent){
+            this.m_TargetValue.text = widget.node.parent.name;
            }else 
            this.m_TargetValue.text ="";
        }else{
@@ -52,11 +54,11 @@ export default class CreatorWidgetUI extends CreatorWidgetPanel implements IProp
        }
        
     }
-    onChanged(){
-        this.widget.alignMode =this.m_AlignMode.selectedIndex ;
-    }
-   dispose(){
-       this.m_AlignMode.off(fairygui.Events.STATE_CHANGED,this,this.onChanged)
-       super.dispose();
-   }
+//     onChanged(){
+//         this.widget.alignMode =this.m_AlignMode.selectedIndex ;
+//     }
+//    dispose(){
+//        this.m_AlignMode.off(fairygui.Events.STATE_CHANGED,this,this.onChanged)
+//        super.dispose();
+//    }
 }

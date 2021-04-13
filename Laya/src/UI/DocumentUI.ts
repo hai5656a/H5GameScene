@@ -11,15 +11,14 @@ import EgretManager from "../editor/display/EgretManager";
 
 export default class DocumentUI{
     view:DocumentView;
-    frame;
-    frameStyle:CSSStyleDeclaration;
+   
     constructor(view:DocumentView){
-        this.frame = document.getElementById('gameFrame');
-        if(this.frame){
-            this.frameStyle =  this.frame.style;
+        Consts.frame = document.getElementById('gameFrame');
+        if(Consts.frame){
+            Consts.frameStyle =  Consts.frame.style;
             // this.line = document.getElementById("line");
             // this.lineStyle = this.line.style;
-            this.frame.onload = this.frameLoad.bind(this);
+            Consts.frame.onload = this.frameLoad.bind(this);
         }else{
             window["setGameFrame"] = this.setGameFrame.bind(this);
         }
@@ -37,10 +36,11 @@ export default class DocumentUI{
       }
       this.view.m_device.on(fairygui.Events.STATE_CHANGED, this, this.resize);
       this.view.m_orientation.on(fairygui.Events.STATE_CHANGED, this, this.resize);
+      this.view.on(fairygui.Events.SIZE_CHANGED, this, this.resize);
       this.view.m_editType.on(fairygui.Events.STATE_CHANGED, this, this.changeType);
       this.view.m_btnfps.onClick(this,this.onFPS);
       this.view.m_btnpause.onClick(this,this.onPause);
-      Laya.stage.on(Laya.Event.RESIZE,this,this.resize);
+    //   Laya.stage.on(Laya.Event.RESIZE,this,this.resize);
     //   Laya.stage.on(Laya.Event.KEY_DOWN,this,this.keyDown);
     //   Laya.stage.on(Laya.Event.KEY_UP,this,this.keyUp);
       this.resize();
@@ -53,13 +53,13 @@ export default class DocumentUI{
     }
     setGameFrame(frame){
         
-        if(this.frame){
+        if(Consts.frame){
             this.reset();
-            this.frame = null;
+            Consts.frame = null;
             this.onClickChange();
         }else{
-            this.frame = frame;
-            this.frameStyle = frame.style;
+            Consts.frame = frame;
+            Consts.frameStyle = frame.style;
             this.reset();
             this.loadTimes = 100;
             this.frameLoad();
@@ -84,7 +84,7 @@ export default class DocumentUI{
           Consts.engineManager.hideRect()
     }
     resize(){
-        if(!this.frame){
+        if(!Consts.frame){
             return;
         }
         let value =  this.view.m_device.value.split(":");
@@ -120,10 +120,10 @@ export default class DocumentUI{
             }  
         }
         
-        this.frameStyle.left = p.x/Laya.Browser.pixelRatio+"px";
-        this.frameStyle.top = p.y/Laya.Browser.pixelRatio+"px";
-        this.frame.width = w/Laya.Browser.pixelRatio;
-        this.frame.height = h/Laya.Browser.pixelRatio;
+        Consts.frameStyle.left = p.x/Laya.Browser.pixelRatio+"px";
+        Consts.frameStyle.top = p.y/Laya.Browser.pixelRatio+"px";
+        Consts.frame.width = w/Laya.Browser.pixelRatio;
+        Consts.frame.height = h/Laya.Browser.pixelRatio;
         localStorage.setItem("device",this.view.m_device.selectedIndex+"");
         localStorage.setItem("orientation",this.view.m_orientation.selectedIndex+"");
         if( Consts.engineManager)
@@ -151,7 +151,7 @@ export default class DocumentUI{
 
     loadTimes;
     goweb(url){
-        this.frame.src = url;
+        Consts.frame.src = url;
         this.reset();
         Laya.timer.clear(this,this.frameLoad);
         Laya.timer.loop(100,this,this.frameLoad);
@@ -172,7 +172,7 @@ export default class DocumentUI{
     }
 
     frameLoad(){
-        var win = this.frame.contentWindow;
+        var win = Consts.frame.contentWindow;
        
         Consts.gameWindow = win;
         if(win.Laya){
@@ -221,9 +221,9 @@ export default class DocumentUI{
            
             }
         }
-        if(Consts.displayList){
-            this.frame.contentWindow.document.onkeydown=this.keyDown.bind(this);
-            this.frame.contentWindow.document.onkeyup = this.keyUp.bind(this);  
+        if(Consts.displayList&&Consts.frame&&Consts.frame.contentDocument){
+            Consts.frame.contentDocument.onkeydown=this.keyDown.bind(this);
+            Consts.frame.contentDocument.onkeyup = this.keyUp.bind(this);  
         }
        
         // else {
@@ -235,7 +235,7 @@ export default class DocumentUI{
             Consts.displayList.end();
             Consts.displayList = null;
         }
-        var win = this.frame.contentWindow;
+        var win = Consts.frame.contentWindow;
         var gamefgui = win.fairygui?win.fairygui:win.fgui;
         if(gamefgui){
               Consts.displayList = FGUIManager.getInstance(); 
@@ -249,7 +249,7 @@ export default class DocumentUI{
             Consts.displayList.end();
             Consts.displayList = null;
         }
-        var win = this.frame.contentWindow;
+        var win = Consts.frame.contentWindow;
         if(win.Laya){
             Consts.displayList = LayaManager.getInstance(); 
             Consts.displayList.start(win.Laya.stage,win.Laya); 

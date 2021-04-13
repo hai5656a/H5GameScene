@@ -1,0 +1,57 @@
+<html>
+
+<head>
+    <title>FairyGui</title>
+    <meta charset='utf-8' />
+    <meta name='renderer' content='webkit' />
+    <meta name='viewport' content='width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no'
+    />
+    <meta name='apple-mobile-web-app-capable' content='yes' />
+    <meta name='full-screen' content='true' />
+    <meta name='x5-fullscreen' content='true' />
+    <meta name='360-fullscreen' content='true' />
+    <meta name='laya' screenorientation='landscape' />
+    <meta http-equiv='expires' content='0' />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1' />
+    <meta http-equiv='expires' content='0' />
+    <meta http-equiv='Cache-Control' content='no-siteapp' />
+    <script type=text/javascript language =javascript > 
+   
+        var frameLoad=function(){
+            var frmame= document.getElementById('gameFrame');
+            var win = frmame.contentWindow;
+           // console.log(win.Laya.stage);
+        }
+        // function removeElement()
+        // {
+        //    document.getElementById("gameFrame").style.display="none";
+
+        //    document.getElementById("line").style.pointer-events="auto";
+        // }
+    </script>
+    
+</head>
+
+<body >
+    <script type="text/javascript">
+        basePath = "http://192.168.148.37:8900/bin/";
+        function loadLib(url) {
+            var script = document.createElement("script");
+            script.async = false;
+            script.src =basePath+ url;
+            document.body.appendChild(script);
+        }
+        function checkComp(){
+            if(window.Laya){
+                Laya.URL.basePath = basePath;
+                clearInterval(tid);
+            }
+        }
+        tid = setInterval(checkComp,1);
+    </script>
+    <script type="text/javascript" src="http://192.168.148.37:8900/bin/index.js"></script>
+    <iframe id="gameFrame" style=" position: absolute; z-index: 999; "  frameborder="0" scrolling="no" ></iframe> 
+    <!-- <div id="line"  style=" position: absolute; z-index: 9999; border-style: solid; border-color: #00ffff; pointer-events: none; display: none; " ></div> -->
+</body>
+
+</html>

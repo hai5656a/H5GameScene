@@ -12,7 +12,7 @@ export default class  EmCheckbox extends fgui.GButton{
     targetObj;
     targetKey;
     isNot;
-    setObj(target,key,isNot){
+    setObj(target,key,isNot?:boolean){
         this.targetObj = target;
         this.targetKey = key;
         this.isNot = isNot;

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="270,290" extention="Button" bgColorEnabled="true" bgColor="#383838">
+  <controller name="type" pages="0,,1," selected="0"/>
+  <displayList>
+    <component id="n124_fyi9" name="title" src="itme7iudp" fileName="basic/TitleBar.xml" xy="0,0">
+      <Button controller="type" page="1"/>
+    </component>
+    <loader id="n125_fyi9" name="icon" xy="0,20" size="270,0" autoSize="true"/>
+    <text id="n17" name="n17" xy="4,187" size="80,26" group="n126_fyi9" fontSize="12" color="#bdbdbd" align="center" autoSize="none" text="Font"/>
+    <text id="n33" name="n33" xy="4,136" size="80,26" group="n126_fyi9" fontSize="12" color="#bdbdbd" align="center" autoSize="none" singleLine="true" text="Font Size"/>
+    <text id="n42" name="n42" xy="4,161" size="80,26" group="n126_fyi9" fontSize="12" color="#bdbdbd" align="center" autoSize="none" singleLine="true" text="Line Height"/>
+    <text id="n46" name="n46" xy="4,211" size="80,26" group="n126_fyi9" fontSize="12" color="#bdbdbd" align="center" autoSize="none" singleLine="true" text="Overflow"/>
+    <text id="n113_uebo" name="n113" xy="4,86" size="80,26" group="n126_fyi9" fontSize="12" color="#bdbdbd" align="center" autoSize="none" singleLine="true" text="H Align"/>
+    <text id="n117_s4ys" name="n117" xy="4,42" size="80,26" group="n126_fyi9" fontSize="12" color="#bdbdbd" align="center" autoSize="none" text="String"/>
+    <text id="n119_fyi9" name="n119" xy="4,236" size="80,26" group="n126_fyi9" fontSize="12" color="#bdbdbd" align="center" autoSize="none" singleLine="true" text="Cache Mode"/>
+    <text id="n121_fyi9" name="n121" xy="4,111" size="80,26" group="n126_fyi9" fontSize="12" color="#bdbdbd" align="center" autoSize="none" singleLine="true" text="V Align"/>
+    <component id="n60" name="text" src="au3n6k" fileName="Input/TextArea.xml" pkg="nk9ejx23" xy="85,20" size="180,67" group="n126_fyi9">
+      <Label titleFontSize="13"/>
+    </component>
+    <component id="n97_r1st" name="bold" src="dp4f7u" fileName="Button/EmCheckbox_as.xml" pkg="nk9ejx23" xy="4,261" size="50,29" group="n126_fyi9" tooltips="粗体">
+      <Button title="Bold" icon="ui://2pshu6oiyy9iiucn"/>
+    </component>
+    <component id="n98_r1st" name="italic" src="dp4f7u" fileName="Button/EmCheckbox_as.xml" pkg="nk9ejx23" xy="85,261" size="52,29" group="n126_fyi9" tooltips="斜体">
+      <Button title="Italic" icon="ui://2pshu6oiyy9iiucm"/>
+    </component>
+    <component id="n99_r1st" name="underline" src="dp4f7u" fileName="Button/EmCheckbox_as.xml" pkg="nk9ejx23" xy="170,261" size="80,29" group="n126_fyi9" tooltips="下划线">
+      <Button title="Underline" icon="ui://2pshu6oiyy9iiuco"/>
+    </component>
+    <component id="n55" name="fontSize" src="au3n69" fileName="Input/NumericInput.xml" pkg="nk9ejx23" xy="90,135" size="130,27" group="n126_fyi9">
+      <Label title="12"/>
+    </component>
+    <component id="n118_fyi9" name="font" src="gcza1s" fileName="Input/TextInput.xml" pkg="nk9ejx23" xy="90,185" size="130,27" group="n126_fyi9" controller="noBorder,0,showClear,0"/>
+    <component id="n58" name="lineHeight" src="au3n69" fileName="Input/NumericInput.xml" pkg="nk9ejx23" xy="90,160" size="130,27" group="n126_fyi9">
+      <Label title="12"/>
+    </component>
+    <component id="n120_fyi9" name="cachemode" src="gcza18" fileName="ComboBox/ComboBox.xml" pkg="nk9ejx23" xy="90,235" size="130,27" group="n126_fyi9">
+      <ComboBox visibleItemCount="10">
+        <item title="NONE"/>
+        <item title="BITMAP"/>
+        <item title="CHAR"/>
+      </ComboBox>
+    </component>
+    <component id="n45" name="overflow" src="gcza18" fileName="ComboBox/ComboBox.xml" pkg="nk9ejx23" xy="90,210" size="130,27" group="n126_fyi9">
+      <ComboBox visibleItemCount="10">
+        <item title="NONE"/>
+        <item title="CLAMP"/>
+        <item title="SHRINK"/>
+        <item title="RESIZE"/>
+      </ComboBox>
+    </component>
+    <component id="n122_fyi9" name="hAlign" src="gcza18" fileName="ComboBox/ComboBox.xml" pkg="nk9ejx23" xy="90,85" size="130,27" group="n126_fyi9">
+      <ComboBox visibleItemCount="10">
+        <item title="LEFT"/>
+        <item title="CENTER"/>
+        <item title="RIGHT"/>
+      </ComboBox>
+    </component>
+    <component id="n123_fyi9" name="vAlign" src="gcza18" fileName="ComboBox/ComboBox.xml" pkg="nk9ejx23" xy="90,110" size="130,27" group="n126_fyi9">
+      <ComboBox visibleItemCount="10">
+        <item title="TOP"/>
+        <item title="CENTER"/>
+        <item title="BOTTOM"/>
+      </ComboBox>
+    </component>
+    <group id="n126_fyi9" name="n126" xy="4,20" size="261,270" advanced="true">
+      <gearDisplay controller="type" pages="0"/>
+      <gearSize controller="type" pages="0,1" values="261,270,1,1|261,0,1,1"/>
+    </group>
+  </displayList>
+  <Button/>
+  <relation target="n126_fyi9" sidePair="height-height"/>
+</component>

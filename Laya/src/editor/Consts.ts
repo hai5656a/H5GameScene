@@ -9,9 +9,10 @@ export enum TreeType{
     FGUI="FariyGui"
 }
 export default class Consts{
-    
+    public static version="1.0.0";
     public static gameWindow:Window;
-    
+    public static frame;
+    public static frameStyle:CSSStyleDeclaration;
     // public static GRoot:fairygui.GRoot;
     public static engineManager:IEngine;
     public static displayList:IDisplayManager;
