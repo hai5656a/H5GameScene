@@ -581,6 +581,8 @@
     <component id="s4ys1nry32d" name="CreatorLabelPropsPanel.xml" path="/inspectors/creator/" exported="true"/>
     <component id="s4ys1nry32e" name="CreatorComp.xml" path="/inspectors/creator/" exported="true"/>
     <component id="fyi91nry32f" name="CreatorLabelPropsPanel(1).xml" path="/inspectors/creator/"/>
+    <component id="v4gl1nry32g" name="ResourceListView.xml" path="/" exported="true"/>
+    <component id="pjp91nry32h" name="ResourceView.xml" path="/"/>
   </resources>
   <publish name="Builder" genCode="true"/>
 </packageDescription>

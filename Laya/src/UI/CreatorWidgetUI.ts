@@ -5,6 +5,7 @@ import XYInput from "./Builder/XYInput";
 import EmCheckbox from "./Builder/EmCheckbox";
 import { IPropsUI } from "./PropsUI";
 import ComboBox from "./Builder/ComboBox";
+import CreatorCompUI from "./CreatorCompUI";
 
 export default class CreatorWidgetUI extends CreatorWidgetPanel implements IPropsUI{
     widget:cc.Widget;
@@ -18,7 +19,7 @@ export default class CreatorWidgetUI extends CreatorWidgetPanel implements IProp
     public setData(item){
         // let gameModule = Consts.displayList.displayModule; 
          this.setCCData(item);
-      
+         (this.m_comp as CreatorCompUI).setData(item);
     }
     private  setCCData(widget:cc.Widget){
       

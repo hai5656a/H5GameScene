@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="270,280" bgColorEnabled="true" bgColor="#383838">
+<component size="270,310" bgColorEnabled="true" bgColor="#383838">
   <displayList>
-    <text id="n17" name="n17" xy="4,171" size="80,19" fontSize="12" color="#bdbdbd" autoSize="none" text="Font"/>
-    <text id="n33" name="n33" xy="4,120" size="80,19" fontSize="12" color="#bdbdbd" autoSize="none" singleLine="true" text="Font Size"/>
-    <text id="n42" name="n42" xy="4,145" size="80,19" fontSize="12" color="#bdbdbd" autoSize="none" singleLine="true" text="Line Height"/>
-    <text id="n46" name="n46" xy="4,195" size="80,19" fontSize="12" color="#bdbdbd" autoSize="none" singleLine="true" text="Overflow"/>
-    <text id="n113_uebo" name="n113" xy="4,70" size="80,19" fontSize="12" color="#bdbdbd" autoSize="none" singleLine="true" text="H Align"/>
-    <text id="n117_s4ys" name="n117" xy="4,26" size="80,19" fontSize="12" color="#bdbdbd" autoSize="none" text="String"/>
-    <text id="n119_fyi9" name="n119" xy="4,220" size="80,19" fontSize="12" color="#bdbdbd" autoSize="none" singleLine="true" text="Cache Mode"/>
-    <text id="n121_fyi9" name="n121" xy="4,95" size="80,19" fontSize="12" color="#bdbdbd" autoSize="none" singleLine="true" text="V Align"/>
-    <component id="n60" name="text" src="au3n6k" fileName="Input/TextArea.xml" pkg="nk9ejx23" xy="85,4" size="180,60">
+    <text id="n17" name="n17" xy="4,207" size="80,19" fontSize="12" color="#bdbdbd" autoSize="none" text="Font"/>
+    <text id="n33" name="n33" xy="4,156" size="80,19" fontSize="12" color="#bdbdbd" autoSize="none" singleLine="true" text="Font Size"/>
+    <text id="n42" name="n42" xy="4,181" size="80,19" fontSize="12" color="#bdbdbd" autoSize="none" singleLine="true" text="Line Height"/>
+    <text id="n46" name="n46" xy="4,231" size="80,19" fontSize="12" color="#bdbdbd" autoSize="none" singleLine="true" text="Overflow"/>
+    <text id="n113_uebo" name="n113" xy="4,106" size="80,19" fontSize="12" color="#bdbdbd" autoSize="none" singleLine="true" text="H Align"/>
+    <text id="n117_s4ys" name="n117" xy="4,62" size="80,19" fontSize="12" color="#bdbdbd" autoSize="none" text="String"/>
+    <text id="n119_fyi9" name="n119" xy="4,256" size="80,19" fontSize="12" color="#bdbdbd" autoSize="none" singleLine="true" text="Cache Mode"/>
+    <text id="n121_fyi9" name="n121" xy="4,131" size="80,19" fontSize="12" color="#bdbdbd" autoSize="none" singleLine="true" text="V Align"/>
+    <component id="n60" name="text" src="au3n6k" fileName="Input/TextArea.xml" pkg="nk9ejx23" xy="85,40" size="180,60">
       <Label titleFontSize="13"/>
     </component>
-    <component id="n97_r1st" name="bold" src="dp4f7u" fileName="Button/EmCheckbox_as.xml" pkg="nk9ejx23" xy="4,245" size="50,22" tooltips="粗体">
+    <component id="n97_r1st" name="bold" src="dp4f7u" fileName="Button/EmCheckbox_as.xml" pkg="nk9ejx23" xy="4,281" size="50,22" tooltips="粗体">
       <Button title="Bold" icon="ui://2pshu6oiyy9iiucn"/>
     </component>
-    <component id="n98_r1st" name="italic" src="dp4f7u" fileName="Button/EmCheckbox_as.xml" pkg="nk9ejx23" xy="85,245" size="52,22" tooltips="斜体">
+    <component id="n98_r1st" name="italic" src="dp4f7u" fileName="Button/EmCheckbox_as.xml" pkg="nk9ejx23" xy="85,281" size="52,22" tooltips="斜体">
       <Button title="Italic" icon="ui://2pshu6oiyy9iiucm"/>
     </component>
-    <component id="n99_r1st" name="underline" src="dp4f7u" fileName="Button/EmCheckbox_as.xml" pkg="nk9ejx23" xy="170,245" size="80,22" tooltips="下划线">
+    <component id="n99_r1st" name="underline" src="dp4f7u" fileName="Button/EmCheckbox_as.xml" pkg="nk9ejx23" xy="170,281" size="80,22" tooltips="下划线">
       <Button title="Underline" icon="ui://2pshu6oiyy9iiuco"/>
     </component>
-    <component id="n55" name="fontSize" src="au3n69" fileName="Input/NumericInput.xml" pkg="nk9ejx23" xy="90,119" size="130,20">
+    <component id="n55" name="fontSize" src="au3n69" fileName="Input/NumericInput.xml" pkg="nk9ejx23" xy="90,155" size="130,20">
       <Label title="12"/>
     </component>
-    <component id="n118_fyi9" name="font" src="gcza1s" fileName="Input/TextInput.xml" pkg="nk9ejx23" xy="90,169" size="130,20" controller="noBorder,0,showClear,0"/>
-    <component id="n58" name="lineHeight" src="au3n69" fileName="Input/NumericInput.xml" pkg="nk9ejx23" xy="90,144" size="130,20">
+    <component id="n118_fyi9" name="font" src="gcza1s" fileName="Input/TextInput.xml" pkg="nk9ejx23" xy="90,205" size="130,20" controller="noBorder,0,showClear,0"/>
+    <component id="n58" name="lineHeight" src="au3n69" fileName="Input/NumericInput.xml" pkg="nk9ejx23" xy="90,180" size="130,20">
       <Label title="12"/>
     </component>
-    <component id="n120_fyi9" name="cachemode" src="gcza18" fileName="ComboBox/ComboBox.xml" pkg="nk9ejx23" xy="90,219" size="130,20">
+    <component id="n120_fyi9" name="cachemode" src="gcza18" fileName="ComboBox/ComboBox.xml" pkg="nk9ejx23" xy="90,255" size="130,20">
       <ComboBox visibleItemCount="10">
         <item title="NONE"/>
         <item title="BITMAP"/>
         <item title="CHAR"/>
       </ComboBox>
     </component>
-    <component id="n45" name="overflow" src="gcza18" fileName="ComboBox/ComboBox.xml" pkg="nk9ejx23" xy="90,194" size="130,20">
+    <component id="n45" name="overflow" src="gcza18" fileName="ComboBox/ComboBox.xml" pkg="nk9ejx23" xy="90,230" size="130,20">
       <ComboBox visibleItemCount="10">
         <item title="NONE"/>
         <item title="CLAMP"/>
@@ -43,19 +43,20 @@
         <item title="RESIZE"/>
       </ComboBox>
     </component>
-    <component id="n122_fyi9" name="hAlign" src="gcza18" fileName="ComboBox/ComboBox.xml" pkg="nk9ejx23" xy="90,69" size="130,20">
+    <component id="n122_fyi9" name="hAlign" src="gcza18" fileName="ComboBox/ComboBox.xml" pkg="nk9ejx23" xy="90,105" size="130,20">
       <ComboBox visibleItemCount="10">
         <item title="LEFT"/>
         <item title="CENTER"/>
         <item title="RIGHT"/>
       </ComboBox>
     </component>
-    <component id="n123_fyi9" name="vAlign" src="gcza18" fileName="ComboBox/ComboBox.xml" pkg="nk9ejx23" xy="90,94" size="130,20">
+    <component id="n123_fyi9" name="vAlign" src="gcza18" fileName="ComboBox/ComboBox.xml" pkg="nk9ejx23" xy="90,130" size="130,20">
       <ComboBox visibleItemCount="10">
         <item title="TOP"/>
         <item title="CENTER"/>
         <item title="BOTTOM"/>
       </ComboBox>
     </component>
+    <component id="n127_fyi9" name="comp" src="s4ys1nry32e" fileName="inspectors/creator/CreatorComp.xml" xy="0,0"/>
   </displayList>
 </component>

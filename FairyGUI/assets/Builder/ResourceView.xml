@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="710,681" bgColorEnabled="true" bgColor="#383838">
+  <controller name="editType" pages="1,,0,,2," selected="2">
+    <remark page="0" value="图片"/>
+    <remark page="1" value="文字"/>
+    <remark page="2" value="音乐"/>
+  </controller>
+  <displayList>
+    <graph id="n7" name="docBg" xy="5,57" size="700,620" type="rect" lineSize="0" lineColor="#fc292828" fillColor="#ff666666">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <graph id="n91_j5yv" name="border" xy="0,0" size="710,681" touchable="false" type="rect" lineColor="#ff292828" fillColor="#00ffffff">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <graph id="n50" name="tabBar" xy="0,0" size="710,40" type="rect" fillColor="#00ffffff">
+      <relation target="" sidePair="width-width"/>
+    </graph>
+    <component id="n99_pjp9" name="url" src="gcza1s" fileName="Input/TextInput.xml" pkg="nk9ejx23" xy="5,10" size="619,20" controller="noBorder,0,showClear,0">
+      <relation target="" sidePair="width-width"/>
+    </component>
+    <loader id="n101_pjp9" name="icon" xy="5,57" size="700,620" align="center" vAlign="middle" fill="scale" shrinkOnly="true">
+      <gearDisplay controller="editType" pages="1"/>
+      <relation target="" sidePair="width-width,height-height"/>
+    </loader>
+    <text id="n104_pjp9" name="title" xy="5,57" size="700,620" fontSize="12" color="#bdbdbd" vAlign="middle" autoSize="none" text="" input="true">
+      <gearDisplay controller="editType" pages="0"/>
+      <relation target="" sidePair="width-width,height-height"/>
+    </text>
+    <component id="n105_pjp9" name="play" src="d1l0iubo" fileName="basic/PlayButton.xml" xy="323,308" size="64,64" scale="2,2">
+      <gearDisplay controller="editType" pages="2"/>
+      <relation target="" sidePair="center-center,middle-middle"/>
+    </component>
+    <text id="n106_pjp9" name="message" xy="5,681" size="700,19" fontSize="12" color="#bdbdbd" vAlign="middle" autoSize="none" singleLine="true" text="">
+      <relation target="" sidePair="width-width,bottom-bottom"/>
+    </text>
+    <component id="n107_pjp9" name="logbtn" src="okou7w" fileName="Button/LinkButton.xml" pkg="nk9ejx23" xy="626,12" size="80,18" tooltips="点击打印对象到控制台">
+      <relation target="" sidePair="right-right"/>
+      <Button title=" 打印控制台"/>
+    </component>
+  </displayList>
+</component>

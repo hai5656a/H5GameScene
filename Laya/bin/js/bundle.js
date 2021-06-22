@@ -27,14 +27,17 @@
             return (fgui.UIPackage.createObject("Builder", "MainView"));
         }
         onConstruct() {
+            this.m_display = this.getControllerAt(0);
             this.m_webset = (this.getChildAt(0));
             this.m_btngo = (this.getChildAt(1));
             this.m_holder = (this.getChildAt(2));
-            this.m_list = (this.getChildAt(3));
-            this.m_sep1 = (this.getChildAt(4));
-            this.m_document = (this.getChildAt(5));
-            this.m_insp = (this.getChildAt(6));
-            this.m_version = (this.getChildAt(7));
+            this.m_displaylist = (this.getChildAt(3));
+            this.m_resourcelist = (this.getChildAt(4));
+            this.m_sep1 = (this.getChildAt(5));
+            this.m_document = (this.getChildAt(6));
+            this.m_resource = (this.getChildAt(7));
+            this.m_insp = (this.getChildAt(8));
+            this.m_version = (this.getChildAt(9));
         }
     }
     MainView.URL = "ui://2pshu6oimlmb1nry31w";
@@ -49,6 +52,7 @@
     FObjectType.TREE = "tree";
     FObjectType.LOADER = "loader";
     FObjectType.TEXT = "text";
+    FObjectType.JSON = "json";
     FObjectType.RICHTEXT = "richtext";
     FObjectType.INPUTTEXT = "inputtext";
     FObjectType.GROUP = "group";
@@ -137,6 +141,7 @@
             Consts.icons[FObjectType.LIST] = fgui.UIPackage.getItemURL("Builder", "icon_list");
             Consts.icons[FObjectType.LOADER] = fgui.UIPackage.getItemURL("Builder", "icon_loader");
             Consts.icons[FObjectType.TEXT] = fgui.UIPackage.getItemURL("Builder", "icon_text");
+            Consts.icons[FObjectType.JSON] = fgui.UIPackage.getItemURL("Builder", "icon_json");
             Consts.icons[FObjectType.RICHTEXT] = fgui.UIPackage.getItemURL("Builder", "icon_richtext");
             Consts.icons[FObjectType.RICHTEXT] = fgui.UIPackage.getItemURL("Builder", "icon_inputtext");
             Consts.icons[FObjectType.COMPONENT] = fgui.UIPackage.getItemURL("Builder", "icon_component");
@@ -179,6 +184,32 @@
                 return unescape(r[2]);
             return null;
         }
+        static getFileIcon(type) {
+            var index = this.getFileIndex(type);
+            if (index > -1) {
+                let types = [Consts.icons[FObjectType.IMAGE], Consts.icons[FObjectType.JSON], Consts.icons[FPackageItemType.SOUND]];
+                return types[index];
+            }
+            return Consts.icons[FPackageItemType.MISC];
+        }
+        static getFileIndex(type) {
+            if (type) {
+                for (var i = 0; i < this.filetype.length; i++) {
+                    var item = this.filetype[i];
+                    if (item.indexOf(type) != -1) {
+                        return i;
+                    }
+                }
+            }
+            return -1;
+        }
+        static urlToType(url) {
+            var ft = url.split("?")[0].split(".");
+            if (ft.length > 1) {
+                return ft[ft.length - 1];
+            }
+            return "";
+        }
     }
     Consts.version = "1.0.0";
     Consts.icons = {};
@@ -187,6 +218,7 @@
     Consts.rectLineSize = 4;
     Consts.rectColor = 0x1F66D1;
     Consts.rectFill = 0;
+    Consts.filetype = [['png', 'jpg', 'webp', 'bmp', 'gif', 'jpeg'], ['txt', 'plist', 'xml', 'json', 'yaml', 'ini', 'csv', 'md', 'atlas', 'js', 'fnt'], ['ogg', 'mp3', 'wma', "mpeg", "wav", "m4a", "mp4", "aiff", "mid"]];
 
     class EditorEvent {
         static hasListener(type) {
@@ -212,6 +244,7 @@
         }
     }
     EditorEvent.SelectionChanged = "SelectionChanged";
+    EditorEvent.RESSelectionChanged = "RESSelectionChanged";
     EditorEvent.Selection = "Selection";
     EditorEvent.TreeChanged = "TreeChanged";
     EditorEvent.TreeTypeDataChanged = "TreeTypeDataChanged";
@@ -462,6 +495,30 @@
         checkFGUIVisible(gobj) {
             return gobj._displayObject && gobj.internalVisible && gobj.internalVisible2;
         }
+        getResouceList() {
+            var allasset = [];
+            var allres = this.engine.Loader.loadedMap;
+            for (var key in allres) {
+                var item = {};
+                item.url = key;
+                if (this.engine.URL && this.engine.URL.basePath) {
+                    item.name = key.replace(this.engine.URL.basePath, "");
+                }
+                else
+                    item.name = key;
+                item.type = Consts.urlToType(key);
+                item.data = allres[key];
+                if (item.data && item.data.width && item.data.height) {
+                    item.width = item.data.width;
+                    item.height = item.data.height;
+                }
+                allasset.push(item);
+            }
+            return allasset;
+        }
+        get gpuMemory() {
+            return this.engine.Resource.gpuMemory;
+        }
     }
 
     class EgretEngine {
@@ -587,6 +644,33 @@
         checkFGUIVisible(gobj) {
             return gobj.internalVisible && gobj.internalVisible2;
         }
+        getResouceList() {
+            let res = Consts.gameWindow["RES"];
+            this.totalTextureSize = 0;
+            var all = [];
+            if (res) {
+                var fsData = res.config.config.fileSystem.fsData;
+                for (var key in fsData) {
+                    var item = fsData[key];
+                    var data = res.host.get(item);
+                    if (data) {
+                        var asset = {};
+                        asset.data = data;
+                        asset.url = item.root + item.url;
+                        asset.name = item.url;
+                        asset.type = Consts.urlToType(item.url);
+                        all.push(asset);
+                        if (data.textureWidth && data.textureHeight) {
+                            this.totalTextureSize += data.textureWidth * data.textureHeight * 4;
+                        }
+                    }
+                }
+            }
+            return all;
+        }
+        get gpuMemory() {
+            return this.totalTextureSize;
+        }
     }
 
     class CCEngine {
@@ -614,7 +698,7 @@
             }
             this.rect = new this.engine.Node();
             this.rect.name = Consts.EditorLineName;
-            let line = this._content = this.rect.addComponent(this.engine.Graphics);
+            let line = (this._content = this.rect.addComponent(this.engine.Graphics));
             let color = Consts.rectColorStr;
             let c = new this.engine.Color(0, 0, 0, 255);
             c.fromHEX(color);
@@ -633,7 +717,7 @@
                 this.fguirect.removeFromParent();
                 this.fguirect.dispose();
             }
-            let line = this.fguirect = new Consts.displayList.displayModule.GGraph();
+            let line = (this.fguirect = new Consts.displayList.displayModule.GGraph());
             let color = Consts.rectColorStr;
             let c = new this.engine.Color(0, 0, 0, 255);
             c.fromHEX(color);
@@ -648,7 +732,7 @@
         }
         showRect(x, y, w, h) {
             if (Consts.nowTreeType == TreeType.CC) {
-                if (!this.rect) {
+                if (!this.rect || !this.rect.isValid) {
                     this.createRectGraph();
                 }
                 this.rect.active = true;
@@ -706,7 +790,7 @@
         }
         addSelectModel() {
             this.touchHander = this.onMouseDown.bind(this);
-            this.engine.game.canvas.addEventListener('mousedown', this.touchHander);
+            this.engine.game.canvas.addEventListener("mousedown", this.touchHander);
             let evt;
             if (this.engine.internal) {
                 evt = this.engine.internal.eventManager;
@@ -726,7 +810,10 @@
             }
         }
         hitTest(node, pos) {
-            if (node.active && node != this.rectNode && node != this.rect && !node.mouseThrough) {
+            if (node.active &&
+                node != this.rectNode &&
+                node != this.rect &&
+                !node.mouseThrough) {
                 if (node._hitTest(pos)) {
                     this.target = node;
                 }
@@ -772,7 +859,7 @@
                     evt._isEnabled = true;
                 }
                 if (this.touchHander) {
-                    this.engine.game.canvas.removeEventListener('mousedown', this.touchHander);
+                    this.engine.game.canvas.removeEventListener("mousedown", this.touchHander);
                 }
             }
         }
@@ -795,6 +882,106 @@
         }
         checkFGUIVisible(gobj) {
             return gobj._finalVisible;
+        }
+        getResouceList() {
+            let all = [];
+            this.totalTextureSize = 0;
+            if (this.engine.assetManager) {
+                var assets = this.engine.assetManager.assets;
+                assets.forEach((item, key) => {
+                    let asset;
+                    if (item.nativeUrl) {
+                        asset = {};
+                        asset.url = item.nativeUrl;
+                        var path = this.uuidToPath(item._uuid);
+                        if (item.name) {
+                            asset.name = item.name;
+                        }
+                        else if (path) {
+                            asset.name = path;
+                        }
+                        else
+                            asset.name = key;
+                        asset.type = item["_native"];
+                        if (asset.type) {
+                            asset.type = asset.type.replace(".", "");
+                        }
+                        else {
+                            asset.type = Consts.urlToType(item.nativeUrl);
+                        }
+                        asset.data = item;
+                        all.push(asset);
+                    }
+                    if (item["width"] && item["height"]) {
+                        if (asset) {
+                            asset.width = item["width"];
+                            asset.height = item["height"];
+                        }
+                        let scale = 1;
+                        if (item["genMipmaps"]) {
+                            scale = 1 + 1 / 3;
+                        }
+                        this.totalTextureSize += item["width"] * item["height"] * 4 * scale;
+                    }
+                });
+            }
+            else if (this.engine.loader) {
+                var assets = this.engine.loader._cache;
+                for (var key in assets) {
+                    let asset;
+                    var item = assets[key];
+                    if (item.url && item.type != "uuid") {
+                        asset = {};
+                        asset.url = item.url;
+                        var path = this.uuidToPath(item.uuid || item.id);
+                        if (item.name) {
+                            asset.name = item.name;
+                        }
+                        else if (path) {
+                            asset.name = path;
+                        }
+                        else
+                            asset.name = key;
+                        asset.type = item.type;
+                        if (asset.type) {
+                            asset.type = asset.type;
+                        }
+                        asset.data = item._owner;
+                        all.push(asset);
+                    }
+                    if (item._owner && item._owner["width"] && item._owner["height"]) {
+                        if (asset) {
+                            asset.width = item._owner["width"];
+                            asset.height = item._owner["height"];
+                        }
+                        let scale = 1;
+                        if (item._owner["genMipmaps"]) {
+                            scale = 1 + 1 / 3;
+                        }
+                        this.totalTextureSize +=
+                            item._owner["width"] * item._owner["height"] * 4 * scale;
+                    }
+                }
+            }
+            return all;
+        }
+        uuidToPath(uuid) {
+            if (!uuid)
+                return;
+            if (this.engine.assetManager) {
+                var bundles = this.engine.assetManager.bundles;
+                let info;
+                for (var mkey in bundles._map) {
+                    var bundle = bundles._map[mkey];
+                    info = bundle.getAssetInfo(uuid);
+                    if (info) {
+                        return info.path;
+                    }
+                }
+            }
+        }
+        get gpuMemory() {
+            return this.totalTextureSize;
         }
     }
 
@@ -1067,14 +1254,16 @@
             }
             return this.i;
         }
+        get root() {
+            return this.displayModule && this.displayModule.director.getScene();
+        }
+        ;
         start(root, m) {
-            this.root = root;
             this.displayModule = m;
             Consts.nowTreeType = TreeType.CC;
         }
         ;
         end() {
-            this.root = null;
             this.displayModule = null;
         }
         ;
@@ -1307,7 +1496,7 @@
                 Consts.frame = frame;
                 Consts.frameStyle = frame.style;
                 this.reset();
-                this.loadTimes = 100;
+                this.loadTimes = 200;
                 this.frameLoad();
                 this.resize();
             }
@@ -1398,7 +1587,7 @@
             Consts.frame.src = url;
             this.reset();
             Laya.timer.clear(this, this.frameLoad);
-            Laya.timer.loop(100, this, this.frameLoad);
+            Laya.timer.loop(50, this, this.frameLoad);
         }
         reset() {
             Consts.gameWindow = null;
@@ -1416,31 +1605,34 @@
         }
         frameLoad() {
             var win = Consts.frame.contentWindow;
+            console.log(new Date().getTime());
             Consts.gameWindow = win;
-            if (win.Laya) {
-                Consts.engineManager = LayaEngine.getInstance();
-                Consts.engineManager.start(win.Laya);
-            }
-            else if (win.egret) {
-                Consts.engineManager = EgretEngine.getInstance();
-                Consts.engineManager.start(win.egret);
-            }
-            else if (win.cc) {
-                Consts.engineManager = CCEngine.getInstance();
-                Consts.engineManager.start(win.cc);
-                var toolbar = win.document.getElementsByClassName('toolbar')[0];
-                if (toolbar)
-                    toolbar.style.display = 'none';
-                win.onbeforeunload = () => {
-                    this.reset();
-                    Laya.timer.clear(this, this.frameLoad);
-                    Laya.timer.loop(100, this, this.frameLoad);
-                };
-            }
             if (Consts.engineManager) {
                 this.loadTimes++;
                 if (Consts.treeTypeList.indexOf(Consts.engineManager.type) == -1) {
                     Consts.treeTypeList.push(Consts.engineManager.type);
+                }
+            }
+            else {
+                if (win.Laya) {
+                    Consts.engineManager = LayaEngine.getInstance();
+                    Consts.engineManager.start(win.Laya);
+                }
+                else if (win.egret) {
+                    Consts.engineManager = EgretEngine.getInstance();
+                    Consts.engineManager.start(win.egret);
+                }
+                else if (win.cc) {
+                    Consts.engineManager = CCEngine.getInstance();
+                    Consts.engineManager.start(win.cc);
+                    var toolbar = win.document.getElementsByClassName('toolbar')[0];
+                    if (toolbar)
+                        toolbar.style.display = 'none';
+                    win.onbeforeunload = () => {
+                        this.reset();
+                        Laya.timer.clear(this, this.frameLoad);
+                        Laya.timer.loop(50, this, this.frameLoad);
+                    };
                 }
             }
             var gamefgui = win.fairygui ? win.fairygui : win.fgui;
@@ -1454,7 +1646,7 @@
                 EditorEvent.event(EditorEvent.TreeTypeDataChanged, Consts.treeTypeList.indexOf(TreeType.FGUI));
             }
             else {
-                if (this.loadTimes > 50) {
+                if (this.loadTimes > 30) {
                     Laya.timer.clear(this, this.frameLoad);
                     this.initManager();
                     EditorEvent.event(EditorEvent.TreeTypeDataChanged, Consts.treeTypeList.indexOf(Consts.engineManager.type));
@@ -1710,6 +1902,159 @@
         }
     }
 
+    class ResourceListUI {
+        constructor(view) {
+            this.view = view;
+            this.view.m_listView.setVirtual();
+            this.view.m_listView.itemRenderer = Laya.Handler.create(this, this.renderListNode, null, false);
+            this.view.m_listView.on(fairygui.Events.CLICK_ITEM, this, this.onClickItem);
+            this.view.m_btnRefresh.onClick(this, this.onRefresh);
+            this.view.m_btnSearch.onClick(this, this.onSearch);
+            this.view.m_txtSearch.getTextField().on(Laya.Event.KEY_DOWN, this, this.onChanged);
+            this.view.m_group.on(fairygui.Events.STATE_CHANGED, this, this.onSearch);
+        }
+        getIcon(type) {
+        }
+        initList() {
+            this.selectItem = null;
+            if (Consts.engineManager) {
+                this.all = Consts.engineManager.getResouceList();
+                this.onSearch();
+            }
+            else {
+                this.all = [];
+                this.view.m_listView.numItems = 0;
+            }
+        }
+        renderListNode(index, item) {
+            var itemdata = this.seatchlist[index];
+            item.text = itemdata.name;
+            item.icon = Consts.getFileIcon(itemdata.type);
+            item.data = itemdata;
+        }
+        onClickItem(item) {
+            this.selectItem = item;
+            EditorEvent.event(EditorEvent.RESSelectionChanged, item.data);
+        }
+        onRefresh() {
+            this.initList();
+        }
+        onChanged(e) {
+            if (e.keyCode == Laya.Keyboard.ENTER) {
+                this.onSearch();
+            }
+        }
+        onSearch() {
+            this.seatchlist = [];
+            var serarchText = this.view.m_txtSearch.text;
+            var selectedIndex = this.view.m_group.selectedIndex - 1;
+            for (var i = 0; i < this.all.length; i++) {
+                var item = this.all[i];
+                if (selectedIndex == -1 || Consts.getFileIndex(item.type) == selectedIndex) {
+                    if (serarchText && item.name.indexOf(serarchText) == -1) {
+                        continue;
+                    }
+                    this.seatchlist.push(item);
+                }
+            }
+            this.view.m_listView.numItems = this.seatchlist.length;
+            if (selectedIndex == -1) {
+                this.view.m_message.text = "资源数量：" + this.all.length + " gpuMemory:" + (Consts.engineManager.gpuMemory / 1024 / 1024).toFixed(2) + 'M';
+            }
+            else {
+                this.view.m_message.text = "资源数量：" + this.seatchlist.length + "/" + this.all.length + " gpuMemory:" + (Consts.engineManager.gpuMemory / 1024 / 1024).toFixed(2) + 'M';
+            }
+        }
+    }
+
+    class ResourceUI {
+        constructor(view) {
+            this.view = view;
+            EditorEvent.on(EditorEvent.RESSelectionChanged, this, this.selectItem);
+            this.view.m_url.editable = false;
+            this.view.m_title.editable = false;
+            this.view.m_play.onClick(this, this.playSound);
+            this.view.m_logbtn.onClick(this, this.logItem);
+            this.loader = new Laya.Loader();
+        }
+        GetUrlRelativePath() {
+            if (Consts.gameWindow) {
+                var url = Consts.gameWindow.document.location.href;
+                var arrUrl = url.split("//");
+                var start = arrUrl[1].indexOf("/");
+                var relUrl = arrUrl[1].substring(start);
+                if (relUrl.indexOf("?") != -1) {
+                    relUrl = relUrl.split("?")[0];
+                }
+                return relUrl;
+            }
+            return "";
+        }
+        selectItem(item) {
+            this.item = item;
+            if (item) {
+                var index = Consts.getFileIndex(item.type);
+                if (item.url.indexOf("http:") > -1 || item.url.indexOf("https:") > -1) {
+                    url = item.url;
+                }
+                else
+                    var url = this.GetUrlRelativePath() + item.url;
+                if (this.view.m_url.text) {
+                    Laya.loader.clearRes(this.view.m_url.text);
+                }
+                this.view.m_url.text = url;
+                if (index > -1) {
+                    this.view.m_editType.selectedIndex = index;
+                    if (index == 0) {
+                        this.view.m_icon.url = this.view.m_url.text;
+                    }
+                    else if (index == 1) {
+                        Laya.loader.load(this.view.m_url.text, Laya.Handler.create(this, this.loadTxtcomp), null, Laya.Loader.TEXT);
+                    }
+                }
+                else {
+                    this.view.m_editType.selectedIndex = 1;
+                    this.view.m_title.text = "暂时不支持查看格式：" + item.type;
+                }
+            }
+            var url = Laya.URL.formatURL(this.view.m_url.text);
+            this.loader["_loadHttpRequest"](url, Laya.Loader.BUFFER, this, this.onLoaded, this, this.onProgress, this, this.onError);
+        }
+        loadTxtcomp(data) {
+            this.view.m_title.text = data;
+        }
+        onLoaded(data) {
+            var mess = "";
+            if (this.item && this.item.width && this.item.height) {
+                mess = "文件尺寸:" + this.item.width + "x" + this.item.height;
+            }
+            let size = data.byteLength;
+            if (data.byteLength > 1024 * 1024) {
+                size = (data.byteLength / 1024 / 1024).toFixed(2) + "MB";
+            }
+            else if (data.byteLength > 1024) {
+                size = (data.byteLength / 1024).toFixed(2) + "KB";
+            }
+            else
+                size = size + "B";
+            mess += "  " + "文件大小:" + size + " ";
+            this.view.m_message.text = mess;
+        }
+        onProgress(data) {
+        }
+        onError(data) {
+        }
+        playSound() {
+            if (this.view.m_url.text) {
+                Laya.SoundManager.playSound(this.view.m_url.text);
+            }
+        }
+        logItem() {
+            if (this.item)
+                console.log(this.item.data);
+        }
+    }
+
     class MainUI {
         constructor() {
             this.view = MainView.createInstance();
@@ -1718,9 +2063,12 @@
             fgui.GRoot.inst.addChild(this.view);
             this.view.m_btngo.onClick(this, this.goweb);
             this.view.m_webset.getTextField().on(Laya.Event.KEY_DOWN, this, this.onChanged);
-            this.list = new DisplayTreeUI(this.view.m_list);
+            this.view.m_display.on(fgui.Events.STATE_CHANGED, this, this.onChangeView);
+            new DisplayTreeUI(this.view.m_displaylist);
             this.document = new DocumentUI(this.view.m_document);
-            this.insp = new InspectorUI(this.view.m_insp);
+            this.res = new ResourceListUI(this.view.m_resourcelist);
+            new ResourceUI(this.view.m_resource);
+            new InspectorUI(this.view.m_insp);
             this.m_sep1 = this.view.m_sep1;
             this.m_sep1.type = CursorType.H_RESIZE;
             this.view.m_version.text = "version:" + Consts.version;
@@ -1739,6 +2087,13 @@
         onChanged(e) {
             if (e.keyCode == Laya.Keyboard.ENTER) {
                 this.goweb();
+            }
+        }
+        onChangeView() {
+            if (Consts.frameStyle)
+                Consts.frameStyle.display = this.view.m_display.selectedIndex == 0 ? "block" : "none";
+            if (this.view.m_display.selectedIndex == 1) {
+                this.res.initList();
             }
         }
         goweb() {
@@ -1816,6 +2171,16 @@
         }
     }
     BasicPropsPanel.URL = "ui://2pshu6oiau3n5";
+
+    class PlayButton extends fgui.GButton {
+        static createInstance() {
+            return (fgui.UIPackage.createObject("Builder", "PlayButton"));
+        }
+        onConstruct() {
+            this.m_play = (this.getChildAt(0));
+        }
+    }
+    PlayButton.URL = "ui://2pshu6oid1l0iubo";
 
     class ComControllerPanel extends fgui.GComponent {
         static createInstance() {
@@ -1904,20 +2269,21 @@
             this.m_bottom = this.getControllerAt(3);
             this.m_horizontal = this.getControllerAt(4);
             this.m_verticl = this.getControllerAt(5);
-            this.m_TopValue = (this.getChildAt(2));
-            this.m_TargetValue = (this.getChildAt(3));
-            this.m_Top = (this.getChildAt(4));
-            this.m_AlignMode = (this.getChildAt(5));
-            this.m_LeftValue = (this.getChildAt(6));
-            this.m_Left = (this.getChildAt(7));
-            this.m_RightValue = (this.getChildAt(8));
-            this.m_Right = (this.getChildAt(9));
-            this.m_BottomValue = (this.getChildAt(10));
-            this.m_Bottom = (this.getChildAt(11));
-            this.m_HorizontalCenterValue = (this.getChildAt(12));
-            this.m_HorizontalCenter = (this.getChildAt(13));
-            this.m_VerticlCenterValue = (this.getChildAt(14));
-            this.m_VerticlCenter = (this.getChildAt(15));
+            this.m_comp = (this.getChildAt(0));
+            this.m_TopValue = (this.getChildAt(3));
+            this.m_TargetValue = (this.getChildAt(4));
+            this.m_Top = (this.getChildAt(5));
+            this.m_AlignMode = (this.getChildAt(6));
+            this.m_LeftValue = (this.getChildAt(7));
+            this.m_Left = (this.getChildAt(8));
+            this.m_RightValue = (this.getChildAt(9));
+            this.m_Right = (this.getChildAt(10));
+            this.m_BottomValue = (this.getChildAt(11));
+            this.m_Bottom = (this.getChildAt(12));
+            this.m_HorizontalCenterValue = (this.getChildAt(13));
+            this.m_HorizontalCenter = (this.getChildAt(14));
+            this.m_VerticlCenterValue = (this.getChildAt(15));
+            this.m_VerticlCenter = (this.getChildAt(16));
         }
     }
     CreatorWidgetPanel.URL = "ui://2pshu6oiixw71nry326";
@@ -1995,6 +2361,25 @@
     }
     LibraryView_Slider.URL = "ui://2pshu6oinw20ixicv7";
 
+    class ResourceView extends fgui.GComponent {
+        static createInstance() {
+            return (fgui.UIPackage.createObject("Builder", "ResourceView"));
+        }
+        onConstruct() {
+            this.m_editType = this.getControllerAt(0);
+            this.m_docBg = (this.getChildAt(0));
+            this.m_border = (this.getChildAt(1));
+            this.m_tabBar = (this.getChildAt(2));
+            this.m_url = (this.getChildAt(3));
+            this.m_icon = (this.getChildAt(4));
+            this.m_title = (this.getChildAt(5));
+            this.m_play = (this.getChildAt(6));
+            this.m_message = (this.getChildAt(7));
+            this.m_logbtn = (this.getChildAt(8));
+        }
+    }
+    ResourceView.URL = "ui://2pshu6oipjp91nry32h";
+
     class InfoPropsPanel extends fgui.GComponent {
         static createInstance() {
             return (fgui.UIPackage.createObject("Builder", "InfoPropsPanel"));
@@ -2033,6 +2418,7 @@
             this.m_overflow = (this.getChildAt(16));
             this.m_hAlign = (this.getChildAt(17));
             this.m_vAlign = (this.getChildAt(18));
+            this.m_comp = (this.getChildAt(19));
         }
     }
     CreatorLabelPropsPanel.URL = "ui://2pshu6ois4ys1nry32d";
@@ -2045,6 +2431,7 @@
             this.m_title = (this.getChildAt(0));
             this.m_key = (this.getChildAt(1));
             this.m_value = (this.getChildAt(2));
+            this.m_enabled = (this.getChildAt(3));
         }
     }
     CreatorComp.URL = "ui://2pshu6ois4ys1nry32e";
@@ -2060,10 +2447,26 @@
     }
     RefreshButton.URL = "ui://2pshu6oiso5uixicsd";
 
+    class ResourceListView extends fgui.GComponent {
+        static createInstance() {
+            return (fgui.UIPackage.createObject("Builder", "ResourceListView"));
+        }
+        onConstruct() {
+            this.m_btnRefresh = (this.getChildAt(1));
+            this.m_group = (this.getChildAt(2));
+            this.m_txtSearch = (this.getChildAt(3));
+            this.m_btnSearch = (this.getChildAt(4));
+            this.m_listView = (this.getChildAt(5));
+            this.m_message = (this.getChildAt(7));
+        }
+    }
+    ResourceListView.URL = "ui://2pshu6oiv4gl1nry32g";
+
     class BuilderBinder {
         static bindAll() {
             fgui.UIObjectFactory.setExtension(Basic3DPropsPanel.URL, Basic3DPropsPanel);
             fgui.UIObjectFactory.setExtension(BasicPropsPanel.URL, BasicPropsPanel);
+            fgui.UIObjectFactory.setExtension(PlayButton.URL, PlayButton);
             fgui.UIObjectFactory.setExtension(ComControllerPanel.URL, ComControllerPanel);
             fgui.UIObjectFactory.setExtension(ComControllerItem.URL, ComControllerItem);
             fgui.UIObjectFactory.setExtension(ComTransitionPanel.URL, ComTransitionPanel);
@@ -2077,11 +2480,13 @@
             fgui.UIObjectFactory.setExtension(DocumentView.URL, DocumentView);
             fgui.UIObjectFactory.setExtension(InspectorView.URL, InspectorView);
             fgui.UIObjectFactory.setExtension(LibraryView_Slider.URL, LibraryView_Slider);
+            fgui.UIObjectFactory.setExtension(ResourceView.URL, ResourceView);
             fgui.UIObjectFactory.setExtension(InfoPropsPanel.URL, InfoPropsPanel);
             fgui.UIObjectFactory.setExtension(PropsPanel.URL, PropsPanel);
             fgui.UIObjectFactory.setExtension(CreatorLabelPropsPanel.URL, CreatorLabelPropsPanel);
             fgui.UIObjectFactory.setExtension(CreatorComp.URL, CreatorComp);
             fgui.UIObjectFactory.setExtension(RefreshButton.URL, RefreshButton);
+            fgui.UIObjectFactory.setExtension(ResourceListView.URL, ResourceListView);
         }
     }
 
@@ -2314,6 +2719,7 @@
         }
         setData(item) {
             this.setCCData(item);
+            this.m_comp.setData(item);
         }
         setCCData(widget) {
             this.widget = widget;
@@ -2473,6 +2879,7 @@
         setCCData(component) {
             this.component = component;
             this.m_title.text = Consts.getClassName(component);
+            this.m_enabled.setObj(component, "enabled");
         }
     }
 
@@ -2483,6 +2890,7 @@
         }
         setData(item) {
             this.setCCData(item);
+            this.m_comp.setData(item);
         }
         setCCData(label) {
             this.label = label;
@@ -2499,9 +2907,6 @@
                 this.m_hAlign.setObj(label, "horizontalAlign");
                 this.m_vAlign.setObj(label, "verticalAlign");
                 this.m_font.setObj(label, "fontFamily");
-                if (!label.useSystemFont) {
-                    this.m_font.text = label.font.name;
-                }
             }
             else {
                 this.visible = false;

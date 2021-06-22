@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="1200,800" bgColorEnabled="true" bgColor="#383838">
+  <controller name="display" pages="0,,1," selected="1">
+    <remark page="0" value="显示列表"/>
+    <remark page="1" value="资源列表"/>
+  </controller>
   <displayList>
     <component id="n142_p0d9" name="webset" src="gcza1s" fileName="Input/TextInput.xml" pkg="nk9ejx23" xy="5,13" size="1078,30">
       <relation target="" sidePair="width-width"/>
@@ -12,23 +16,42 @@
     <graph id="n115_r5uk" name="holder" xy="4,54" size="1192,724">
       <relation target="" sidePair="width-width,height-height"/>
     </graph>
-    <component id="n139_mlmb" name="list" src="mlmb1nry31v" fileName="DisplayTreeView.xml" xy="4,55" size="283,725">
+    <component id="n139_mlmb" name="displaylist" src="mlmb1nry31v" fileName="DisplayTreeView.xml" xy="4,80" size="283,700">
+      <gearDisplay controller="display" pages="0"/>
       <relation target="" sidePair="height-height,left-left"/>
       <relation target="n144_fyi9" sidePair="rightext-left"/>
     </component>
-    <component id="n144_fyi9" name="sep1" src="e80aixictx" fileName="Editor/LibView_sep.xml" xy="286,55" size="8,725">
+    <component id="n150_pjp9" name="resourcelist" src="v4gl1nry32g" fileName="ResourceListView.xml" xy="4,80" size="283,700">
+      <gearDisplay controller="display" pages="1"/>
+      <relation target="" sidePair="height-height,left-left"/>
+      <relation target="n144_fyi9" sidePair="rightext-left"/>
+    </component>
+    <component id="n144_fyi9" name="sep1" src="e80aixictx" fileName="Editor/LibView_sep.xml" xy="286,80" size="8,700">
       <relation target="" sidePair="height-height"/>
     </component>
     <component id="n140_mlmb" name="document" src="mlmb1nry31x" fileName="DocumentView.xml" xy="293,55" size="614,725">
+      <gearDisplay controller="display" pages="0"/>
       <relation target="" sidePair="height-height"/>
       <relation target="n139_mlmb" sidePair="leftext-right"/>
       <relation target="n141_mlmb" sidePair="rightext-left"/>
     </component>
+    <component id="n151_pjp9" name="resource" src="pjp91nry32h" fileName="ResourceView.xml" xy="293,55" size="904,725">
+      <gearDisplay controller="display" pages="1"/>
+      <relation target="" sidePair="height-height,rightext-right"/>
+      <relation target="n150_pjp9" sidePair="leftext-right"/>
+    </component>
     <component id="n141_mlmb" name="insp" src="mtrqiudk" fileName="InspectorView.xml" xy="914,55" size="286,725">
+      <gearDisplay controller="display" pages="0"/>
       <relation target="" sidePair="height-height,right-right"/>
     </component>
-    <text id="n146_fyi9" name="version" xy="6,779" size="40,19" fontSize="12" color="#bdbdbd" text="">
-      <relation target="" sidePair="bottom-bottom"/>
+    <text id="n146_fyi9" name="version" xy="1045,779" size="150,19" fontSize="12" color="#bdbdbd" align="right" autoSize="none" text="">
+      <relation target="" sidePair="right-right,bottom-bottom"/>
     </text>
+    <component id="n147_v4gl" name="n147" src="lcw17iufh" fileName="Tab/TabButton.xml" pkg="nk9ejx23" xy="4,53" size="79,28">
+      <Button title="显示列表" controller="display" page="0"/>
+    </component>
+    <component id="n148_v4gl" name="n148" src="lcw17iufh" fileName="Tab/TabButton.xml" pkg="nk9ejx23" xy="83,53" size="79,28">
+      <Button checked="true" title="资源列表" controller="display" page="1"/>
+    </component>
   </displayList>
 </component>

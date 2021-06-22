@@ -1,6 +1,6 @@
 import Consts, { TreeType } from "../Consts";
 import EditorEvent from "../EditorEvent";
-import { IEngine } from "./IEngine";
+import { Asset, IEngine } from "./IEngine";
 
 export default class  LayaEngine implements IEngine{
     private static  i:LayaEngine;
@@ -134,5 +134,28 @@ export default class  LayaEngine implements IEngine{
     checkFGUIVisible(gobj){
         return  gobj._displayObject&&gobj.internalVisible&& gobj.internalVisible2;
     }
-   
+    getResouceList():Asset[]{
+        var allasset = []; 
+       var allres = this.engine.Loader.loadedMap;
+
+       for(var key in allres){
+           var item:Asset = {};
+           item.url = key;
+           if(this.engine.URL&&this.engine.URL.basePath){
+            item.name = key.replace(this.engine.URL.basePath,"");
+           }else item.name =key;
+           item.type = Consts.urlToType(key);
+
+           item.data = allres[key];
+           if( item.data&& item.data.width&&item.data.height){
+               item.width = item.data.width;
+               item.height = item.data.height;
+           }
+           allasset.push(item);
+       }
+       return allasset;
+    }
+    get gpuMemory():number{
+        return this.engine.Resource.gpuMemory;
+    }
 }

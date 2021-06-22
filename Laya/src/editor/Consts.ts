@@ -42,6 +42,7 @@ export default class Consts{
         Consts.icons[FObjectType.LIST] = fgui.UIPackage.getItemURL("Builder", "icon_list");
         Consts.icons[FObjectType.LOADER] = fgui.UIPackage.getItemURL("Builder", "icon_loader");
         Consts.icons[FObjectType.TEXT] = fgui.UIPackage.getItemURL("Builder", "icon_text");
+        Consts.icons[FObjectType.JSON] = fgui.UIPackage.getItemURL("Builder", "icon_json");
         Consts.icons[FObjectType.RICHTEXT] = fgui.UIPackage.getItemURL("Builder", "icon_richtext");
         Consts.icons[FObjectType.RICHTEXT] = fgui.UIPackage.getItemURL("Builder", "icon_inputtext");
         Consts.icons[FObjectType.COMPONENT] = fgui.UIPackage.getItemURL("Builder", "icon_component");
@@ -83,5 +84,32 @@ export default class Consts{
         var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
         var r = window.location.search.substr(1).match(reg);
         if(r!=null)return  unescape(r[2]); return null;
+    }
+   private static filetype = [['png','jpg','webp','bmp','gif','jpeg'],['txt','plist','xml','json','yaml','ini','csv','md','atlas','js','fnt'],['ogg','mp3','wma', "mpeg","wav","m4a","mp4","aiff","mid"]];
+    static getFileIcon(type:string){
+        var index = this.getFileIndex(type);
+        if(index>-1){
+            let types = [Consts.icons[FObjectType.IMAGE],Consts.icons[FObjectType.JSON],Consts.icons[FPackageItemType.SOUND]]
+            return types[index];
+        }
+        return Consts.icons[FPackageItemType.MISC]
+    }
+    static getFileIndex(type:string){
+        if(type){
+            for(var i =0;i<this.filetype.length;i++){
+                var item = this.filetype[i];
+                if(item.indexOf(type)!=-1){
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+    static urlToType(url){
+        var ft = url.split("?")[0].split(".");
+        if(ft.length>1){
+            return ft[ft.length-1];
+        }
+        return "";
     }
 }

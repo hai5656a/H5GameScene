@@ -1,0 +1,20 @@
+{
+    "name": "game-run-tools",
+    "version": "1.0.0",
+    "description": "game run tools",
+    "author": "coter",
+    "main": "main.js",
+    "main-menu": {
+        "i18n:MAIN_MENU.package.title/game-run-tools": {
+            "message": "game-run-tools:openpanel",
+            "accelerator": "Alt+R"
+        }
+    },
+    "panel": {
+        "main": "panel/index.js",
+        "type": "dockable",
+        "title": "game-run-tools",
+        "width": 300,
+        "height": 300
+    }
+}

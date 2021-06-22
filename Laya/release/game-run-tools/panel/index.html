@@ -1,0 +1,19 @@
+<div style="height: 100%; width:100%; overflow-y:scroll">
+   
+    <ui-prop name="端口" tooltip="">
+        <ui-input placeholder="7456" v-bind:value="m_point" v-on:input="m_point = $event.target.value" v-on:confirm="onPointChange"></ui-input>
+    </ui-prop>
+    <ui-prop name="参数" tooltip="">
+        <ui-input placeholder="参数&间隔" v-bind:value="m_param" v-on:input="m_param = $event.target.value" v-on:confirm="onParamChange"></ui-input>
+    </ui-prop>
+    <div>
+        <div><br /></div>
+        <div><br /></div>
+        
+        <ui-button v-on:confirm="onOpenSingle">启动</ui-button>
+        <div><br /></div>
+        <ui-button v-on:confirm="onCopySingle">复制</ui-button>
+       
+    </div>
+    
+</div>

@@ -1,6 +1,6 @@
 import Consts, { TreeType } from "../Consts";
 import EditorEvent from "../EditorEvent";
-import { IEngine } from "./IEngine";
+import { Asset, IEngine } from "./IEngine";
 
 export default class  EgretEngine implements IEngine{
     private static  i:EgretEngine;
@@ -140,4 +140,33 @@ export default class  EgretEngine implements IEngine{
     checkFGUIVisible(gobj){
         return  gobj.internalVisible&& gobj.internalVisible2;
     }
+    totalTextureSize;
+    getResouceList():Asset[]{
+        let res = Consts.gameWindow["RES"]
+        this.totalTextureSize = 0;
+        var all = []
+        if(res){
+            var fsData = res.config.config.fileSystem.fsData;
+            for(var key in fsData){
+                var  item= fsData[key];
+                var  data = res.host.get(item);
+                if(data){
+                    var asset:Asset = {};
+                    asset.data = data;
+                    asset.url =item.root + item.url;
+                    asset.name = item.url;
+                    asset.type =  Consts.urlToType( item.url);
+                    all.push(asset);
+                    if(data.textureWidth&&data.textureHeight){
+                        this.totalTextureSize += data.textureWidth* data.textureHeight * 4 ;
+                    }
+                }
+               
+            }
+        }
+        return all;
+    }
+    get gpuMemory(): number {
+        return this.totalTextureSize ;
+      }
 }

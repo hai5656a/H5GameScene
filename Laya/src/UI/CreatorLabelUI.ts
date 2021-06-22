@@ -6,6 +6,7 @@ import { IPropsUI } from "./PropsUI";
 import CreatorLabelPropsPanel from "../fgui/Builder/CreatorLabelPropsPanel";
 import TextInput from "./Builder/TextInput";
 import ComboBox from "./Builder/ComboBox";
+import CreatorCompUI from "./CreatorCompUI";
 
 export default class CreatorLabelUI extends CreatorLabelPropsPanel implements IPropsUI{
     label:cc.Label;
@@ -19,7 +20,7 @@ export default class CreatorLabelUI extends CreatorLabelPropsPanel implements IP
     }
     public setData(item){
          this.setCCData(item);
-      
+      (this.m_comp as CreatorCompUI).setData(item);
     }
     private  setCCData(label:cc.Label){
       
@@ -40,9 +41,9 @@ export default class CreatorLabelUI extends CreatorLabelPropsPanel implements IP
            (this.m_hAlign as ComboBox).setObj(label,"horizontalAlign");
            (this.m_vAlign as ComboBox).setObj(label,"verticalAlign");
            (this.m_font as TextInput).setObj(label,"fontFamily");
-           if(!label.useSystemFont){
-            this.m_font.text = label.font.name;
-           }
+        //    if(!label.useSystemFont){
+        //     this.m_font.text = label.font.name;
+        //    }
        }else{
         this.visible = false;
        }

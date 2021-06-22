@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="283,580" designImageOffsetX="-428" designImageAlpha="100" bgColorEnabled="true" bgColor="#383838">
+  <displayList>
+    <graph id="n12_qilr" name="n12" xy="0,51" size="283,1" type="rect" lineColor="#ff292828" fillColor="#00383838">
+      <relation target="" sidePair="width-width"/>
+    </graph>
+    <component id="n6_qilr" name="btnRefresh" src="so5uixicsd" fileName="basic/RefreshButton.xml" xy="258,1" size="22,22" tooltips="刷新">
+      <relation target="" sidePair="right-right"/>
+      <Button icon="ui://2pshu6oiih9xiua2"/>
+    </component>
+    <component id="n11_qilr" name="group" src="gcza18" fileName="ComboBox/ComboBox.xml" pkg="nk9ejx23" xy="5,3" size="250,20">
+      <relation target="" sidePair="width-width"/>
+      <ComboBox visibleItemCount="10">
+        <item title="全部"/>
+        <item title="图片"/>
+        <item title="Json"/>
+        <item title="音乐"/>
+      </ComboBox>
+    </component>
+    <component id="n20_s4ys" name="txtSearch" src="gcza1s" fileName="Input/TextInput.xml" pkg="nk9ejx23" xy="5,28" size="250,20" controller="noBorder,0,showClear,0">
+      <relation target="" sidePair="width-width"/>
+    </component>
+    <component id="n21_s4ys" name="btnSearch" src="so5uixicsd" fileName="basic/RefreshButton.xml" xy="256,26" size="22,22" tooltips="搜索">
+      <relation target="" sidePair="right-right"/>
+      <Button icon="ui://2pshu6oic3ppiu9h"/>
+    </component>
+    <list id="n3" name="listView" xy="5,53" size="278,527" overflow="scroll" margin="1,1,1,1" defaultItem="ui://nk9ejx23au3n6q" autoClearItems="true">
+      <relation target="" sidePair="width-width,height-height"/>
+      <item title="Package" icon="ui://2pshu6oiptssa7iug6"/>
+      <item title="Folder" icon="ui://2pshu6oin8o8a7iug2"/>
+      <item title="Component" icon="ui://2pshu6oiau3n1p"/>
+      <item title="Button" icon="ui://2pshu6oiau3n1l"/>
+      <item title="Image" icon="ui://2pshu6oiau3n22"/>
+      <item title="MovieClip" icon="ui://2pshu6oiau3n1e"/>
+      <item title="Swf" icon="ui://2pshu6oig5gnixics7"/>
+      <item title="Spine" icon="ui://2pshu6oikmrmixicuz"/>
+      <item title="DragonBones" icon="ui://2pshu6oiguwfixicv6"/>
+      <item title="Font" icon="ui://2pshu6oiau3n4l"/>
+      <item title="Label" icon="ui://2pshu6oimclsiuby"/>
+      <item title="ComboBox" icon="ui://2pshu6oimclsiubu"/>
+      <item title="ProgressBar" icon="ui://2pshu6oimclsiubw"/>
+      <item title="Slider" icon="ui://2pshu6oimclsiubx"/>
+      <item title="ScrollBar" icon="ui://2pshu6oiitz3iuc3"/>
+      <item title="Folder" icon="ui://2pshu6oin8o8a7iug2"/>
+      <item title="Json" icon="ui://2pshu6oikmrmixicv1"/>
+      <item title="Txt" icon="ui://2pshu6oikmrmixicv3"/>
+      <item title="Branch" icon="ui://2pshu6oipzcca7iuir"/>
+      <item title="Misc" icon="ui://2pshu6oiifjkixicwq"/>
+      <item title="Sound" icon="ui://2pshu6oig5gnixics8"/>
+    </list>
+    <graph id="n19_p0d9" name="n19" xy="0,0" size="283,580" touchable="false" type="rect" lineColor="#ff292828" fillColor="#00383838">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <text id="n23_pjp9" name="message" xy="4,581" size="276,19" fontSize="12" color="#bdbdbd" vAlign="middle" autoSize="none" singleLine="true" text="">
+      <relation target="" sidePair="width-width,bottom-bottom"/>
+    </text>
+  </displayList>
+</component>

@@ -7,6 +7,7 @@ export default class FObjectType{
     public static readonly TREE:string = "tree";
     public static readonly LOADER:string = "loader";
     public static readonly TEXT:string = "text";
+    public static readonly JSON:string = "json";
     public static readonly RICHTEXT:string = "richtext";
     public static readonly INPUTTEXT:string = "inputtext";
     public static readonly GROUP:string = "group";

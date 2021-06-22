@@ -5,6 +5,7 @@ export default class CreatorComp extends fgui.GComponent {
 	public m_title:fgui.GButton;
 	public m_key:fgui.GLabel;
 	public m_value:fgui.GTextField;
+	public m_enabled:fgui.GButton;
 	public static URL:string = "ui://2pshu6ois4ys1nry32e";
 
 	public static createInstance():CreatorComp {
@@ -15,5 +16,6 @@ export default class CreatorComp extends fgui.GComponent {
 		this.m_title = <fgui.GButton>(this.getChildAt(0));
 		this.m_key = <fgui.GLabel>(this.getChildAt(1));
 		this.m_value = <fgui.GTextField>(this.getChildAt(2));
+		this.m_enabled = <fgui.GButton>(this.getChildAt(3));
 	}
 }

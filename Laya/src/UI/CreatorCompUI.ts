@@ -27,6 +27,7 @@ export default class CreatorCompUI extends CreatorComp implements IPropsUI{
         // var widget:cc.Widget = item.getComponent(gameModule.Widget);
         this.component = component;
         this.m_title.text = Consts.getClassName(component);
+        ( this.m_enabled as EmCheckbox).setObj(component,"enabled");
     //    if(component){
     //        this.visible = true;
         

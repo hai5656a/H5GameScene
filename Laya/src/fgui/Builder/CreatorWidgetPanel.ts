@@ -1,5 +1,7 @@
 /** This is an automatically generated class by FairyGUI. Please do not modify it. **/
 
+import CreatorComp from "./CreatorComp";
+
 export default class CreatorWidgetPanel extends fgui.GComponent {
 
 	public m_top:fgui.Controller;
@@ -8,6 +10,7 @@ export default class CreatorWidgetPanel extends fgui.GComponent {
 	public m_bottom:fgui.Controller;
 	public m_horizontal:fgui.Controller;
 	public m_verticl:fgui.Controller;
+	public m_comp:CreatorComp;
 	public m_TopValue:fgui.GLabel;
 	public m_TargetValue:fgui.GLabel;
 	public m_Top:fgui.GButton;
@@ -35,19 +38,20 @@ export default class CreatorWidgetPanel extends fgui.GComponent {
 		this.m_bottom = this.getControllerAt(3);
 		this.m_horizontal = this.getControllerAt(4);
 		this.m_verticl = this.getControllerAt(5);
-		this.m_TopValue = <fgui.GLabel>(this.getChildAt(2));
-		this.m_TargetValue = <fgui.GLabel>(this.getChildAt(3));
-		this.m_Top = <fgui.GButton>(this.getChildAt(4));
-		this.m_AlignMode = <fgui.GComboBox>(this.getChildAt(5));
-		this.m_LeftValue = <fgui.GLabel>(this.getChildAt(6));
-		this.m_Left = <fgui.GButton>(this.getChildAt(7));
-		this.m_RightValue = <fgui.GLabel>(this.getChildAt(8));
-		this.m_Right = <fgui.GButton>(this.getChildAt(9));
-		this.m_BottomValue = <fgui.GLabel>(this.getChildAt(10));
-		this.m_Bottom = <fgui.GButton>(this.getChildAt(11));
-		this.m_HorizontalCenterValue = <fgui.GLabel>(this.getChildAt(12));
-		this.m_HorizontalCenter = <fgui.GButton>(this.getChildAt(13));
-		this.m_VerticlCenterValue = <fgui.GLabel>(this.getChildAt(14));
-		this.m_VerticlCenter = <fgui.GButton>(this.getChildAt(15));
+		this.m_comp = <CreatorComp>(this.getChildAt(0));
+		this.m_TopValue = <fgui.GLabel>(this.getChildAt(3));
+		this.m_TargetValue = <fgui.GLabel>(this.getChildAt(4));
+		this.m_Top = <fgui.GButton>(this.getChildAt(5));
+		this.m_AlignMode = <fgui.GComboBox>(this.getChildAt(6));
+		this.m_LeftValue = <fgui.GLabel>(this.getChildAt(7));
+		this.m_Left = <fgui.GButton>(this.getChildAt(8));
+		this.m_RightValue = <fgui.GLabel>(this.getChildAt(9));
+		this.m_Right = <fgui.GButton>(this.getChildAt(10));
+		this.m_BottomValue = <fgui.GLabel>(this.getChildAt(11));
+		this.m_Bottom = <fgui.GButton>(this.getChildAt(12));
+		this.m_HorizontalCenterValue = <fgui.GLabel>(this.getChildAt(13));
+		this.m_HorizontalCenter = <fgui.GButton>(this.getChildAt(14));
+		this.m_VerticlCenterValue = <fgui.GLabel>(this.getChildAt(15));
+		this.m_VerticlCenter = <fgui.GButton>(this.getChildAt(16));
 	}
 }

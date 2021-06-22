@@ -61,7 +61,7 @@ export default class DocumentUI{
             Consts.frame = frame;
             Consts.frameStyle = frame.style;
             this.reset();
-            this.loadTimes = 100;
+            this.loadTimes = 200;
             this.frameLoad();
             this.resize();
         }
@@ -154,7 +154,7 @@ export default class DocumentUI{
         Consts.frame.src = url;
         this.reset();
         Laya.timer.clear(this,this.frameLoad);
-        Laya.timer.loop(100,this,this.frameLoad);
+        Laya.timer.loop(50,this,this.frameLoad);
     }
     reset(){
         Consts.gameWindow = null;
@@ -173,33 +173,35 @@ export default class DocumentUI{
 
     frameLoad(){
         var win = Consts.frame.contentWindow;
-       
+       console.log(new Date().getTime());
         Consts.gameWindow = win;
-        if(win.Laya){
-            Consts.engineManager = LayaEngine.getInstance();
-            Consts.engineManager.start(win.Laya);
-        }else if(win.egret){
-            Consts.engineManager = EgretEngine.getInstance();
-            Consts.engineManager.start(win.egret);
-        }else if(win.cc){
-            Consts.engineManager = CCEngine.getInstance();
-            Consts.engineManager.start(win.cc);
-
-            var toolbar = win.document.getElementsByClassName('toolbar')[0];
-            if(toolbar)
-               toolbar.style.display = 'none';
-               win.onbeforeunload = ()=>{
-                    this.reset();
-                    Laya.timer.clear(this,this.frameLoad);
-                    Laya.timer.loop(100,this,this.frameLoad);
-               }
-  
-             //getComputedStyle(toolbar).display = 'none';
-        }
+       
         if(Consts.engineManager){
             this.loadTimes++;
             if(Consts.treeTypeList.indexOf(Consts.engineManager.type)==-1){
                 Consts.treeTypeList.push(Consts.engineManager.type);
+            }
+        }else{
+            if(win.Laya){
+                Consts.engineManager = LayaEngine.getInstance();
+                Consts.engineManager.start(win.Laya);
+            }else if(win.egret){
+                Consts.engineManager = EgretEngine.getInstance();
+                Consts.engineManager.start(win.egret);
+            }else if(win.cc){
+                Consts.engineManager = CCEngine.getInstance();
+                Consts.engineManager.start(win.cc);
+    
+                var toolbar = win.document.getElementsByClassName('toolbar')[0];
+                if(toolbar)
+                   toolbar.style.display = 'none';
+                   win.onbeforeunload = ()=>{
+                        this.reset();
+                        Laya.timer.clear(this,this.frameLoad);
+                        Laya.timer.loop(50,this,this.frameLoad);
+                   }
+      
+                 //getComputedStyle(toolbar).display = 'none';
             }
         }
         var gamefgui = win.fairygui?win.fairygui:win.fgui;
@@ -212,7 +214,7 @@ export default class DocumentUI{
              Consts.treeTypeList.push(TreeType.FGUI);
           EditorEvent.event(EditorEvent.TreeTypeDataChanged,Consts.treeTypeList.indexOf(TreeType.FGUI));
         }else{
-            if(this.loadTimes>50){
+            if(this.loadTimes>30){
                 Laya.timer.clear(this,this.frameLoad);
                 
                 this.initManager();

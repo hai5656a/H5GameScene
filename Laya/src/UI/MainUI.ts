@@ -5,12 +5,13 @@ import EditorEvent from "../editor/EditorEvent";
 import DocumentUI from "./DocumentUI";
 import InspectorUI from "./InspectorUI";
 import SetUI, { CursorType } from "./SepUI";
+import ResourceListUI from "./ResourceListUI";
+import ResourceUI from "./ResourceUI";
 
 export default class MainUI{
     view:MainView;
-    list:DisplayTreeUI;
     document:DocumentUI;
-    insp:InspectorUI;
+    res:ResourceListUI;
     m_sep1:SetUI;
     // lineStyle:CSSStyleDeclaration;
    
@@ -22,9 +23,12 @@ export default class MainUI{
         fgui.GRoot.inst.addChild(this.view);
         this.view.m_btngo.onClick(this,this.goweb);
         this.view.m_webset.getTextField().on(Laya.Event.KEY_DOWN, this, this.onChanged);
-        this.list = new DisplayTreeUI(this.view.m_list);
+        this.view.m_display.on(fgui.Events.STATE_CHANGED,this,this.onChangeView)
+        new DisplayTreeUI(this.view.m_displaylist);
         this.document = new DocumentUI(this.view.m_document);
-        this.insp = new InspectorUI(this.view.m_insp);
+        this.res = new ResourceListUI(this.view.m_resourcelist);
+        new ResourceUI(this.view.m_resource);
+        new InspectorUI(this.view.m_insp);
         this.m_sep1 = this.view.m_sep1 as SetUI; 
         this.m_sep1.type = CursorType.H_RESIZE
         this.view.m_version.text ="version:"+ Consts.version;
@@ -44,6 +48,13 @@ export default class MainUI{
     onChanged(e:Laya.Event){
         if(e.keyCode==Laya.Keyboard.ENTER){
             this.goweb();
+        }
+    }
+    onChangeView(){
+        if(Consts.frameStyle)
+        Consts.frameStyle.display=this.view.m_display.selectedIndex==0?"block":"none";
+        if(this.view.m_display.selectedIndex==1){
+            this.res.initList();
         }
     }
     goweb(){

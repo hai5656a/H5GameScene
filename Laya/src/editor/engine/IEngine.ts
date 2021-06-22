@@ -23,4 +23,16 @@ export interface IEngine{
     onPause();
     /**当前对象是否还在显示 */
     checkFGUIVisible(gobj);
+    /**资源列表 */
+    getResouceList():Asset[];
+
+    gpuMemory:number;
+}
+export interface Asset{
+    name?:string;
+    url?:string;
+    type?:string;
+    data?:any;
+    width?:number;
+    height?:number;
 }

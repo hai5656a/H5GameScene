@@ -11,17 +11,19 @@ export default class  CCManager implements IDisplayManager{
         }
         return this.i;
     }
-    root:cc.Node;
+   get root():cc.Node{
+       return this.displayModule&&this.displayModule.director.getScene()
+   };
     displayModule//cc;
     /**引擎初始化 */
     start(root,m){
-        this.root = root;
+       // this.root = root;
         this.displayModule = m;
         Consts.nowTreeType = TreeType.CC;
     };
     /**引擎结束 */
     end(){
-        this.root = null;
+        // this.root = null;
         this.displayModule =null;
     };
     public refreshList(parent:fgui.GTreeNode){

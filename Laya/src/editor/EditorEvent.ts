@@ -1,6 +1,7 @@
 export default class EditorEvent {
     
     public static readonly SelectionChanged: string = "SelectionChanged";
+    public static readonly RESSelectionChanged: string = "RESSelectionChanged";
     public static readonly Selection: string = "Selection";
     public static readonly TreeChanged: string = "TreeChanged";
     public static readonly TreeTypeDataChanged: string = "TreeTypeDataChanged";

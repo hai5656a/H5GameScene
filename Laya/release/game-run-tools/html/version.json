@@ -1,0 +1,12 @@
+{
+  "index.js": "index-14b0435637.js",
+  "js/bundle.js": "js/bundle-7a4a05909f.js",
+  "js/bundle.js.map": "js/bundle-4a334cfb3e.js.map",
+  "libs/min/fairygui/fairygui.min.js": "libs/min/fairygui/fairygui-e7611decfc.min.js",
+  "libs/min/fairygui/rawinflate.min.js": "libs/min/fairygui/rawinflate-9cdae7df51.min.js",
+  "libs/min/laya.core.min.js": "libs/min/laya-44a1178a69.core.min.js",
+  "res/fgui/Basic.fui": "res/fgui/Basic-b253b1ecea.fui",
+  "res/fgui/Basic_atlas0.png": "res/fgui/Basic_atlas0-b505bf69d2.png",
+  "res/fgui/Builder.fui": "res/fgui/Builder-57bc5903de.fui",
+  "res/fgui/Builder_atlas0.png": "res/fgui/Builder_atlas0-1b6d3400dd.png"
+}
